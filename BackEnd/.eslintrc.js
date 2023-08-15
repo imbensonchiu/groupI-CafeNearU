@@ -10,9 +10,7 @@ module.exports = {
       env: {
         node: true,
       },
-      files: [
-        '.eslintrc.{js,cjs}',
-      ],
+      files: ['.eslintrc.{js,cjs}'],
       parserOptions: {
         sourceType: 'script',
       },
@@ -22,5 +20,8 @@ module.exports = {
     ecmaVersion: 'latest',
   },
   rules: {
+    quotes: ['error', 'single'],
   },
+  plugins: ['prettier'], // Use the eslint-plugin-prettier
+  extends: ['eslint:recommended'], // Use the eslint-config-prettier
 };
