@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
 // const hello = require('./routes/helloWorld');
@@ -13,6 +14,10 @@ app.use(express.static('public'));
 app.get('/', (req, res) => {
   res.send('Hello World From Cafe Near U');
 });
+
+const userRoutes = require('./routes/userRoute');
+
+app.use('/users', userRoutes);
 
 const port = 3000;
 app.listen(port, () => {

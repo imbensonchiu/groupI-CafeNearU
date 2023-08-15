@@ -3,8 +3,8 @@ const mysql = require('mysql2');
 const setPool = mysql.createPool({
   host: process.env.MYSQL_RDS_HOST,
   user: process.env.MYSQL_RDS_USER,
-  database: process.env.MYSQL_RDS_PASSWORD,
-  password: process.env.MYSQL_RDS_DATABASE,
+  database: process.env.MYSQL_RDS_DATABASE,
+  password: process.env.MYSQL_RDS_PASSWORD,
   waitForConnections: true,
   connectionLimit: 10,
   maxIdle: 10,
