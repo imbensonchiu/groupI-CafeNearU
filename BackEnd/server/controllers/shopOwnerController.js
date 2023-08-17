@@ -226,7 +226,23 @@ module.exports = {
     }
   },
   menuUpdate: async (req, res) => {
-    res.json(model.menuUpdate());
+    try {
+      const userId = extractUserIDFromToken(req);
+      const { menu } = req.body;
+      if (!menu || menu.length === 0) {
+        return errorHandler.clientError(res, 'inputFeild', 400);
+      }
+      await model.menuUpdate(userId, menu);
+      res.status(200).json({
+        data: {
+          shops: {
+            id: userId,
+          },
+        },
+      });
+    } catch (error) {
+      errorHandler.serverError(res, error, 'internalServer');
+    }
   },
   statusUpdate: (req, res) => {
     res.json(model.statusUpdate());
