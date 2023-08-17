@@ -32,7 +32,6 @@ module.exports = {
     const query = 'UPDATE `customers` SET name = ?, school = ? WHERE id = ?';
     try {
       const [result] = await pool.query(query, [name, school, currentID]);
-      console.log(query, [name, school, currentID]);
       return result[0];
     } finally {
       pool.releaseConnection();

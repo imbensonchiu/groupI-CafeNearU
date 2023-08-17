@@ -1119,18 +1119,18 @@ export default function DialogEdit({ open, handleOpen, type }) {
     // 帳戶設定
     return (
       <Dialog
-        size="xxl"
+        size="md"
         open={open}
         handler={handleOpen}
-        className="rounded-md"
+        className="lg:container lg:mx-auto overflow-scroll z-[100]"
       >
-        <div className="flex items-center justify-between">
-          <DialogHeader className="flex flex-col items-start border-l-[#7D6E83] border-l-8 ">
+        <div className="flex items-center justify-between sticky top-0 bg-white z-50">
+          <DialogHeader className="flex flex-col items-start border-l-[#7D6E83] border-l-8 lg:container lg:mx-auto ">
             <div className="text-xl text-[#7D6E83] mb-1 w-fit py-1 transition-all text-left font-medium">
               帳戶設定
             </div>
             <div className="text-base text-gray-700 mr-2 text-left font-normal">
-              修改電子郵箱地址、修改密碼
+              使用者名稱、電子郵箱地址、密碼
             </div>
           </DialogHeader>
           <svg
@@ -1147,8 +1147,64 @@ export default function DialogEdit({ open, handleOpen, type }) {
             />
           </svg>
         </div>
-        <DialogBody divider className="flex flex-col"></DialogBody>
-        <DialogFooter className="space-x-4 ">
+        <DialogBody className="flex flex-col lg:container lg:mx-auto">
+          <div className="grid grid-cols-12 gap-4">
+            <div className="col-span-12 flex flex-col">
+              <div className="grid grid-cols-12">
+                <div className="col-span-12">
+                  <Input
+                    label="使用者名稱"
+                    className="py-4 "
+                    size="lg"
+                    containerProps={{ className: "my-2 col-span-12" }}
+                  />
+                  <Button
+                    size="sm"
+                    className="!absolute right-6 top-[30px] rounded"
+                    variant="text"
+                  >
+                    編輯
+                  </Button>
+                </div>
+
+                <div className="col-span-12">
+                  <Input
+                    label="電子郵箱地址"
+                    type="email"
+                    className="py-4 "
+                    size="lg"
+                    containerProps={{ className: "my-2 col-span-12" }}
+                  />
+                  <Button
+                    size="sm"
+                    className="!absolute right-6 top-[90px] rounded"
+                    variant="text"
+                  >
+                    編輯
+                  </Button>
+                </div>
+
+                <div className="col-span-12">
+                  <Input
+                    label="密碼"
+                    type="password"
+                    className="py-4 "
+                    size="lg"
+                    containerProps={{ className: "my-2 col-span-12" }}
+                  />
+                  <Button
+                    size="sm"
+                    className="!absolute right-6 top-[150px] rounded"
+                    variant="text"
+                  >
+                    編輯
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogBody>
+        <DialogFooter className="space-x-4 lg:container lg:mx-auto">
           <Button
             variant="outlined"
             onClick={handleOpen}

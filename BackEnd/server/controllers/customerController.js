@@ -66,7 +66,6 @@ module.exports = {
           res.status(200).json(responseData);
         }
       } catch (error) {
-        console.log(error);
         errorHandler.serverError(res, error, 'sqlquery');
       }
     } catch (error) {
@@ -170,7 +169,6 @@ module.exports = {
 
       res.status(200).json(responseData);
     } catch (error) {
-      console.log(error);
       errorHandler.clientError(res, 'userNotFound', 400);
     }
   },

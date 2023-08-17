@@ -28,47 +28,45 @@ module.exports = {
       pool.releaseConnection();
     }
   },
-  basicInfoUpdate: async (arr, rules, service_and_equipment) => {
-    // 要先檢查用戶是否存在
-    // 要追加一個條件 update wherer id = 用戶 id
-    const query = `UPDATE shops SET shop_name = ?, type = ?, introduction = ?, opening_hour = ?, closing_hour = ?, address = ?, telephone = ?, facebook = ?, ig = ?, line = ?, time_limit = ?, min_order = ?, plug = ?, wifi = ?, smoking_area = ?, dog = ?, cat = ?, primary_image = ?, secondary_image_1 = ?, secondary_image_2 = ? WHERE id = 1`;
+  basicInfoUpdate: async (userId, arr, rules, service_and_equipment) => {
+    const insertBasicInfo = `UPDATE shops SET shop_name = ?, type = ?, introduction = ?, opening_hour = ?, closing_hour = ?, address = ?, telephone = ?, facebook = ?, ig = ?, line = ?, time_limit = ?, min_order = ?, plug = ?, wifi = ?, smoking_area = ?, dog = ?, cat = ?, primary_image = ?, secondary_image_1 = ?, secondary_image_2 = ? WHERE id = ?`;
     const findRules = `SELECT id FROM rules WHERE cafe_id = ?`;
     const deleteRules = `DELETE FROM rules WHERE cafe_id = ?`;
     const insertRules = `INSERT INTO rules (type, heading, content, cafe_id) VALUES (?, ?, ?, ?)`;
-    const findServiceAndEquip = `SELECT id FROM service_and_equipment WHERE cafe_id = ?`;
-    const deleteServiceAndEquip = `DELETE FROM service_and_equipment WHERE cafe_id = ?`;
-    const insertServiceAndEquip = `INSERT INTO service_and_equipment (icon, type, content, cafe_id) VALUES (?, ?, ?, ?)`;
+    const findServiceAndEquip = `SELECT id FROM service_and_equipments WHERE cafe_id = ?`;
+    const deleteServiceAndEquip = `DELETE FROM service_and_equipments WHERE cafe_id = ?`;
+    const insertServiceAndEquip = `INSERT INTO service_and_equipments (icon, type, content, cafe_id) VALUES (?, ?, ?, ?)`;
     const conn = await pool.getConnection();
     await conn.beginTransaction();
     try {
-      await conn.query(query, arr);
-      const [hasRules] = await conn.query(findRules, 1 /*模擬的用戶id*/); // if 沒找到，直接 insert，else 找到 先刪再 insert
+      await conn.query(insertBasicInfo, [...arr, userId]);
+      const [hasRules] = await conn.query(findRules, userId);
       if (hasRules.length !== 0) {
         console.log('Delete Rules');
-        await conn.query(deleteRules, 1 /*模擬的用戶id*/);
+        await conn.query(deleteRules, userId);
       }
       for (let i = 0; i < rules.length; i++) {
         await conn.query(insertRules, [
           rules[i].type,
           rules[i].heading,
           rules[i].content,
-          1, // 這是模擬的 cafe_id
+          userId,
         ]);
       }
       const [hasServiceAndEquip] = await conn.query(
         findServiceAndEquip,
-        1 /*模擬的用戶id*/,
-      ); // if 沒找到，直接 insert，else 找到 先刪再 insert
+        userId,
+      );
       if (hasServiceAndEquip.length !== 0) {
         console.log('Delete Service and Equip');
-        await conn.query(deleteServiceAndEquip, 1 /*模擬的用戶id*/);
+        await conn.query(deleteServiceAndEquip, userId);
       }
       for (let i = 0; i < service_and_equipment.length; i++) {
         await conn.query(insertServiceAndEquip, [
           service_and_equipment[i].icon,
           service_and_equipment[i].type,
           service_and_equipment[i].content,
-          1, // 這是模擬的 cafe_id
+          userId,
         ]);
       }
       await conn.commit();
@@ -80,8 +78,27 @@ module.exports = {
       pool.releaseConnection();
     }
   },
-  menuUpdate: async () => {
-    return 'menu update';
+  menuUpdate: async (userId, menu) => {
+    const findMenu = `SELECT id FROM menus WHERE cafe_id = ?`;
+    const deleteMenu = `DELETE FROM menus WHERE cafe_id = ?`;
+    const insertMenu = `INSERT INTO menus (category, item, price, cafe_id, created_at) VALUES (?, ?, ?, ?, CONVERT_TZ(NOW(), 'UTC', 'Asia/Taipei'))`;
+    try {
+      const [hasMenu] = await pool.query(findMenu, userId);
+      if (hasMenu.length !== 0) {
+        console.log('Delete Menu');
+        await pool.query(deleteMenu, userId);
+      }
+      for (let i = 0; i < menu.length; i++) {
+        await pool.query(insertMenu, [
+          menu[i].category,
+          menu[i].item,
+          menu[i].price,
+          userId,
+        ]);
+      }
+    } finally {
+      pool.releaseConnection();
+    }
   },
   statusUpdate: () => {
     return 'status update';

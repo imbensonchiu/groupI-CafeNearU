@@ -109,7 +109,7 @@ export default function Home() {
                 帳戶設定
               </div>
               <div className="text-base text-gray-700 mr-2">
-                修改電子郵箱地址、修改密碼
+                使用者名稱、電子郵箱地址、密碼
               </div>
             </div>
           </div>
