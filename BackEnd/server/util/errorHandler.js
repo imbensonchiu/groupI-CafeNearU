@@ -4,7 +4,8 @@ const errorMessages = {
     // user
     inputFeild: 'Missing input feild',
     lostParams: 'Lost params',
-    emailValidate: 'Invalid email format.',
+    emailValidate: 'Invalid email format',
+    passwordValidate: 'Invalid password format',
     userNotFound: 'User not found',
     wrongPassword: 'Sign In Failed (wrong password)',
     wrongProvider: 'Sign In Failed (wrong provider)',
@@ -18,6 +19,7 @@ const errorMessages = {
     invalidToken: 'Invalid token',
     signInFailed:
       'Sign In Failed (Wrong Password, User Not Found, Wrong provider)',
+    duplicatePassword: 'Can not use the same password',
   },
   server: {
     // 500 Server Error

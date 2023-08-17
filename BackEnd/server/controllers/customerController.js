@@ -3,14 +3,15 @@ const {
   bcrypt,
   jwt,
   jwtSecret,
+  extractUserIDFromToken,
   validateEmail,
   validateProvider,
 } = require('../util/common');
 
-const User = require('../models/userModel');
+const User = require('../models/customerModel');
 
 module.exports = {
-  signUp: async (req, res) => {
+  customerSignUp: async (req, res) => {
     try {
       const data = req.body;
 
@@ -18,42 +19,36 @@ module.exports = {
         return errorHandler.clientError(res, 'inputFeild', 400);
       }
 
-      let { name, email, password, identity } = data;
+      let { name, email, password, school } = data;
 
       name = name.trim();
       email = email.trim();
       password = password.trim();
-      identity = identity.trim();
+      school = school.trim();
 
-      // Check white space
-      if (!name || !email || !password || !identity) {
+      if (!name || !email || !password || !school) {
         return errorHandler.clientError(res, 'inputFeild', 400);
       }
       if (!validateEmail(email)) {
         return errorHandler.clientError(res, 'emailValidate', 400);
       }
       try {
-        // Check duplicate email
-        const existingUser = await User.getUserByEmail(email);
+        const existingUser = await User.getByEmail(email);
         if (existingUser) {
           errorHandler.clientError(res, 'emailExist', 403);
         } else {
-          // Hash user's password
           const hashedPassword = await bcrypt.hash(password, 10);
 
-          // Get user's id from newly inserted data
-          const [result] = await User.insertNewUser(
+          const [result] = await User.insertNewCustomer(
             name,
             email,
             hashedPassword,
-            identity,
+            school,
           );
           const userID = result.insertId;
 
-          // Get user's data by id
-          const user = await User.getUserById(userID);
+          const user = await User.getByID(userID);
 
-          // Generate JWT
           const payload = {
             id: user.id,
             provider: user.provider,
@@ -71,13 +66,14 @@ module.exports = {
           res.status(200).json(responseData);
         }
       } catch (error) {
+        console.log(error);
         errorHandler.serverError(res, error, 'sqlquery');
       }
     } catch (error) {
       errorHandler.serverError(res, error, 'internalServer');
     }
   },
-  signIn: async (req, res) => {
+  customerSignIn: async (req, res) => {
     try {
       const data = req.body;
 
@@ -96,7 +92,7 @@ module.exports = {
       }
       try {
         // Validate if user exist in our database
-        const user = await User.getUserByEmail(email);
+        const user = await User.getByEmail(email);
 
         if (
           user &&
@@ -128,5 +124,83 @@ module.exports = {
     } catch (error) {
       errorHandler.serverError(res, error, 'internalServer');
     }
+  },
+  updateCustomerPassword: async (req, res) => {
+    const currentID = extractUserIDFromToken(req);
+    const { password } = req.body;
+    if (password.trim() === '') {
+      return errorHandler.clientError(res, 'passwordValidate', 400);
+    }
+
+    const userRow = await User.getByID(currentID);
+    if (await bcrypt.compare(password, userRow.password)) {
+      return errorHandler.clientError(res, 'duplicatePassword', 403);
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await User.updatePassword(currentID, hashedPassword);
+
+    const responseData = {
+      data: {
+        user: {
+          id: currentID,
+        },
+      },
+    };
+
+    res.status(200).json(responseData);
+  },
+  getCustomerProfile: async (req, res) => {
+    try {
+      const currentID = extractUserIDFromToken(req);
+      const userRow = await User.getByID(currentID);
+
+      const user = {
+        id: userRow.id,
+        name: userRow.name,
+        email: userRow.email,
+        picture: userRow.picture,
+        school: userRow.school,
+        provider: userRow.provider,
+      };
+
+      const responseData = {
+        data: { user },
+      };
+
+      res.status(200).json(responseData);
+    } catch (error) {
+      console.log(error);
+      errorHandler.clientError(res, 'userNotFound', 400);
+    }
+  },
+  updateCustomerProfile: async (req, res) => {
+    const currentID = extractUserIDFromToken(req);
+    const { name, school } = req.body;
+
+    await User.updateProfile(currentID, name, school);
+
+    const responseData = {
+      data: {
+        user: {
+          id: currentID,
+        },
+      },
+    };
+    res.status(200).json(responseData);
+  },
+  //Not yet
+  updateCustomerPicture: async (req, res) => {
+    const currentID = extractUserIDFromToken(req);
+    const { name, school } = req.body;
+
+    const responseData = {
+      data: {
+        user: {
+          id: currentID,
+        },
+      },
+    };
+    res.status(200).json(responseData);
   },
 };
