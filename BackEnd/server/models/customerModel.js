@@ -47,13 +47,10 @@ module.exports = {
       pool.releaseConnection();
     }
   },
-  updatePicture: async (currentID, picture) => {
-    const query = 'UPDATE `customers` SET picture = ? WHERE id = ?';
-    try {
-      const [result] = await pool.query(query, [picture, currentID]);
-      return result[0];
-    } finally {
-      pool.releaseConnection();
-    }
+  updatePicture: async (currentID, filename) => {
+    const pictureURL = `https://${process.env.HOST_NAME}/public/avatars/${filename}`;
+    const updateQuery = 'UPDATE `customers` SET picture = ? WHERE id = ?';
+    await pool.query(updateQuery, [pictureURL, currentID]);
+    return pictureURL;
   },
 };
