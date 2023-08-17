@@ -78,13 +78,7 @@ module.exports = {
     // res.json(model.basicInfoUpdate());
   },
   menuUpdate: async (req, res) => {
-    const { menu } = req.body;
-    if (!menu || menu.length === 0) {
-      console.log('menu is required');
-    }
-    await model.menuUpdate(menu);
-    console.log(menu);
-    // res.json();
+    res.json(model.menuUpdate());
   },
   statusUpdate: (req, res) => {
     res.json(model.statusUpdate());

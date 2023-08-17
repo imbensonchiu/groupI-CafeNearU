@@ -53,28 +53,7 @@ module.exports = {
       pool.releaseConnection();
     }
   },
-  menuUpdate: async (menu) => {
-    console.log(menu);
-    const findMenu = `SELECT id FROM menus WHERE cafe_id = ?`;
-    const deleteMenu = `DELETE FROM menus WHERE cafe_id = ?`;
-    const insertMenu = `INSERT INTO menus (category, item, price, cafe_id, created_at) VALUES (?, ?, ?, ?, CONVERT_TZ(NOW(), 'UTC', 'Asia/Taipei'))`;
-    try {
-      const [hasMenu] = await pool.query(findMenu, 1 /*模擬的用戶id*/); // if 沒找到，直接 insert，else 找到 先刪再 insert
-      if (hasMenu.length !== 0) {
-        console.log('Delete Menu');
-        await pool.query(deleteMenu, 1 /*模擬的用戶id*/);
-      }
-      for (let i = 0; i < menu.length; i++) {
-        await pool.query(insertMenu, [
-          menu[i].category,
-          menu[i].item,
-          menu[i].price,
-          1 /*假的用戶id*/,
-        ]);
-      }
-    } finally {
-      pool.releaseConnection();
-    }
+  menuUpdate: async () => {
     return 'menu update';
   },
   statusUpdate: () => {
