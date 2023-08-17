@@ -189,18 +189,38 @@ module.exports = {
     };
     res.status(200).json(responseData);
   },
-  //Not yet
   updateCustomerPicture: async (req, res) => {
-    const currentID = extractUserIDFromToken(req);
-    const { name, school } = req.body;
+    try {
+      const currentID = extractUserIDFromToken(req);
 
-    const responseData = {
-      data: {
-        user: {
-          id: currentID,
-        },
-      },
-    };
-    res.status(200).json(responseData);
+      if (req.fileError) {
+        return res.status(400).json({ error: req.fileError });
+      }
+      if (!req.file) {
+        return res.status(400).json({ error: 'No picture provided' });
+      }
+      try {
+        const pictureURL = await User.updatePicture(
+          currentID,
+          req.file.filename,
+        );
+
+        const responseData = {
+          data: {
+            picture: pictureURL,
+          },
+        };
+
+        res.status(200).json(responseData);
+      } catch (error) {
+        if (req.fileError) {
+          res.status(400).json({ error: req.fileError });
+        } else {
+          errorHandler.serverError(res, error, 'sqlquery');
+        }
+      }
+    } catch (error) {
+      errorHandler.serverError(res, error, 'internalServer');
+    }
   },
 };

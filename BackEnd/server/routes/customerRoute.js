@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const customerController = require('../controllers/customerController');
 const { userAuthorization } = require('../util/common');
+const upload = require('../util/multer');
 
 router.post('/signup', customerController.customerSignUp);
 router.post('/signin', customerController.customerSignIn);
@@ -24,8 +25,9 @@ router.put(
   customerController.updateCustomerProfile,
 );
 router.put(
-  '/profile',
+  '/picture',
   userAuthorization,
+  upload.single('avatar'),
   customerController.updateCustomerPicture,
 );
 
