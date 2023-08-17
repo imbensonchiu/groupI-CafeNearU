@@ -41,14 +41,16 @@ export default function Home() {
                     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
                 />
 
-                <div className="flex items-end gap-8 mt-4">
+                <div className="flex items-end gap-8 mt-4 flex-nowrap overflow-scroll ">
                     <div className="flex flex-col">
                         <IconButton variant="text" className="rounded-full">
                             <span className="material-symbols-outlined">
                                 work
                             </span>
                         </IconButton>
-                        <span className="self-center text-sm">工作</span>
+                        <span className="self-center  text-xs lg:text-sm">
+                            工作
+                        </span>
                     </div>
                     <div className="flex flex-col">
                         <IconButton variant="text" className="rounded-full">
@@ -56,7 +58,9 @@ export default function Home() {
                                 local_cafe
                             </span>
                         </IconButton>
-                        <span className="self-center text-sm">放鬆</span>
+                        <span className="self-center  text-xs lg:text-sm">
+                            放鬆
+                        </span>
                     </div>
                     <div className="flex flex-col">
                         <IconButton variant="text" className="rounded-full">
@@ -64,13 +68,17 @@ export default function Home() {
                                 groups
                             </span>
                         </IconButton>
-                        <span className="self-center text-sm">聚會</span>
+                        <span className="self-center text-xs lg:text-sm">
+                            聚會
+                        </span>
                     </div>
                     <div className="flex flex-col">
                         <IconButton variant="text" className="rounded-full">
                             <span class="material-symbols-outlined">pets</span>
                         </IconButton>
-                        <span className="self-center text-sm">寵物</span>
+                        <span className="self-center  text-xs lg:text-sm">
+                            寵物
+                        </span>
                     </div>
                     <div className="flex flex-col">
                         <IconButton variant="text" className="rounded-full">
@@ -78,7 +86,9 @@ export default function Home() {
                                 schedule
                             </span>
                         </IconButton>
-                        <span className="self-center text-sm">不限時</span>
+                        <span className="self-center text-xs lg:text-sm">
+                            不限時
+                        </span>
                     </div>
                     <div className="flex flex-col">
                         <IconButton variant="text" className="rounded-full">
@@ -86,13 +96,17 @@ export default function Home() {
                                 cookie
                             </span>
                         </IconButton>
-                        <span className="self-center text-sm">甜點</span>
+                        <span className="self-center  text-xs lg:text-sm">
+                            甜點
+                        </span>
                     </div>
                     <div className="flex flex-col">
                         <IconButton variant="text" className="rounded-full">
                             <span class="material-symbols-outlined">power</span>
                         </IconButton>
-                        <span className="self-center text-sm">插座</span>
+                        <span className="self-center  text-xs lg:text-sm">
+                            插座
+                        </span>
                     </div>
                     <div className="flex flex-col">
                         <IconButton variant="text" className="rounded-full">
@@ -100,7 +114,9 @@ export default function Home() {
                                 casino
                             </span>
                         </IconButton>
-                        <span className="self-center text-sm">好手氣</span>
+                        <span className="self-center text-xs lg:text-sm">
+                            好手氣
+                        </span>
                     </div>
                 </div>
             </div>
@@ -111,7 +127,7 @@ export default function Home() {
                 <div className="col-span-12 grid grid-cols-12 gap-8">
                     {storesHome.data.shops.workspace.map((store) => (
                         <StoreCard
-                            className={"rounded-xl col-span-3"}
+                            className={"rounded-xl col-span-6 lg:col-span-3"}
                             key={store.id}
                             store={store}
                         />
@@ -123,7 +139,7 @@ export default function Home() {
                 <div className="col-span-12 grid grid-cols-12 gap-8">
                     {storesHome.data.shops.leisure.map((store) => (
                         <StoreCard
-                            className={"rounded-xl col-span-3"}
+                            className={"rounded-xl  col-span-6 lg:col-span-3"}
                             key={store.id}
                             store={store}
                         />
@@ -135,7 +151,7 @@ export default function Home() {
                 <div className="col-span-12 grid grid-cols-12 gap-8">
                     {storesHome.data.shops.pet.map((store) => (
                         <StoreCard
-                            className={"rounded-xl col-span-3"}
+                            className={"rounded-xl  col-span-6 lg:col-span-3"}
                             key={store.id}
                             store={store}
                         />

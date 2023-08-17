@@ -8,7 +8,7 @@ export default function StoreCard({ className, store }) {
     let seat = seats.some((elem) => elem.available_seats);
 
     return (
-        <div className={`flex flex-col  ${className}`}>
+        <div className={`flex flex-col justify-center  ${className}`}>
             <Carousel transition={{ duration: 2 }}>
                 <img
                     src={primary_image}
