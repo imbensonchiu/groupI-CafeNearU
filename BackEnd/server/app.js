@@ -14,12 +14,14 @@ app.get('/', (req, res) => {
 });
 
 const homeRoutes = require('./routes/homeRoute');
-const userRoutes = require('./routes/userRoute');
+const customerRoutes = require('./routes/customerRoute');
 const shopOwnerRoutes = require('./routes/shopOwnerRoute');
 const shopRoutes = require('./routes/shopRoute');
+const wishListRoutes = require('./routes/wishListRoute');
 
 app.use('/api/1.0/home', homeRoutes);
-app.use('/api/1.0/users', userRoutes);
+app.use('/api/1.0/customers', customerRoutes);
+app.use('/api/1.0/wishLists', wishListRoutes);
 app.use('/api/1.0/shop-owners', shopOwnerRoutes);
 app.use('/api/1.0/shops', shopRoutes);
 
