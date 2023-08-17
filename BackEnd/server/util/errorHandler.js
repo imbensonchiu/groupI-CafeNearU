@@ -10,8 +10,10 @@ const errorMessages = {
     wrongPassword: 'Sign In Failed (wrong password)',
     wrongProvider: 'Sign In Failed (wrong provider)',
     wrongToken: 'Wrong token',
+    commentNotExist: 'comment does not exist',
     jsonValidate: 'Invalid Input Format (should be JSON)',
     contentTypeValidate: 'Invalid Content-type Header',
+
 
     // 401 Client Error (Token error)
     noToken: 'No token provided',
