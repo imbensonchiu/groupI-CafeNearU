@@ -36,7 +36,7 @@ export default function Signup() {
         <hr className="border-gray-300" />
 
         <div className="container mx-auto flex items-center justify-start py-4">
-          <p className="text-[#030712] text-xl ml-4 me-2 text-left">
+          <p className="text-[#030712] text-xl ml-4 me-2 text-left font-logo">
             CafeNearU
           </p>
           <p className="text-[#030712] text-xl text-left font-inter me-4">

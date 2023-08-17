@@ -16,6 +16,8 @@ const errorMessages = {
     missingContent: 'Missing content',
     cafeExistsInWishlist: 'Cafe already exists in the wishlist',
     cafeNotExistsInWishlist: 'Cafe does not exists in the wishlist',
+    seatNotFound: 'Seat Not Found',
+    booleanValidate: 'Invalid Input Format (should be boolean)',
 
     // 401 Client Error (Token error)
     noToken: 'No token provided',

@@ -1,5 +1,4 @@
 import { Inter, Train_One } from "next/font/google";
-import "tw-elements/dist/css/tw-elements.min.css";
 
 import "./globals.css";
 
@@ -9,7 +8,7 @@ const train_one = Train_One({
   subsets: ["latin"],
   display: "swap",
   weight: "400",
-  variable: "--font-train-one"
+  variable: "--font-train-one",
 });
 
 export const metadata = {
