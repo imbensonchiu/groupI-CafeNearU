@@ -1,6 +1,33 @@
 const pool = require('../util/db');
 
 module.exports = {
+  insertNewShoper: async (name, email, hashedPassword) => {
+    const query =
+      'INSERT INTO `shops` (user_name, email, password) VALUES (?, ?, ?)';
+    try {
+      return await pool.query(query, [name, email, hashedPassword]);
+    } finally {
+      pool.releaseConnection();
+    }
+  },
+  getByEmail: async (email) => {
+    const query = 'SELECT * FROM `shops` WHERE `email` = ?';
+    try {
+      const [result] = await pool.query(query, [email]);
+      return result[0];
+    } finally {
+      pool.releaseConnection();
+    }
+  },
+  getByID: async (id) => {
+    const query = 'SELECT * FROM `shops` WHERE `id` = ?';
+    try {
+      const [result] = await pool.query(query, [id]);
+      return result[0];
+    } finally {
+      pool.releaseConnection();
+    }
+  },
   basicInfoUpdate: async (arr, rules, service_and_equipment) => {
     // 要先檢查用戶是否存在
     // 要追加一個條件 update wherer id = 用戶 id

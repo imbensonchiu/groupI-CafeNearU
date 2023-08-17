@@ -4,6 +4,9 @@ const router = express.Router();
 const controller = require('../controllers/shopOwnerController');
 const pictureUpload = require('../util/pictureUpload');
 
+router.post('/signup', controller.shoperSignUp);
+router.post('/signin', controller.shoperSignIn);
+
 router.put(
   '/:id/basic-info',
   pictureUpload.setting().fields([
