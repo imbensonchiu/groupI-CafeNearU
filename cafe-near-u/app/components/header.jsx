@@ -19,7 +19,10 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpen(true);
+  };
+  const closeMenu = () => {
+    setIsMenuOpen(false);
   };
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
@@ -29,8 +32,8 @@ export default function Header() {
 
   return (
     <>
-      <div className="sticky-top w-full h-[86px] flex-shrink-0 bg-white text-gray-600 text-center font-train-one font-normal flex justify-between items-center px-200  border-d shadow-md">
-        <div className="text-4xl ml-[10%] text-5c5c5c text-center font-train-one font-normal">
+      <div className="fixed top-0  w-full h-[86px] flex-shrink-0 bg-white text-gray-600 text-center font-train-one font-normal flex justify-between items-center px-200  border-d shadow-md">
+        <div className="font-logo text-4xl ml-[10%] text-5c5c5c text-center font-train-one font-normal">
           CafeNearU
         </div>
         <div className="relative flex items-center">
@@ -43,20 +46,21 @@ export default function Header() {
           </div>
           <input
             type="search"
-            className="w-[100%] h-11 px-4 pl-12 text-gray-800 placeholder-gray-400 border border-gray-300 rounded-lg shadow-lg"
+            className="w-[100%] h-11 px-4 pl-12 text-gray-800 placeholder-gray-400 border border-gray-300 rounded-lg shadow-md"
             placeholder="開始搜尋"
           />
         </div>
-        <div className="me-52 flex items-center">
+        <div className="me-[10%] flex items-center">
           <div className="relative">
             <img
               src="account_circle.svg"
               alt="main"
               className="w-12 h-12 rounded-full cursor-pointer"
-              onClick={toggleMenu}
+              onMouseOver={toggleMenu}
+              
             />
             {isMenuOpen && (
-              <div className="absolute right-0 top-[50px] w-60 bg-white border border-gray-300 rounded-2xl shadow-lg">
+              <div className="absolute right-0 top-[50px] w-60 bg-white border border-gray-300 rounded-2xl shadow-lg" onMouseLeave={closeMenu}>
                 <ul className="">
                   <li
                     className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl"
@@ -88,8 +92,8 @@ export default function Header() {
                   </li>
                   <hr className="border-gray-300 " />
                 </ul> */}
-                <div className="text-gray-400 text-sm px-4 py-3 font-inter text-center text-lg">
-                  CaféNearU
+                <div className="text-gray-400 text-sm px-4 py-3 font-inter text-center text-lg font-logo">
+                  CafeNearU
                 </div>
               </div>
             )}

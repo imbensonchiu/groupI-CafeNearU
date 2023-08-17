@@ -1,8 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-else-return */
-import "react-phone-number-input/style.css";
 import "react-time-picker/dist/TimePicker.css";
-import "react-clock/dist/Clock.css";
 
 import {
   Textarea,
@@ -27,7 +25,7 @@ import {
   Option,
   Checkbox,
   Typography,
-  ListItemPrefix
+  ListItemPrefix,
 } from "@material-tailwind/react";
 
 const TABLE_HEAD = ["品項", "價格", "分類", ""];
@@ -36,18 +34,18 @@ const TABLE_ROWS = [
   {
     item: "芋頭",
     price: 100,
-    category: "難吃的東西"
+    category: "難吃的東西",
   },
   {
     item: "好喝可樂",
     price: 200,
-    category: "特色飲品"
+    category: "特色飲品",
   },
   {
     item: "好吃冰淇淋",
     price: 300,
-    category: "特色甜點"
-  }
+    category: "特色甜點",
+  },
 ];
 
 import { useState } from "react";
@@ -76,18 +74,18 @@ const data = [
     value: "normal",
     desc: `It really matters and then like it really doesn't matter.
     What matters is the people who are sparked by it. And the people
-    who are like offended by it, it doesn't matter.`
+    who are like offended by it, it doesn't matter.`,
   },
   {
     label: "插座席",
     value: "socket",
-    desc: `123456`
+    desc: `123456`,
   },
   {
     label: "戶外席",
     value: "outside",
-    desc: `123456`
-  }
+    desc: `123456`,
+  },
 ];
 
 const dataOp = [
@@ -96,40 +94,40 @@ const dataOp = [
     value: "mon",
     desc: `It really matters and then like it really doesn't matter.
     What matters is the people who are sparked by it. And the people
-    who are like offended by it, it doesn't matter.`
+    who are like offended by it, it doesn't matter.`,
   },
   {
     label: "星期二",
     value: "tue",
-    desc: `123456`
+    desc: `123456`,
   },
   {
     label: "星期三",
     value: "wed",
-    desc: `123456`
+    desc: `123456`,
   },
   {
     label: "星期四",
     value: "thu",
     desc: `It really matters and then like it really doesn't matter.
     What matters is the people who are sparked by it. And the people
-    who are like offended by it, it doesn't matter.`
+    who are like offended by it, it doesn't matter.`,
   },
   {
     label: "星期五",
     value: "fri",
-    desc: `123456`
+    desc: `123456`,
   },
   {
     label: "星期六",
     value: "sat",
-    desc: `123456`
+    desc: `123456`,
   },
   {
     label: "星期日",
     value: "sun",
-    desc: `123456`
-  }
+    desc: `123456`,
+  },
 ];
 
 export default function DialogEdit({ open, handleOpen, type }) {
@@ -446,7 +444,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                     size="lg"
                     label="社群類型"
                     containerProps={{
-                      className: ""
+                      className: "",
                     }}
                   >
                     <Option>Facebook</Option>
@@ -551,7 +549,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                   className="py-4"
                   size="lg"
                   containerProps={{
-                    className: "col-span-12 lg:col-span-6 my-2"
+                    className: "col-span-12 lg:col-span-6 my-2",
                   }}
                 />
                 <Input
@@ -559,7 +557,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                   className="py-4"
                   size="lg"
                   containerProps={{
-                    className: "col-span-12 lg:col-span-6 my-2"
+                    className: "col-span-12 lg:col-span-6 my-2",
                   }}
                 />
               </div>
@@ -570,7 +568,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                   className="py-4"
                   size="lg"
                   containerProps={{
-                    className: "col-span-12 lg:col-span-6 my-2"
+                    className: "col-span-12 lg:col-span-6 my-2",
                   }}
                 />
                 <Input
@@ -578,7 +576,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                   className="py-4"
                   size="lg"
                   containerProps={{
-                    className: "col-span-12 lg:col-span-6 my-2"
+                    className: "col-span-12 lg:col-span-6 my-2",
                   }}
                 />
               </div>
@@ -591,7 +589,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                   className="py-4"
                   size="lg"
                   containerProps={{
-                    className: "col-span-12 my-2"
+                    className: "col-span-12 my-2",
                   }}
                 />
                 <Textarea
@@ -599,7 +597,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                   className="py-4"
                   size="lg"
                   containerProps={{
-                    className: "col-span-12 my-2"
+                    className: "col-span-12 my-2",
                   }}
                 />
                 <Button className="my-2 xl:my-0 py-2 px-1 text-base bg-[#7D6E83] col-span-12">
@@ -656,7 +654,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                         ripple={false}
                         className="hover:before:opacity-0"
                         containerProps={{
-                          className: "p-0"
+                          className: "p-0",
                         }}
                       />
                     </ListItemPrefix>
@@ -679,7 +677,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                         ripple={false}
                         className="hover:before:opacity-0"
                         containerProps={{
-                          className: "p-0"
+                          className: "p-0",
                         }}
                       />
                     </ListItemPrefix>
@@ -702,7 +700,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                         ripple={false}
                         className="hover:before:opacity-0"
                         containerProps={{
-                          className: "p-0"
+                          className: "p-0",
                         }}
                       />
                     </ListItemPrefix>
@@ -725,7 +723,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                         ripple={false}
                         className="hover:before:opacity-0"
                         containerProps={{
-                          className: "p-0"
+                          className: "p-0",
                         }}
                       />
                     </ListItemPrefix>
@@ -748,7 +746,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                         ripple={false}
                         className="hover:before:opacity-0"
                         containerProps={{
-                          className: "p-0"
+                          className: "p-0",
                         }}
                       />
                     </ListItemPrefix>
@@ -767,7 +765,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                   className="py-4"
                   size="lg"
                   containerProps={{
-                    className: "col-span-12 my-2"
+                    className: "col-span-12 my-2",
                   }}
                 />
                 <Textarea
@@ -775,7 +773,7 @@ export default function DialogEdit({ open, handleOpen, type }) {
                   className="py-4"
                   size="lg"
                   containerProps={{
-                    className: "col-span-12 my-2"
+                    className: "col-span-12 my-2",
                   }}
                 />
                 <Button className="my-2 xl:my-0 py-2 px-1 text-base bg-[#7D6E83] col-span-12">
