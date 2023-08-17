@@ -81,7 +81,7 @@ module.exports = {
   menuUpdate: async (userId, menu) => {
     const findMenu = `SELECT id FROM menus WHERE cafe_id = ?`;
     const deleteMenu = `DELETE FROM menus WHERE cafe_id = ?`;
-    const insertMenu = `INSERT INTO menus (category, item, price, cafe_id, created_at) VALUES (?, ?, ?, ?, CONVERT_TZ(NOW(), 'UTC', 'Asia/Taipei'))`;
+    const insertMenu = `INSERT INTO menus (category, item, price, cafe_id) VALUES (?, ?, ?, ?)`;
     try {
       const [hasMenu] = await pool.query(findMenu, userId);
       if (hasMenu.length !== 0) {
@@ -100,11 +100,31 @@ module.exports = {
       pool.releaseConnection();
     }
   },
+  setSeatType: async (userId, seats) => {
+    const findSeats = `SELECT id FROM seats WHERE cafe_id = ?`;
+    const deleteSeats = `DELETE FROM seats WHERE cafe_id = ?`;
+    const insertSeats = `INSERT INTO seats (icon, type, total_seats,cafe_id) VALUES (?, ?, ?, ?)`;
+    try {
+      const [hasSeats] = await pool.query(findSeats, userId);
+      if (hasSeats.length !== 0) {
+        console.log('Delete Seats');
+        await pool.query(deleteSeats, userId);
+      }
+      for (let i = 0; i < seats.length; i++) {
+        await pool.query(insertSeats, [
+          seats[i].icon,
+          seats[i].type,
+          seats[i].total_seats,
+          userId,
+        ]);
+      }
+    } finally {
+      pool.releaseConnection();
+    }
+    return 'seat type update';
+  },
   statusUpdate: () => {
     return 'status update';
-  },
-  setSeatType: () => {
-    return 'seat type update';
   },
   profilePub: () => {
     return 'profile publish';

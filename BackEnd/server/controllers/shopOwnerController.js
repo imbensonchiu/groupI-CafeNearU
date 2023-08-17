@@ -253,11 +253,25 @@ module.exports = {
       errorHandler.serverError(res, error, 'internalServer');
     }
   },
+  setSeatType: async (req, res) => {
+    try {
+      const header = req.get('Content-Type');
+      if (header !== 'application/json') {
+        return errorHandler.clientError(res, 'contentTypeValidate', 400);
+      }
+      const userId = extractUserIDFromToken(req);
+      const { seats } = req.body;
+      if (!seats || seats.length === 0) {
+        return errorHandler.clientError(res, 'inputFeild', 400);
+      }
+      await model.setSeatType(userId, seats);
+    } catch (error) {
+      errorHandler.serverError(res, error, 'internalServer');
+    }
+    // res.json();
+  },
   statusUpdate: (req, res) => {
     res.json(model.statusUpdate());
-  },
-  setSeatType: (req, res) => {
-    res.json(model.setSeatType());
   },
   profilePub: (req, res) => {
     res.json(model.profilePub());
