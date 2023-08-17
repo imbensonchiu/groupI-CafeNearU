@@ -1,6 +1,5 @@
 const pool = require('../util/db');
 
-
 module.exports = {
   insertNewShoper: async (name, email, hashedPassword) => {
     const query =
@@ -40,8 +39,8 @@ module.exports = {
     const conn = await pool.getConnection();
     await conn.beginTransaction();
     try {
-      await conn.query(insertBasicInfo, [...arr,userId]);
-      const [hasRules] = await conn.query(findRules,userId); 
+      await conn.query(insertBasicInfo, [...arr, userId]);
+      const [hasRules] = await conn.query(findRules, userId);
       if (hasRules.length !== 0) {
         console.log('Delete Rules');
         await conn.query(deleteRules, userId);
@@ -51,13 +50,13 @@ module.exports = {
           rules[i].type,
           rules[i].heading,
           rules[i].content,
-          userId 
+          userId,
         ]);
       }
       const [hasServiceAndEquip] = await conn.query(
         findServiceAndEquip,
-        userId 
-      ); 
+        userId,
+      );
       if (hasServiceAndEquip.length !== 0) {
         console.log('Delete Service and Equip');
         await conn.query(deleteServiceAndEquip, userId);
@@ -67,7 +66,7 @@ module.exports = {
           service_and_equipment[i].icon,
           service_and_equipment[i].type,
           service_and_equipment[i].content,
-          userId
+          userId,
         ]);
       }
       await conn.commit();

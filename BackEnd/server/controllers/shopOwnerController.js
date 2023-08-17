@@ -127,9 +127,13 @@ module.exports = {
     try {
       const userId = extractUserIDFromToken(req);
       const ip = '13.211.10.154';
-      const primaryImg = req.files.primary_image
-        ? `https://${ip}/shopPics/${req.files.primary_image[0].filename}`
-        : errorHandler.clientError(res, 'inputFeild', 400);
+
+      if (typeof req.files.primary_image === 'undefined') {
+        return errorHandler.clientError(res, 'inputFeild', 400);
+      }
+
+      const primaryImg = `https://${ip}/shopPics/${req.files.primary_image[0].filename}`;
+
       const secondaryImg1 = req.files.secondary_image_1
         ? `https://${ip}/shopPics/${req.files.secondary_image_1[0].filename}`
         : null;
