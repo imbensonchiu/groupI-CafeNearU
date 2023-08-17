@@ -253,11 +253,58 @@ module.exports = {
       errorHandler.serverError(res, error, 'internalServer');
     }
   },
-  statusUpdate: (req, res) => {
-    res.json(model.statusUpdate());
+  setSeatType: async (req, res) => {
+    try {
+      const header = req.get('Content-Type');
+      if (header !== 'application/json') {
+        return errorHandler.clientError(res, 'contentTypeValidate', 400);
+      }
+      const userId = extractUserIDFromToken(req);
+      const { seats } = req.body;
+      if (!seats || seats.length === 0) {
+        return errorHandler.clientError(res, 'inputFeild', 400);
+      }
+      await model.setSeatType(userId, seats);
+      res.status(200).json({
+        data: {
+          shops: {
+            id: userId,
+          },
+        },
+      });
+    } catch (error) {
+      errorHandler.serverError(res, error, 'internalServer');
+    }
   },
-  setSeatType: (req, res) => {
-    res.json(model.setSeatType());
+  statusUpdate: async (req, res) => {
+    try {
+      const header = req.get('Content-Type');
+      if (header !== 'application/json') {
+        return errorHandler.clientError(res, 'contentTypeValidate', 400);
+      }
+      const userId = extractUserIDFromToken(req);
+      const { operating_status, type, available_seats } = req.body;
+      if (
+        !operating_status ||
+        !type ||
+        !available_seats ||
+        operating_status.trim() ||
+        type.trim() ||
+        available_seats.trim()
+      ) {
+        return errorHandler.clientError(res, 'inputFeild', 400);
+      }
+      await model.statusUpdate(userId, operating_status, type, available_seats);
+      res.status(200).json({
+        data: {
+          shops: {
+            id: userId,
+          },
+        },
+      });
+    } catch (error) {
+      errorHandler.serverError(res, error, 'internalServer');
+    }
   },
   profilePub: (req, res) => {
     res.json(model.profilePub());

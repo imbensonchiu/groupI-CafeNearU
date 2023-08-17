@@ -81,18 +81,49 @@ module.exports = {
   menuUpdate: async (userId, menu) => {
     const findMenu = `SELECT id FROM menus WHERE cafe_id = ?`;
     const deleteMenu = `DELETE FROM menus WHERE cafe_id = ?`;
-    const insertMenu = `INSERT INTO menus (category, item, price, cafe_id, created_at) VALUES (?, ?, ?, ?, CONVERT_TZ(NOW(), 'UTC', 'Asia/Taipei'))`;
+    const insertMenu = `INSERT INTO menus (category, item, price, cafe_id) VALUES (?, ?, ?, ?)`;
+    const insertUpdateTime = `INSERT INTO shops (menu_last_updated) VALUES (CONVERT_TZ(NOW(), 'UTC', 'Asia/Taipei'))`;
+    const conn = await pool.getConnection();
+    await conn.beginTransaction();
     try {
-      const [hasMenu] = await pool.query(findMenu, userId);
+      const [hasMenu] = await conn.query(findMenu, userId);
       if (hasMenu.length !== 0) {
         console.log('Delete Menu');
-        await pool.query(deleteMenu, userId);
+        await conn.query(deleteMenu, userId);
       }
       for (let i = 0; i < menu.length; i++) {
-        await pool.query(insertMenu, [
+        await conn.query(insertMenu, [
           menu[i].category,
           menu[i].item,
           menu[i].price,
+          userId,
+        ]);
+      }
+      await conn.query(insertUpdateTime);
+      await conn.commit();
+      console.log('Transaction committed.');
+    } catch (error) {
+      await conn.rollback();
+      console.error('Transaction rolled back:', error);
+    } finally {
+      pool.releaseConnection();
+    }
+  },
+  setSeatType: async (userId, seats) => {
+    const findSeats = `SELECT id FROM seats WHERE cafe_id = ?`;
+    const deleteSeats = `DELETE FROM seats WHERE cafe_id = ?`;
+    const insertSeats = `INSERT INTO seats (icon, type, total_seats,cafe_id) VALUES (?, ?, ?, ?)`;
+    try {
+      const [hasSeats] = await pool.query(findSeats, userId);
+      if (hasSeats.length !== 0) {
+        console.log('Delete Seats');
+        await pool.query(deleteSeats, userId);
+      }
+      for (let i = 0; i < seats.length; i++) {
+        await pool.query(insertSeats, [
+          seats[i].icon,
+          seats[i].type,
+          seats[i].total_seats,
           userId,
         ]);
       }
@@ -100,11 +131,34 @@ module.exports = {
       pool.releaseConnection();
     }
   },
-  statusUpdate: () => {
-    return 'status update';
-  },
-  setSeatType: () => {
-    return 'seat type update';
+  statusUpdate: async (userId, operating_status, type, available_seats) => {
+    const updateSeatStatus = `UPDATE seats SET available_seats = ? WHERE type = ? and seat = ?`;
+    const updateOperatingStatus = `UPDATE shops SET operating_status = ?, status_last_updated = (CONVERT_TZ(NOW(), 'UTC', 'Asia/Taipei') WHERE id = ?`;
+    const conn = await pool.getConnection();
+    await conn.beginTransaction();
+    try {
+      const [hasMenu] = await conn.query(findMenu, userId);
+      if (hasMenu.length !== 0) {
+        console.log('Delete Menu');
+        await conn.query(deleteMenu, userId);
+      }
+      for (let i = 0; i < menu.length; i++) {
+        await conn.query(insertMenu, [
+          menu[i].category,
+          menu[i].item,
+          menu[i].price,
+          userId,
+        ]);
+      }
+      await conn.query(insertUpdateTime);
+      await conn.commit();
+      console.log('Transaction committed.');
+    } catch (error) {
+      await conn.rollback();
+      console.error('Transaction rolled back:', error);
+    } finally {
+      pool.releaseConnection();
+    }
   },
   profilePub: () => {
     return 'profile publish';
