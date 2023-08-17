@@ -6,7 +6,6 @@ module.exports = withMT({
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/tw-elements/dist/js/**/*.js"
   ],
   theme: {
     extend: {
@@ -17,8 +16,8 @@ module.exports = withMT({
       },
     },
     fontFamily: {
-      logo: ["var(--font-train-one)"]
-    }
+      logo: ["var(--font-train-one)"],
+    },
   },
-  plugins: [require("tw-elements/dist/plugin.cjs")]
+  plugins: [],
 });

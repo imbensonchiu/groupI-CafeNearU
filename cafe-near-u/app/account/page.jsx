@@ -71,7 +71,7 @@ export default function h() {
   return (
     <>
       <Header />
-      <div className="text-4xl mt-8 mb-4 ml-[10%] text-5c5c5c text-left font-bold font-normal">
+      <div className="text-4xl mt-32 mb-4 ml-[10%] text-5c5c5c text-left font-bold font-normal">
         個人資料
       </div>
 
@@ -81,22 +81,16 @@ export default function h() {
       </div>
 
       <div class="w-64 h-64 ml-[10%] rounded-full bg-white flex">
-        <div className="relative">
-          <img
-            src={defaultImageSrc}
-            alt="User"
-            width={180}
-            height={180}
-            className="w-64 h-64"
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            style={{ cursor: "pointer", objectFit: "cover" }}
-          />
-          <div
-            className="absolute rounded-full inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-opacity"
-            style={{ cursor: "pointer", objectFit: "cover" }}
-          ></div>
-        </div>
+        <img
+          src={defaultImageSrc}
+          alt="User"
+          width={180}
+          height={180}
+          className="w-64 h-64"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          style={{ cursor: "pointer", objectFit: "cover" }}
+        />
       </div>
 
       <div className="ml-[10%] w-[30%]">
@@ -163,7 +157,7 @@ export default function h() {
                 <hr className="border-gray-300" />
 
                 <div className="container mx-auto flex items-center justify-start py-4">
-                  <p className="text-[#030712] text-xl ml-4 me-2 text-left">
+                  <p className="text-[#030712] text-xl ml-4 me-2 text-left font-logo">
                     CafeNearU
                   </p>
                   <p className="text-[#030712] text-xl text-left font-inter me-4">
@@ -188,7 +182,7 @@ export default function h() {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 }
