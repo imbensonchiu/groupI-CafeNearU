@@ -287,12 +287,15 @@ module.exports = {
       if (
         !operating_status ||
         !type ||
-        !available_seats ||
-        operating_status.trim() ||
-        type.trim() ||
-        available_seats.trim()
+        !('available_seats' in req.body) ||
+        !operating_status.trim() ||
+        !type.trim()
       ) {
         return errorHandler.clientError(res, 'inputFeild', 400);
+      }
+      const result = await model.checkSeatSetting(userId, type);
+      if (result === 'Seat Not Found') {
+        return errorHandler.clientError(res, 'seatNotFound', 400);
       }
       await model.statusUpdate(userId, operating_status, type, available_seats);
       res.status(200).json({

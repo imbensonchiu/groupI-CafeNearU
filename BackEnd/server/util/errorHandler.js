@@ -13,7 +13,7 @@ const errorMessages = {
     commentNotExist: 'comment does not exist',
     jsonValidate: 'Invalid Input Format (should be JSON)',
     contentTypeValidate: 'Invalid Content-type Header',
-
+    seatNotFound: 'Seat Not Found',
 
     // 401 Client Error (Token error)
     noToken: 'No token provided',
