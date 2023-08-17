@@ -309,7 +309,7 @@ module.exports = {
       errorHandler.serverError(res, error, 'internalServer');
     }
   },
-  profilePub: async (req, res) => {
+  ChangeProfilePubStatus: async (req, res) => {
     try {
       const header = req.get('Content-Type');
       if (header !== 'application/json') {
@@ -320,7 +320,7 @@ module.exports = {
       if (typeof is_published !== 'boolean') {
         return errorHandler.clientError(res, 'booleanValidate', 400);
       }
-      await model.profilePub(userId, is_published);
+      await model.ChangeProfilePubStatus(userId, is_published);
       res.status(200).json({
         data: {
           shops: {
@@ -331,8 +331,5 @@ module.exports = {
     } catch (error) {
       errorHandler.serverError(res, error, 'internalServer');
     }
-  },
-  profileUnpub: (req, res) => {
-    res.json(model.profileUnpub());
   },
 };
