@@ -131,26 +131,25 @@ module.exports = {
       pool.releaseConnection();
     }
   },
+  checkSeatSetting: async (userId, type) => {
+    const findSeatSetting = `SELECT id FROM seats WHERE type = ? AND cafe_id = ?`;
+    try {
+      const [hasSeat] = await pool.query(findSeatSetting, [type, userId]);
+      if (hasSeat.length === 0) {
+        return 'Seat Not Found';
+      }
+    } finally {
+      pool.releaseConnection();
+    }
+  },
   statusUpdate: async (userId, operating_status, type, available_seats) => {
-    const updateSeatStatus = `UPDATE seats SET available_seats = ? WHERE type = ? and seat = ?`;
-    const updateOperatingStatus = `UPDATE shops SET operating_status = ?, status_last_updated = (CONVERT_TZ(NOW(), 'UTC', 'Asia/Taipei') WHERE id = ?`;
+    const updateSeatStatus = `UPDATE seats SET available_seats = ? WHERE type = ? AND cafe_id = ?`;
+    const updateOperatingStatus = `UPDATE shops SET operating_status = ?, status_last_updated = (CONVERT_TZ(NOW(), 'UTC', 'Asia/Taipei')) WHERE id = ?`;
     const conn = await pool.getConnection();
     await conn.beginTransaction();
     try {
-      const [hasMenu] = await conn.query(findMenu, userId);
-      if (hasMenu.length !== 0) {
-        console.log('Delete Menu');
-        await conn.query(deleteMenu, userId);
-      }
-      for (let i = 0; i < menu.length; i++) {
-        await conn.query(insertMenu, [
-          menu[i].category,
-          menu[i].item,
-          menu[i].price,
-          userId,
-        ]);
-      }
-      await conn.query(insertUpdateTime);
+      await conn.query(updateSeatStatus, [available_seats, type, userId]);
+      await conn.query(updateOperatingStatus, [operating_status, userId]);
       await conn.commit();
       console.log('Transaction committed.');
     } catch (error) {
