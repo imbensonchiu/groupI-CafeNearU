@@ -7,12 +7,12 @@ const { userAuthorization } = require('../util/common');
 router.post('/', userAuthorization, wishListController.createWishList);
 router.get('/', userAuthorization, wishListController.getWishList);
 router.post(
-  '/:wishlist_id',
+  '/:wishlist_id/addCafe/:cafe_id',
   userAuthorization,
   wishListController.addCafeToWishList,
 );
 router.delete(
-  '/:wishlist_id',
+  '/:wishlist_id/deleteCafe/:cafe_id',
   userAuthorization,
   wishListController.deleteCafeFromWishList,
 );

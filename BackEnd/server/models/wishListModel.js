@@ -1,34 +1,34 @@
 const pool = require('../util/db');
 
 module.exports = {
-  createWishList: async () => {
-    const query = '';
+  createWishList: async (customer_id, wishlist_name) => {
+    const query = 'INSERT INTO wishlists (customer_id, name) VALUES (?, ?)';
     try {
-      await pool.query(query, []);
+      return await pool.query(query, [customer_id, wishlist_name]);
     } finally {
       pool.releaseConnection();
     }
   },
   getWishList: async () => {
-    const query = '';
+    const query = ``;
     try {
       await pool.query(query, []);
     } finally {
       pool.releaseConnection();
     }
   },
-  addCafeToWishList: async () => {
-    const query = '';
+  addCafeToWishList: async (wishlist_id, cafe_id) => {
+    const query = `INSERT INTO wishlist_items (wishlist_id, cafe_id) VALUES (?, ?)`;
     try {
-      await pool.query(query, []);
+      return await pool.query(query, [wishlist_id, cafe_id]);
     } finally {
       pool.releaseConnection();
     }
   },
-  deleteCafeFromWishList: async () => {
-    const query = '';
+  deleteCafeFromWishList: async (wishlist_id, cafe_id) => {
+    const query = `DELETE FROM wishlist_items WHERE wishlist_id = ? AND cafe_id = ?`;
     try {
-      await pool.query(query, []);
+      return await pool.query(query, [wishlist_id, cafe_id]);
     } finally {
       pool.releaseConnection();
     }
@@ -37,6 +37,16 @@ module.exports = {
     const query = '';
     try {
       await pool.query(query, []);
+    } finally {
+      pool.releaseConnection();
+    }
+  },
+  isCafeInWishlist: async (wishlist_id, cafe_id) => {
+    const query =
+      'SELECT COUNT(*) AS count FROM wishlist_items WHERE wishlist_id = ? AND cafe_id = ?';
+    try {
+      const [result] = await pool.query(query, [wishlist_id, cafe_id]);
+      return result[0].count > 0;
     } finally {
       pool.releaseConnection();
     }
