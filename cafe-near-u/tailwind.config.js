@@ -6,6 +6,7 @@ module.exports = withMT({
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/tw-elements/dist/js/**/*.js"
   ],
   theme: {
     extend: {
@@ -15,6 +16,9 @@ module.exports = withMT({
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
     },
+    fontFamily: {
+      logo: ["var(--font-train-one)"]
+    }
   },
-  plugins: [],
+  plugins: [require("tw-elements/dist/plugin.cjs")]
 });

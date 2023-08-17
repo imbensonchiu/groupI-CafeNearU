@@ -4,29 +4,29 @@ const bcrypt = require('bcrypt');
 
 const errorHandler = require('./errorHandler');
 
+const jwtSecret = process.env.JWT_SECRET;
 module.exports = {
   bcrypt: bcrypt,
   jwt: jwt,
-  jwtSecret: process.env.JWT_SECRET,
+  jwtSecret: jwtSecret,
 
   userAuthorization: async (req, res, next) => {
     if (!req.header('Authorization')) {
-      errorHandler.clientError(res, 'noToken', 401);
-    } else {
-      try {
-        // Verify user token
-        const token = req.header('Authorization').replace('Bearer ', '');
-        const decoded = jwt.verify(token, jwtSecret);
+      return errorHandler.clientError(res, 'noToken', 401);
+    }
+    try {
+      // Verify user token
+      const token = req.header('Authorization').replace('Bearer ', '');
+      const decoded = jwt.verify(token, jwtSecret);
 
-        const userData = {
-          id: decoded.id,
-          name: decoded.name,
-        };
+      const userData = {
+        id: decoded.id,
+        name: decoded.name,
+      };
 
-        next();
-      } catch (error) {
-        errorHandler.clientError(res, 'invalidToken', 403);
-      }
+      next();
+    } catch (error) {
+      errorHandler.clientError(res, 'invalidToken', 403);
     }
   },
   extractUserIDFromToken: (req) => {
