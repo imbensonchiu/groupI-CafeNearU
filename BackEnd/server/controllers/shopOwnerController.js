@@ -125,6 +125,11 @@ module.exports = {
   },
   basicInfoUpdate: async (req, res) => {
     try {
+      const header = req.get('Content-Type');
+      console.log(header);
+      if (!header.includes('multipart/form-data')) {
+        return errorHandler.clientError(res, 'contentTypeValidate', 400);
+      }
       const userId = extractUserIDFromToken(req);
       const ip = '13.211.10.154';
 
@@ -227,6 +232,10 @@ module.exports = {
   },
   menuUpdate: async (req, res) => {
     try {
+      const header = req.get('Content-Type');
+      if (header !== 'application/json') {
+        return errorHandler.clientError(res, 'contentTypeValidate', 400);
+      }
       const userId = extractUserIDFromToken(req);
       const { menu } = req.body;
       if (!menu || menu.length === 0) {
