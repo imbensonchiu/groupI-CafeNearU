@@ -14,6 +14,7 @@ const errorMessages = {
     jsonValidate: 'Invalid Input Format (should be JSON)',
     contentTypeValidate: 'Invalid Content-type Header',
     seatNotFound: 'Seat Not Found',
+    booleanValidate: 'Invalid Input Format (should be boolean)',
 
     // 401 Client Error (Token error)
     noToken: 'No token provided',

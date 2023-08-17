@@ -309,8 +309,28 @@ module.exports = {
       errorHandler.serverError(res, error, 'internalServer');
     }
   },
-  profilePub: (req, res) => {
-    res.json(model.profilePub());
+  profilePub: async (req, res) => {
+    try {
+      const header = req.get('Content-Type');
+      if (header !== 'application/json') {
+        return errorHandler.clientError(res, 'contentTypeValidate', 400);
+      }
+      const userId = extractUserIDFromToken(req);
+      const { is_published } = req.body;
+      if (typeof is_published !== 'boolean') {
+        return errorHandler.clientError(res, 'booleanValidate', 400);
+      }
+      await model.profilePub(userId, is_published);
+      res.status(200).json({
+        data: {
+          shops: {
+            id: userId,
+          },
+        },
+      });
+    } catch (error) {
+      errorHandler.serverError(res, error, 'internalServer');
+    }
   },
   profileUnpub: (req, res) => {
     res.json(model.profileUnpub());
