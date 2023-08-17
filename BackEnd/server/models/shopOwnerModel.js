@@ -78,8 +78,27 @@ module.exports = {
       pool.releaseConnection();
     }
   },
-  menuUpdate: async () => {
-    return 'menu update';
+  menuUpdate: async (userId, menu) => {
+    const findMenu = `SELECT id FROM menus WHERE cafe_id = ?`;
+    const deleteMenu = `DELETE FROM menus WHERE cafe_id = ?`;
+    const insertMenu = `INSERT INTO menus (category, item, price, cafe_id, created_at) VALUES (?, ?, ?, ?, CONVERT_TZ(NOW(), 'UTC', 'Asia/Taipei'))`;
+    try {
+      const [hasMenu] = await pool.query(findMenu, userId);
+      if (hasMenu.length !== 0) {
+        console.log('Delete Menu');
+        await pool.query(deleteMenu, userId);
+      }
+      for (let i = 0; i < menu.length; i++) {
+        await pool.query(insertMenu, [
+          menu[i].category,
+          menu[i].item,
+          menu[i].price,
+          userId,
+        ]);
+      }
+    } finally {
+      pool.releaseConnection();
+    }
   },
   statusUpdate: () => {
     return 'status update';
