@@ -159,15 +159,12 @@ module.exports = {
       pool.releaseConnection();
     }
   },
-  profilePub: async (userId, is_published) => {
+  ChangeProfilePubStatus: async (userId, is_published) => {
     const updatePublishStatus = `UPDATE shops SET is_published = ? WHERE id = ?`;
     try {
       await pool.query(updatePublishStatus, [is_published, userId]);
     } finally {
       pool.releaseConnection();
     }
-  },
-  profileUnpub: () => {
-    return 'profile unpublish';
   },
 };
