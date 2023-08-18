@@ -23,8 +23,9 @@ module.exports = {
       min_order,
       time_limit,
     } = req.query;
+    const basicQuery = `SELECT id, name, primary_image, address, operating_status, icon, type, available_seats, total_seats FROM shops LEFT JOIN seats ON shops.id = seats.cafe_id WHERE is_published = true`;
     if (keyword) {
-      `SELECT id FROM shops WHERE shop_name LIKE %${keyword}% OR address LIKE %${keyword}%`;
+      `WHERE shop_name LIKE %${keyword}% OR address LIKE %${keyword}%`;
     }
     if (type) {
       `AND type = ${type}`;
