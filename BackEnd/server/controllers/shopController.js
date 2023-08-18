@@ -12,6 +12,44 @@ const model = require('../models/shopModel');
 
 module.exports = {
   search: (req, res) => {
+    const {
+      keyword,
+      type,
+      plug,
+      wifi,
+      smoking_area,
+      cat,
+      dog,
+      min_order,
+      time_limit,
+    } = req.query;
+    if (keyword) {
+      `SELECT id FROM shops WHERE shop_name LIKE %${keyword}% OR address LIKE %${keyword}%`;
+    }
+    if (type) {
+      `AND type = ${type}`;
+    }
+    if (plug) {
+      `service_and_equipments.type = "plug" AND service_and_equipments.content = true`;
+    }
+    if (wifi) {
+      `service_and_equipments.type = "wifi" AND service_and_equipments.content = true`;
+    }
+    if (smoking_area) {
+      `service_and_equipments.type = "smoking_area" AND service_and_equipments.content = true`;
+    }
+    if (cat) {
+      `service_and_equipments.type = "cat" AND service_and_equipments.content = true`;
+    }
+    if (dog) {
+      `service_and_equipments.type = "dog" AND service_and_equipments.content = true`;
+    }
+    if (min_order) {
+      `rules.type = "min_order" AND rules.heading > 0`;
+    }
+    if (time_limit) {
+      `rules.type = "time_limit" AND rules.heading = true`;
+    }
     res.json(model.search());
   },
   getBasicInfo: (req, res) => {
