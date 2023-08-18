@@ -18,7 +18,7 @@ import {
   Slider,
 } from "@material-tailwind/react";
 
-export default function h() {
+export default function Filter() {
   const [username, setUsername] = useState("");
   const [activeButton, setActiveButton] = useState("guest");
 
