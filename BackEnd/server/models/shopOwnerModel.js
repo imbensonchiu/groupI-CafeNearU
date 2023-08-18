@@ -29,7 +29,7 @@ module.exports = {
     }
   },
   basicInfoUpdate: async (userId, arr, rules, service_and_equipment) => {
-    const insertBasicInfo = `UPDATE shops SET shop_name = ?, type = ?, introduction = ?, opening_hour = ?, closing_hour = ?, address = ?, telephone = ?, facebook = ?, ig = ?, line = ?, time_limit = ?, min_order = ?, plug = ?, wifi = ?, smoking_area = ?, dog = ?, cat = ?, primary_image = ?, secondary_image_1 = ?, secondary_image_2 = ?, rules = ?, service_and_equipments = ? WHERE id = ?`;
+    const insertBasicInfo = `UPDATE shops SET shop_name = ?, type = ?, introduction = ?, opening_hour = ?, closing_hour = ?, address = ?, telephone = ?, facebook = ?, ig = ?, line = ?, time_limit = ?, min_order = ?, plug = ?, wifi = ?, smoking_area = ?, dog = ?, cat = ?, primary_image = ?, secondary_image_1 = ?, secondary_image_2 = ?, rules = ?, service_and_equipment = ? WHERE id = ?`;
     try {
       await pool.query(insertBasicInfo, [
         ...arr,
@@ -47,7 +47,7 @@ module.exports = {
     const findMenu = `SELECT id FROM menus WHERE cafe_id = ?`;
     const deleteMenu = `DELETE FROM menus WHERE cafe_id = ?`;
     const insertMenu = `INSERT INTO menus (category, item, price, cafe_id) VALUES (?, ?, ?, ?)`;
-    const insertUpdateTime = `INSERT INTO shops (menu_last_updated) VALUES (CONVERT_TZ(NOW(), 'UTC', 'Asia/Taipei'))`;
+    const recordUpdateTime = `UPDATE shops SET menu_last_updated = CONVERT_TZ(NOW(), 'UTC', 'Asia/Taipei') WHERE id = ?`;
     const conn = await pool.getConnection();
     await conn.beginTransaction();
     try {
@@ -64,7 +64,7 @@ module.exports = {
           userId,
         ]);
       }
-      await conn.query(insertUpdateTime);
+      await conn.query(recordUpdateTime, [userId]);
       await conn.commit();
       console.log('Transaction committed.');
     } catch (error) {

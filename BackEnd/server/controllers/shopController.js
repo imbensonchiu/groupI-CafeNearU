@@ -53,8 +53,50 @@ module.exports = {
     }
     res.json(model.search());
   },
-  getBasicInfo: (req, res) => {
-    res.json(model.getBasicInfo());
+  getBasicInfo: async (req, res) => {
+    const cafeId = req.params.id * 1;
+    const result = await model.getBasicInfo(cafeId);
+    const shopObj = {
+      id: result[0].id,
+      name: result[0].shop_name,
+      type: result[0].type,
+      introduction: result[0].introduction,
+      opening_hour: result[0].opening_hour,
+      closing_hour: result[0].closing_hour,
+      primary_image: result[0].primary_image,
+      secondary_image_1: result[0].secondary_image_1,
+      secondary_image_2: result[0].secondary_image_2,
+      address: result[0].address,
+      telephone: result[0].telephone,
+      facebook: result[0].facebook,
+      ig: result[0].ig,
+      line: result[0].line,
+      rules: result[0].rules,
+      service_and_equipment: result[0].service_and_equipment,
+    };
+    const menuObj = {
+      menu: {
+        last_updated: result[0].menu_last_updated,
+        categories: [],
+        items: [],
+      },
+    };
+    for (let i = 0; i < result.length; i++) {
+      menuObj.menu.categories.push(result[i].category);
+    }
+    for (let i = 0; i < result.length; i++) {
+      const [itemName, priceString] = result[i].menu_items.split('$');
+      const itemArr = result[i].menu_items.split(',');
+      const itemObj = itemArr.map((el) => {
+        const [name, price] = el.split('$');
+        return {
+          name,
+          price,
+        };
+      });
+      menuObj.menu.items.push(itemObj);
+    }
+    res.status(200).json({ data: { shop: { ...shopObj, ...menuObj } } });
   },
   getCurrentStatus: (req, res) => {
     res.json(model.getCurrentStatus());
