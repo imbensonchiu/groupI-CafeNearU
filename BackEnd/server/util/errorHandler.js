@@ -16,6 +16,7 @@ const errorMessages = {
     missingContent: 'Missing content',
     cafeExistsInWishlist: 'Cafe already exists in the wishlist',
     cafeNotExistsInWishlist: 'Cafe does not exists in the wishlist',
+    wishlistNotExists: 'wishlist does not exists',
     seatNotFound: 'Seat Not Found',
     booleanValidate: 'Invalid Input Format (should be boolean)',
 
