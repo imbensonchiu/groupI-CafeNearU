@@ -29,54 +29,19 @@ module.exports = {
     }
   },
   basicInfoUpdate: async (userId, arr, rules, service_and_equipment) => {
-    const insertBasicInfo = `UPDATE shops SET shop_name = ?, type = ?, introduction = ?, opening_hour = ?, closing_hour = ?, address = ?, telephone = ?, facebook = ?, ig = ?, line = ?, time_limit = ?, min_order = ?, plug = ?, wifi = ?, smoking_area = ?, dog = ?, cat = ?, primary_image = ?, secondary_image_1 = ?, secondary_image_2 = ? WHERE id = ?`;
-    const findRules = `SELECT id FROM rules WHERE cafe_id = ?`;
-    const deleteRules = `DELETE FROM rules WHERE cafe_id = ?`;
-    const insertRules = `INSERT INTO rules (type, heading, content, cafe_id) VALUES (?, ?, ?, ?)`;
-    const findServiceAndEquip = `SELECT id FROM service_and_equipments WHERE cafe_id = ?`;
-    const deleteServiceAndEquip = `DELETE FROM service_and_equipments WHERE cafe_id = ?`;
-    const insertServiceAndEquip = `INSERT INTO service_and_equipments (icon, type, content, cafe_id) VALUES (?, ?, ?, ?)`;
-    const conn = await pool.getConnection();
-    await conn.beginTransaction();
+    const insertBasicInfo = `UPDATE shops SET shop_name = ?, type = ?, introduction = ?, opening_hour = ?, closing_hour = ?, address = ?, telephone = ?, facebook = ?, ig = ?, line = ?, time_limit = ?, min_order = ?, plug = ?, wifi = ?, smoking_area = ?, dog = ?, cat = ?, primary_image = ?, secondary_image_1 = ?, secondary_image_2 = ?, rules = ?, service_and_equipments = ? WHERE id = ?`;
     try {
-      await conn.query(insertBasicInfo, [...arr, userId]);
-      const [hasRules] = await conn.query(findRules, userId);
-      if (hasRules.length !== 0) {
-        console.log('Delete Rules');
-        await conn.query(deleteRules, userId);
-      }
-      for (let i = 0; i < rules.length; i++) {
-        await conn.query(insertRules, [
-          rules[i].type,
-          rules[i].heading,
-          rules[i].content,
-          userId,
-        ]);
-      }
-      const [hasServiceAndEquip] = await conn.query(
-        findServiceAndEquip,
+      await pool.query(insertBasicInfo, [
+        ...arr,
+        JSON.stringify(rules),
+        JSON.stringify(service_and_equipment),
         userId,
-      );
-      if (hasServiceAndEquip.length !== 0) {
-        console.log('Delete Service and Equip');
-        await conn.query(deleteServiceAndEquip, userId);
-      }
-      for (let i = 0; i < service_and_equipment.length; i++) {
-        await conn.query(insertServiceAndEquip, [
-          service_and_equipment[i].icon,
-          service_and_equipment[i].type,
-          service_and_equipment[i].content,
-          userId,
-        ]);
-      }
-      await conn.commit();
-      console.log('Transaction committed.');
-    } catch (error) {
-      await conn.rollback();
-      console.error('Transaction rolled back:', error);
+      ]);
+      console.log('success');
     } finally {
       pool.releaseConnection();
     }
+    console.log(rules, service_and_equipment);
   },
   menuUpdate: async (userId, menu) => {
     const findMenu = `SELECT id FROM menus WHERE cafe_id = ?`;
