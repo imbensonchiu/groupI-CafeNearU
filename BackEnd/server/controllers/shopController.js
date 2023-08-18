@@ -85,7 +85,6 @@ module.exports = {
       menuObj.menu.categories.push(result[i].category);
     }
     for (let i = 0; i < result.length; i++) {
-      const [itemName, priceString] = result[i].menu_items.split('$');
       const itemArr = result[i].menu_items.split(',');
       const itemObj = itemArr.map((el) => {
         const [name, price] = el.split('$');
