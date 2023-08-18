@@ -4,7 +4,25 @@ module.exports = {
   search: () => {
     return 'search';
   },
-  getBasicInfo: () => {
+  getBasicInfo: async (cafeId) => {
+    try {
+      const query = `
+      SELECT shops.id, shop_name, type, introduction, opening_hour, closing_hour, 
+      primary_image, secondary_image_1, secondary_image_2, address, telephone, facebook, ig, line, 
+      rules, service_and_equipment, 
+      DATE_FORMAT(menu_last_updated, "%Y-%m-%d %H:%i:%s") AS menu_last_updated, 
+      menus.category, 
+      GROUP_CONCAT(CONCAT(menus.item, '$', menus.price)) AS menu_items
+      FROM shops
+      INNER JOIN menus ON shops.id = menus.cafe_id
+      WHERE shops.id = ? AND is_published = true
+      GROUP BY shops.id, menus.category`;
+      const [result] = await pool.query(query, cafeId);
+      return result;
+      console.log(result);
+    } finally {
+      await pool.releaseConnection();
+    }
     return 'get basic info';
   },
   getCurrentStatus: () => {

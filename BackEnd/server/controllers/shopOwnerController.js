@@ -126,7 +126,6 @@ module.exports = {
   basicInfoUpdate: async (req, res) => {
     try {
       const header = req.get('Content-Type');
-      console.log(header);
       if (!header.includes('multipart/form-data')) {
         return errorHandler.clientError(res, 'contentTypeValidate', 400);
       }
