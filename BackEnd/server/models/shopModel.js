@@ -1,8 +1,61 @@
 const pool = require('../util/db');
 
 module.exports = {
-  search: () => {
-    return 'search';
+  search: async (
+    keyword,
+    type,
+    plug,
+    wifi,
+    smoking_area,
+    cat,
+    dog,
+    min_order,
+    time_limit,
+  ) => {
+    let basicQuery = `SELECT shops.id, shop_name, primary_image,
+    address, operating_status, 
+    GROUP_CONCAT(
+      '{ "icon": "', seats.icon, '", "type": "', seats.type,
+      '", "available_seats": ', seats.available_seats,
+      ', "total_seats": ', seats.total_seats, ' }'
+    ) AS seat_info
+    FROM shops
+    LEFT JOIN seats ON shops.id = seats.cafe_id
+    WHERE is_published = true`;
+    try {
+      if (keyword) {
+        basicQuery += ` AND (shop_name LIKE '%${keyword}%' OR address LIKE '%${keyword}%')`;
+      }
+      if (type) {
+        basicQuery += ` AND shops.type = "${type}"`;
+      }
+      if (plug) {
+        basicQuery += ` AND plug = true`;
+      }
+      if (wifi) {
+        basicQuery += ` AND wifi = true`;
+      }
+      if (smoking_area) {
+        basicQuery += ` AND smoking_area = true`;
+      }
+      if (cat) {
+        basicQuery += ` AND cat = true`;
+      }
+      if (dog) {
+        basicQuery += ` AND dog = true`;
+      }
+      if (min_order) {
+        basicQuery += ` AND min_order > ${min_order}`;
+      }
+      if (time_limit) {
+        basicQuery += ` AND time_limit = true`;
+      }
+      basicQuery += ` GROUP BY shops.id;`;
+      const [result] = await pool.query(basicQuery);
+      return result;
+    } finally {
+      await pool.releaseConnection();
+    }
   },
   getBasicInfo: async (cafeId) => {
     try {
@@ -36,8 +89,6 @@ module.exports = {
     } finally {
       await pool.releaseConnection();
     }
-
-    return 'get current status';
   },
   createComment: async (
     context,
