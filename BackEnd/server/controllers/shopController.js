@@ -11,9 +11,9 @@ const {
 const model = require('../models/shopModel');
 
 module.exports = {
-  search: (req, res) => {
+  search: async (req, res) => {
     const {
-      keyword,
+      keyword = null,
       type,
       plug,
       wifi,
@@ -23,35 +23,30 @@ module.exports = {
       min_order,
       time_limit,
     } = req.query;
-    const basicQuery = `SELECT id, name, primary_image, address, operating_status, icon, type, available_seats, total_seats FROM shops LEFT JOIN seats ON shops.id = seats.cafe_id WHERE is_published = true`;
-    if (keyword) {
-      `WHERE shop_name LIKE %${keyword}% OR address LIKE %${keyword}%`;
+    const result = await model.search(
+      keyword,
+      type,
+      plug,
+      wifi,
+      smoking_area,
+      cat,
+      dog,
+      min_order,
+      time_limit,
+    );
+    let shopObj = [];
+    for (let i = 0; i < result.length; i++) {
+      const obj = {
+        id: result[i].id,
+        name: result[i].shop_name,
+        primary_image: result[i].primary_image,
+        address: result[i].address,
+        operating_status: result[i].operating_status,
+        seats: JSON.parse(`[${result[i].seat_info}]`),
+      };
+      shopObj.push({ ...obj });
     }
-    if (type) {
-      `AND type = ${type}`;
-    }
-    if (plug) {
-      `service_and_equipments.type = "plug" AND service_and_equipments.content = true`;
-    }
-    if (wifi) {
-      `service_and_equipments.type = "wifi" AND service_and_equipments.content = true`;
-    }
-    if (smoking_area) {
-      `service_and_equipments.type = "smoking_area" AND service_and_equipments.content = true`;
-    }
-    if (cat) {
-      `service_and_equipments.type = "cat" AND service_and_equipments.content = true`;
-    }
-    if (dog) {
-      `service_and_equipments.type = "dog" AND service_and_equipments.content = true`;
-    }
-    if (min_order) {
-      `rules.type = "min_order" AND rules.heading > 0`;
-    }
-    if (time_limit) {
-      `rules.type = "time_limit" AND rules.heading = true`;
-    }
-    res.json(model.search());
+    res.status(200).json({ data: { shops: shopObj } });
   },
   getBasicInfo: async (req, res) => {
     const cafeId = req.params.id * 1;
