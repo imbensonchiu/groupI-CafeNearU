@@ -19,13 +19,24 @@ module.exports = {
       GROUP BY shops.id, menus.category`;
       const [result] = await pool.query(query, cafeId);
       return result;
-      console.log(result);
     } finally {
       await pool.releaseConnection();
     }
-    return 'get basic info';
   },
-  getCurrentStatus: () => {
+  getCurrentStatus: async (cafeId) => {
+    try {
+      const query = `
+      SELECT DATE_FORMAT(status_last_updated, "%Y-%m-%d %H:%i:%s") AS status_last_updated, 
+      operating_status, icon, seats.type, available_seats, total_seats
+      FROM shops
+      INNER JOIN seats ON shops.id = seats.cafe_id
+      WHERE shops.id = ? AND is_published = true`;
+      const [result] = await pool.query(query, cafeId);
+      return result;
+    } finally {
+      await pool.releaseConnection();
+    }
+
     return 'get current status';
   },
   createComment: async (

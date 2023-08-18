@@ -97,8 +97,24 @@ module.exports = {
     }
     res.status(200).json({ data: { shop: { ...shopObj, ...menuObj } } });
   },
-  getCurrentStatus: (req, res) => {
-    res.json(model.getCurrentStatus());
+  getCurrentStatus: async (req, res) => {
+    const cafeId = req.params.id * 1;
+    const result = await model.getCurrentStatus(cafeId);
+    const statusObj = {
+      last_update: result[0].status_last_updated,
+      operating_status: result[0].operating_status,
+      seats: [],
+    };
+    for (let i = 0; i < result.length; i++) {
+      const obj = {
+        icon: result[0].icon,
+        type: result[0].type,
+        available_seats: result[0].available_seats,
+        total_seats: result[0].total_seats,
+      };
+      statusObj.seats.push(obj);
+    }
+    res.status(200).json({ data: { shop: { ...statusObj } } });
   },
   createComment: async (req, res) => {
     try {
