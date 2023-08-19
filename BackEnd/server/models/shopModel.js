@@ -10,7 +10,7 @@ module.exports = {
     cat,
     dog,
     min_order,
-    time_limit,
+    no_time_limit,
     userId,
     cursor,
     itemsPerQuery,
@@ -47,8 +47,8 @@ module.exports = {
       if (min_order) {
         basicQuery += ` AND min_order < ${min_order}`;
       }
-      if (time_limit) {
-        basicQuery += ` AND time_limit = true`;
+      if (no_time_limit) {
+        basicQuery += ` AND time_limit = false`;
       }
       if (userId) {
         basicQuery += `, IF(

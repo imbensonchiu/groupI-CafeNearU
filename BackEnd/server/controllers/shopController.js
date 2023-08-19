@@ -30,7 +30,7 @@ module.exports = {
       cat,
       dog,
       min_order,
-      time_limit,
+      no_time_limit,
     } = req.query;
 
     let userId;
@@ -48,7 +48,7 @@ module.exports = {
       cat,
       dog,
       min_order,
-      time_limit,
+      no_time_limit,
       userId,
       cursor,
       itemsPerQuery,
@@ -241,7 +241,7 @@ module.exports = {
       errorHandler.serverError(res, error, 'internalServer');
     }
   },
-  getComments: (req, res) => {
+  getComments: async (req, res) => {
     res.json(model.getComments());
   },
 };
