@@ -11,6 +11,9 @@ module.exports = {
     dog,
     min_order,
     time_limit,
+    userId,
+    cursor,
+    itemsPerQuery,
   ) => {
     let basicQuery = `SELECT shops.id, shop_name, primary_image,
     address, operating_status, 
@@ -18,10 +21,7 @@ module.exports = {
       '{ "icon": "', seats.icon, '", "type": "', seats.type,
       '", "available_seats": ', seats.available_seats,
       ', "total_seats": ', seats.total_seats, ' }'
-    ) AS seat_info
-    FROM shops
-    LEFT JOIN seats ON shops.id = seats.cafe_id
-    WHERE is_published = true`;
+    ) AS seat_info`;
     try {
       if (keyword) {
         basicQuery += ` AND (shop_name LIKE '%${keyword}%' OR address LIKE '%${keyword}%')`;
@@ -50,8 +50,26 @@ module.exports = {
       if (time_limit) {
         basicQuery += ` AND time_limit = true`;
       }
-      basicQuery += ` GROUP BY shops.id;`;
-      const [result] = await pool.query(basicQuery);
+      if (userId) {
+        basicQuery += `, IF(
+          (SELECT wishlists.id FROM wishlists 
+          LEFT JOIN wishlist_items 
+          ON wishlists.id = wishlist_items.wishlist_id 
+          WHERE wishlist_items.cafe_id = shops.id AND customer_id = ? ) > 0, true, false) AS wishlist_item`;
+      }
+      basicQuery += ` FROM shops
+      LEFT JOIN seats ON shops.id = seats.cafe_id
+      WHERE is_published = true AND shops.id > ?
+      GROUP BY shops.id
+      LIMIT ${itemsPerQuery}`;
+
+      let result;
+      if (userId) {
+        [result] = await pool.query(basicQuery, [userId, cursor]);
+      } else {
+        [result] = await pool.query(basicQuery, [cursor]);
+      }
+
       return result;
     } finally {
       await pool.releaseConnection();

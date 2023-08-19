@@ -61,7 +61,7 @@ module.exports = {
     try {
       if (!req.header('Authorization')) {
         process.env.HAS_ACCOUNT = false;
-        next();
+        return next();
       }
       // Verify user token
       const token = req.header('Authorization').replace('Bearer ', '');
@@ -71,7 +71,6 @@ module.exports = {
         id: decoded.id,
         name: decoded.name,
       };
-
       next();
     } catch (error) {
       errorHandler.clientError(res, 'invalidToken', 403);
