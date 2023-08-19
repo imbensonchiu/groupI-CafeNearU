@@ -28,6 +28,38 @@ module.exports = {
       pool.releaseConnection();
     }
   },
+  updateProfile: async (currentID, name, email) => {
+    const updateFields = [];
+    const params = [];
+
+    if (name) {
+      updateFields.push('user_name = ?');
+      params.push(name);
+    }
+
+    if (email) {
+      updateFields.push('email = ?');
+      params.push(email);
+    }
+
+    const query = `UPDATE shops SET ${updateFields.join(', ')} WHERE id = ?`;
+
+    try {
+      const [result] = await pool.query(query, [...params, currentID]);
+      return result;
+    } finally {
+      pool.releaseConnection();
+    }
+  },
+  updatePassword: async (currentID, hashedpassword) => {
+    const query = 'UPDATE `shops` SET password = ? WHERE id = ?';
+    try {
+      const [result] = await pool.query(query, [hashedpassword, currentID]);
+      return result[0];
+    } finally {
+      pool.releaseConnection();
+    }
+  },
   basicInfoUpdate: async (userId, arr, rules, service_and_equipment) => {
     const insertBasicInfo = `UPDATE shops SET shop_name = ?, type = ?, introduction = ?, opening_hour = ?, closing_hour = ?, address = ?, telephone = ?, facebook = ?, ig = ?, line = ?, time_limit = ?, min_order = ?, plug = ?, wifi = ?, smoking_area = ?, dog = ?, cat = ?, primary_image = ?, secondary_image_1 = ?, secondary_image_2 = ?, rules = ?, service_and_equipment = ? WHERE id = ?`;
     try {
