@@ -95,7 +95,7 @@ module.exports = {
 
         if (
           user &&
-          validateProvider(user.provider) &&
+          validateProvider(provider) &&
           (await bcrypt.compare(password, user.password))
         ) {
           // Generate JWT
@@ -126,17 +126,18 @@ module.exports = {
   },
   updateCustomerPassword: async (req, res) => {
     const currentID = extractUserIDFromToken(req);
-    const { password } = req.body;
-    if (password.trim() === '') {
+    const { new_password } = req.body;
+
+    if (new_password.trim() === '') {
       return errorHandler.clientError(res, 'passwordValidate', 400);
     }
 
     const userRow = await User.getByID(currentID);
-    if (await bcrypt.compare(password, userRow.password)) {
+    if (await bcrypt.compare(new_password, userRow.password)) {
       return errorHandler.clientError(res, 'duplicatePassword', 403);
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(new_password, 10);
     await User.updatePassword(currentID, hashedPassword);
 
     const responseData = {
@@ -173,19 +174,28 @@ module.exports = {
     }
   },
   updateCustomerProfile: async (req, res) => {
-    const currentID = extractUserIDFromToken(req);
-    const { name, school } = req.body;
+    try {
+      const currentID = extractUserIDFromToken(req);
+      const { name, school } = req.body;
 
-    await User.updateProfile(currentID, name, school);
+      try {
+        await User.updateProfile(currentID, name, school);
 
-    const responseData = {
-      data: {
-        user: {
-          id: currentID,
-        },
-      },
-    };
-    res.status(200).json(responseData);
+        const responseData = {
+          data: {
+            user: {
+              id: currentID,
+            },
+          },
+        };
+
+        res.status(200).json(responseData);
+      } catch (error) {
+        errorHandler.serverError(res, error, 'sqlquery');
+      }
+    } catch (error) {
+      errorHandler.serverError(res, error, 'internalServer');
+    }
   },
   updateCustomerPicture: async (req, res) => {
     try {
