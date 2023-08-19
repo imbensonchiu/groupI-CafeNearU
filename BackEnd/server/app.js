@@ -26,8 +26,8 @@ app.use('/api/1.0/wishLists', wishListRoutes);
 app.use('/api/1.0/shop-owners', shopOwnerRoutes);
 app.use('/api/1.0/shops', shopRoutes);
 
-const intervalTime = 10000; // 60秒
-setInterval(updateCommentDashboard, intervalTime);
+// const intervalTime = 10000; // 60秒
+// setInterval(updateCommentDashboard, intervalTime);
 
 const port = 3000;
 app.listen(port, () => {
