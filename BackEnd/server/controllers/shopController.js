@@ -180,7 +180,7 @@ module.exports = {
       } = data;
 
       if (!context || context.trim() == '') {
-        return errorHandler.clientError(res, 'missingContext', 400);
+        return errorHandler.clientError(res, 'missingContent', 400);
       }
 
       try {
