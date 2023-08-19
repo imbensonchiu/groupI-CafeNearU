@@ -13,7 +13,7 @@ const errorMessages = {
     commentNotExist: 'comment does not exist',
     jsonValidate: 'Invalid Input Format (should be JSON)',
     contentTypeValidate: 'Invalid Content-type Header',
-    missingContent: 'Missing content',
+    missingContent: '	Missing content in the request body',
     cafeExistsInWishlist: 'Cafe already exists in the wishlist',
     cafeNotExistsInWishlist: 'Cafe does not exists in the wishlist',
     wishlistNotExists: 'wishlist does not exists',

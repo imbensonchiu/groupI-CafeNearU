@@ -10,7 +10,7 @@ module.exports = {
       const customer_id = extractUserIDFromToken(req);
       let { wishlist_name } = req.body;
 
-      if (wishlist_name.trim() === '') {
+      if (!wishlist_name || wishlist_name.trim() === '') {
         return errorHandler.clientError(res, 'missingContent', 400);
       }
       try {
@@ -38,6 +38,7 @@ module.exports = {
   getWishList: async (req, res) => {
     try {
       const customer_id = extractUserIDFromToken(req);
+
       try {
         const result = await wishListModel.getWishList(customer_id);
 
@@ -61,17 +62,31 @@ module.exports = {
   },
   addCafeToWishList: async (req, res) => {
     try {
+      const customer_id = extractUserIDFromToken(req);
       const wishlist_id = parseInt(req.params.wishlist_id);
       const cafe_id = parseInt(req.params.cafe_id);
+
+      if (!wishlist_id || !cafe_id) {
+        return errorHandler.clientError(res, 'inputFeild', 400);
+      }
+
+      const isWishlistExist = await wishListModel.isWishlistExist(
+        wishlist_id,
+        customer_id,
+      );
+
+      if (!isWishlistExist) {
+        return errorHandler.clientError(res, 'wishlistNotExists', 400);
+      }
 
       const isCafeInWishlist = await wishListModel.isCafeInWishlist(
         wishlist_id,
         cafe_id,
       );
+
       if (isCafeInWishlist) {
         return errorHandler.clientError(res, 'cafeExistsInWishlist', 400);
       }
-      // 補: isCafeExist
       try {
         await wishListModel.addCafeToWishList(wishlist_id, cafe_id);
 
@@ -96,11 +111,23 @@ module.exports = {
   },
   deleteCafeFromWishList: async (req, res) => {
     try {
+      const customer_id = extractUserIDFromToken(req);
       const wishlist_id = parseInt(req.params.wishlist_id);
       const cafe_id = parseInt(req.params.cafe_id);
+
       if (!wishlist_id || !cafe_id) {
         return errorHandler.clientError(res, 'inputFeild', 400);
       }
+
+      const isWishlistExist = await wishListModel.isWishlistExist(
+        wishlist_id,
+        customer_id,
+      );
+
+      if (!isWishlistExist) {
+        return errorHandler.clientError(res, 'wishlistNotExists', 400);
+      }
+
       const isCafeInWishlist = await wishListModel.isCafeInWishlist(
         wishlist_id,
         cafe_id,
@@ -145,7 +172,6 @@ module.exports = {
 
       try {
         const result = await wishListModel.getCafeFromWishList(wishlist_id);
-
         const shops = result.map((shop) => {
           const seats = [];
 
@@ -179,6 +205,7 @@ module.exports = {
         };
         res.status(200).json(responseData);
       } catch (error) {
+        console.log(error);
         errorHandler.serverError(res, error, 'sqlquery');
       }
     } catch (error) {
