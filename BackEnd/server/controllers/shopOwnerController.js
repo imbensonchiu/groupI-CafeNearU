@@ -100,7 +100,7 @@ module.exports = {
           const payload = {
             id: user.id,
             provider: user.provider,
-            name: user.name,
+            name: user.user_name,
             email: user.email,
           };
           const accessToken = jwt.sign(payload, jwtSecret);
@@ -121,6 +121,113 @@ module.exports = {
     } catch (error) {
       errorHandler.serverError(res, error, 'internalServer');
     }
+  },
+  getShoperProfile: async (req, res) => {
+    try {
+      const currentID = extractUserIDFromToken(req);
+      const userRow = await model.getByID(currentID);
+
+      const user = {
+        id: userRow.id,
+        name: userRow.user_name,
+        email: userRow.email,
+        provider: userRow.provider,
+      };
+
+      const responseData = {
+        data: { user },
+      };
+
+      res.status(200).json(responseData);
+    } catch (error) {
+      errorHandler.clientError(res, 'userNotFound', 400);
+    }
+  },
+  updateShoperProfile: async (req, res) => {
+    try {
+      const currentID = extractUserIDFromToken(req);
+      const { name, email } = req.body;
+
+      if (!name && !email) {
+        return errorHandler.clientError(res, 'inputFeild', 400);
+      }
+
+      if (email && !validateEmail(email)) {
+        return errorHandler.clientError(res, 'emailValidate', 400);
+      }
+
+      try {
+        await model.updateProfile(currentID, name, email);
+
+        const responseData = {
+          data: {
+            user: {
+              id: currentID,
+            },
+          },
+        };
+
+        res.status(200).json(responseData);
+      } catch (error) {
+        errorHandler.serverError(res, error, 'sqlquery');
+      }
+    } catch (error) {
+      errorHandler.serverError(res, error, 'internalServer');
+    }
+  },
+  updateShoperEmail: async (req, res) => {
+    try {
+      const currentID = extractUserIDFromToken(req);
+      const { name, email } = req.body;
+
+      if (!validateEmail(email)) {
+        return errorHandler.clientError(res, 'emailValidate', 400);
+      }
+
+      try {
+        await model.updateProfile(currentID, name, email);
+
+        const responseData = {
+          data: {
+            user: {
+              id: currentID,
+            },
+          },
+        };
+
+        res.status(200).json(responseData);
+      } catch (error) {
+        errorHandler.serverError(res, error, 'sqlquery');
+      }
+    } catch (error) {
+      errorHandler.serverError(res, error, 'internalServer');
+    }
+  },
+  updateShoperPassword: async (req, res) => {
+    const currentID = extractUserIDFromToken(req);
+    const { new_password } = req.body;
+
+    if (new_password.trim() === '') {
+      return errorHandler.clientError(res, 'passwordValidate', 400);
+    }
+
+    const userRow = await model.getByID(currentID);
+    if (await bcrypt.compare(new_password, userRow.password)) {
+      return errorHandler.clientError(res, 'duplicatePassword', 403);
+    }
+
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+    await model.updatePassword(currentID, hashedPassword);
+
+    const responseData = {
+      data: {
+        user: {
+          id: currentID,
+        },
+      },
+    };
+
+    res.status(200).json(responseData);
   },
   basicInfoUpdate: async (req, res) => {
     try {

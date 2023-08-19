@@ -7,6 +7,13 @@ const { userAuthorization } = require('../util/common');
 
 router.post('/signup', controller.shoperSignUp);
 router.post('/signin', controller.shoperSignIn);
+router.put(
+  '/update-password',
+  userAuthorization,
+  controller.updateShoperPassword,
+);
+router.get('/profile', userAuthorization, controller.getShoperProfile);
+router.patch('/profile', userAuthorization, controller.updateShoperProfile);
 
 router.put(
   '/basic-info',
