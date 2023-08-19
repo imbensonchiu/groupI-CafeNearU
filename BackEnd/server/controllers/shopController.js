@@ -241,7 +241,7 @@ module.exports = {
       errorHandler.serverError(res, error, 'internalServer');
     }
   },
-  getComments: (req, res) => {
+  getComments: async (req, res) => {
     res.json(model.getComments());
   },
 };
