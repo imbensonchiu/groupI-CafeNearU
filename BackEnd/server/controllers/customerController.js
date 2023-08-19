@@ -60,7 +60,7 @@ module.exports = {
           const responseData = {
             data: {
               access_token: accessToken,
-              user: payload,
+              customer: payload,
             },
           };
           res.status(200).json(responseData);
@@ -110,7 +110,7 @@ module.exports = {
           const responseData = {
             data: {
               access_token: accessToken,
-              user: payload,
+              customer: payload,
             },
           };
           res.status(200).json(responseData);
@@ -142,7 +142,7 @@ module.exports = {
 
     const responseData = {
       data: {
-        user: {
+        customer: {
           id: currentID,
         },
       },
@@ -155,7 +155,7 @@ module.exports = {
       const currentID = extractUserIDFromToken(req);
       const userRow = await User.getByID(currentID);
 
-      const user = {
+      const customer = {
         id: userRow.id,
         name: userRow.name,
         email: userRow.email,
@@ -165,7 +165,7 @@ module.exports = {
       };
 
       const responseData = {
-        data: { user },
+        data: { customer },
       };
 
       res.status(200).json(responseData);
@@ -176,14 +176,22 @@ module.exports = {
   updateCustomerProfile: async (req, res) => {
     try {
       const currentID = extractUserIDFromToken(req);
-      const { name, school } = req.body;
+      const { name, school, email } = req.body;
+
+      if (!name && !school && !email) {
+        return errorHandler.clientError(res, 'inputFeild', 400);
+      }
+
+      if (email && !validateEmail(email)) {
+        return errorHandler.clientError(res, 'emailValidate', 400);
+      }
 
       try {
-        await User.updateProfile(currentID, name, school);
+        await User.updateProfile(currentID, name, school, email);
 
         const responseData = {
           data: {
-            user: {
+            customer: {
               id: currentID,
             },
           },

@@ -19,7 +19,7 @@ router.get(
   userAuthorization,
   customerController.getCustomerProfile,
 );
-router.put(
+router.patch(
   '/profile',
   userAuthorization,
   customerController.updateCustomerProfile,
