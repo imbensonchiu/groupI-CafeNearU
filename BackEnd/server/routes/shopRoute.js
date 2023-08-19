@@ -5,7 +5,7 @@ const controller = require('../controllers/shopController');
 const { userAuthorization, checkCustomerLogin } = require('../util/common');
 
 router.get('/search', checkCustomerLogin, controller.search);
-router.get('/:id/basic-info', controller.getBasicInfo);
+router.get('/:id/basic-info', checkCustomerLogin, controller.getBasicInfo);
 router.get('/:id/status', controller.getCurrentStatus);
 router.post('/:cafe_id/comments', userAuthorization, controller.createComment);
 router.delete(

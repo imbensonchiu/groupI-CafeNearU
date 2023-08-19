@@ -61,19 +61,18 @@ module.exports = {
     }
   },
   basicInfoUpdate: async (userId, arr, rules, service_and_equipment) => {
-    const insertBasicInfo = `UPDATE shops SET shop_name = ?, type = ?, introduction = ?, opening_hour = ?, closing_hour = ?, address = ?, telephone = ?, facebook = ?, ig = ?, line = ?, time_limit = ?, min_order = ?, plug = ?, wifi = ?, smoking_area = ?, dog = ?, cat = ?, primary_image = ?, secondary_image_1 = ?, secondary_image_2 = ?, rules = ?, service_and_equipment = ? WHERE id = ?`;
+    const insertBasicInfo = `UPDATE shops SET shop_name = ?, type = ?, nearest_MRT=?, introduction = ?, opening_hour = ?, closing_hour = ?, address = ?, telephone = ?, facebook = ?, ig = ?, line = ?, time_limit = ?, min_order = ?, plug = ?, wifi = ?, smoking_area = ?, dog = ?, cat = ?, primary_image = ?, secondary_image_1 = ?, secondary_image_2 = ?, rules = ?, service_and_equipment = ? WHERE id = ?`;
     try {
       await pool.query(insertBasicInfo, [
         ...arr,
+        // 有時間試試看活的 json 能傳進去嗎
         JSON.stringify(rules),
         JSON.stringify(service_and_equipment),
         userId,
       ]);
-      console.log('success');
     } finally {
       pool.releaseConnection();
     }
-    console.log(rules, service_and_equipment);
   },
   menuUpdate: async (userId, menu) => {
     const findMenu = `SELECT id FROM menus WHERE cafe_id = ?`;
@@ -156,10 +155,28 @@ module.exports = {
       pool.releaseConnection();
     }
   },
-  ChangeProfilePubStatus: async (userId, is_published) => {
+  isUnpub: async (userId) => {
+    const query = `SELECT id FROM shops WHERE id = ? AND is_published = false`;
+    try {
+      const [[result]] = await pool.query(query, [userId]);
+      return result;
+    } finally {
+      pool.releaseConnection();
+    }
+  },
+  changeProfilePubStatus: async (userId, is_published) => {
     const updatePublishStatus = `UPDATE shops SET is_published = ? WHERE id = ?`;
     try {
       await pool.query(updatePublishStatus, [is_published, userId]);
+    } finally {
+      pool.releaseConnection();
+    }
+  },
+  hasBasicInfo: async (userId) => {
+    const query = `select shop_name, menu_last_updated, status_last_updated from shops where id = ?;`;
+    try {
+      const [[result]] = await pool.query(query, [userId]);
+      return result;
     } finally {
       pool.releaseConnection();
     }

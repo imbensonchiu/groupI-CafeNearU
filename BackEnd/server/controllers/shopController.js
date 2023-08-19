@@ -100,11 +100,18 @@ module.exports = {
   },
   getBasicInfo: async (req, res) => {
     const cafeId = req.params.id * 1;
-    const result = await model.getBasicInfo(cafeId);
+    let userId;
+    if (process.env.HAS_ACCOUNT === 'true') {
+      console.log('user has login');
+      userId = extractUserIDFromToken(req);
+    }
+    const result = await model.getBasicInfo(cafeId, userId);
     const shopObj = {
       id: result[0].id,
       name: result[0].shop_name,
       type: result[0].type,
+      nearest_MRT: result[0].nearst_MRT,
+      wishlist_item: result[0].wishlist_item,
       introduction: result[0].introduction,
       opening_hour: result[0].opening_hour,
       closing_hour: result[0].closing_hour,
@@ -131,9 +138,10 @@ module.exports = {
     }
     for (let i = 0; i < result.length; i++) {
       const itemArr = result[i].menu_items.split(',');
-      const itemObj = itemArr.map((el) => {
+      const itemObj = itemArr.map((el, index) => {
         const [name, price] = el.split('$');
         return {
+          id: index + 1,
           name,
           price,
         };

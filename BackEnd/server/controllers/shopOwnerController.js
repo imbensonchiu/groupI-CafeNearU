@@ -236,8 +236,8 @@ module.exports = {
         return errorHandler.clientError(res, 'contentTypeValidate', 400);
       }
       const userId = extractUserIDFromToken(req);
-      const ip = '13.211.10.154';
 
+      const ip = '13.211.10.154';
       if (typeof req.files.primary_image === 'undefined') {
         return errorHandler.clientError(res, 'inputFeild', 400);
       }
@@ -253,6 +253,7 @@ module.exports = {
       const {
         name,
         type,
+        nearest_MRT,
         introduction = null,
         opening_hour,
         closing_hour,
@@ -295,6 +296,7 @@ module.exports = {
       const basicInfo = [
         name,
         type,
+        nearest_MRT,
         introduction,
         opening_hour,
         closing_hour,
@@ -414,7 +416,7 @@ module.exports = {
       errorHandler.serverError(res, error, 'internalServer');
     }
   },
-  ChangeProfilePubStatus: async (req, res) => {
+  changeProfilePubStatus: async (req, res) => {
     try {
       const header = req.get('Content-Type');
       if (header !== 'application/json') {
@@ -425,7 +427,22 @@ module.exports = {
       if (typeof is_published !== 'boolean') {
         return errorHandler.clientError(res, 'booleanValidate', 400);
       }
-      await model.ChangeProfilePubStatus(userId, is_published);
+      if (is_published === false) {
+        const isUnpub = await model.isUnpub(userId);
+        console.log(isUnpub);
+        if (isUnpub) {
+          return errorHandler.clientError(res, 'UnpublishedProfile', 400);
+        }
+      }
+      const checkInfo = await model.hasBasicInfo(userId);
+      if (
+        checkInfo.shop_name === null ||
+        checkInfo.menu_last_updated === null ||
+        checkInfo.status_last_updated === null
+      ) {
+        return errorHandler.clientError(res, 'missingRequiredInfo', 400);
+      }
+      await model.changeProfilePubStatus(userId, is_published);
       res.status(200).json({
         data: {
           shops: {

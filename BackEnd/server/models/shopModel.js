@@ -75,20 +75,33 @@ module.exports = {
       await pool.releaseConnection();
     }
   },
-  getBasicInfo: async (cafeId) => {
+  getBasicInfo: async (cafeId, userId) => {
     try {
-      const query = `
+      let query = `
       SELECT shops.id, shop_name, type, introduction, opening_hour, closing_hour, 
       primary_image, secondary_image_1, secondary_image_2, address, telephone, facebook, ig, line, 
       rules, service_and_equipment, 
       DATE_FORMAT(menu_last_updated, "%Y-%m-%d %H:%i:%s") AS menu_last_updated, 
       menus.category, 
-      GROUP_CONCAT(CONCAT(menus.item, '$', menus.price)) AS menu_items
-      FROM shops
+      GROUP_CONCAT(CONCAT(menus.item, '$', menus.price)) AS menu_items`;
+      if (userId) {
+        query += `, IF(
+          (SELECT wishlists.id FROM wishlists 
+          LEFT JOIN wishlist_items 
+          ON wishlists.id = wishlist_items.wishlist_id 
+          WHERE wishlist_items.cafe_id = shops.id AND customer_id = ? ) > 0, true, false) AS wishlist_item`;
+      }
+      query += ` FROM shops
       INNER JOIN menus ON shops.id = menus.cafe_id
       WHERE shops.id = ? AND is_published = true
       GROUP BY shops.id, menus.category`;
-      const [result] = await pool.query(query, cafeId);
+      let result;
+      if (userId) {
+        [result] = await pool.query(query, [userId, cafeId]);
+      } else {
+        [result] = await pool.query(query, [cafeId]);
+      }
+      console.log(result);
       return result;
     } finally {
       await pool.releaseConnection();
