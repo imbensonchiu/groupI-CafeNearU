@@ -19,6 +19,8 @@ const errorMessages = {
     wishlistNotExists: 'wishlist does not exists',
     seatNotFound: 'Seat Not Found',
     booleanValidate: 'Invalid Input Format (should be boolean)',
+    missingRequiredInfo: 'Incomplete Shop Information',
+    UnpublishedProfile: 'Cannot unpublish an unpublished profile',
 
     // 401 Client Error (Token error)
     noToken: 'No token provided',

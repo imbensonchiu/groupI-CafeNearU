@@ -28,7 +28,7 @@ router.put(
 router.put('/menu', userAuthorization, controller.menuUpdate);
 router.put('/seat-setting', userAuthorization, controller.setSeatType);
 router.put('/status', userAuthorization, controller.statusUpdate);
-router.post('/publish', userAuthorization, controller.ChangeProfilePubStatus);
-router.post('/unpublish', userAuthorization, controller.ChangeProfilePubStatus);
+router.post('/publish', userAuthorization, controller.changeProfilePubStatus);
+router.post('/unpublish', userAuthorization, controller.changeProfilePubStatus);
 
 module.exports = router;
