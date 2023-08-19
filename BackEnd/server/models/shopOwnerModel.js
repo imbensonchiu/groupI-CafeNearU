@@ -1,7 +1,7 @@
 const pool = require('../util/db');
 
 module.exports = {
-  insertNewShoper: async (name, email, hashedPassword) => {
+  insertNewOwner: async (name, email, hashedPassword) => {
     const query =
       'INSERT INTO `shops` (user_name, email, password) VALUES (?, ?, ?)';
     try {

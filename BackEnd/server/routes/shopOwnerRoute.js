@@ -5,15 +5,15 @@ const controller = require('../controllers/shopOwnerController');
 const pictureUpload = require('../util/pictureUpload');
 const { userAuthorization } = require('../util/common');
 
-router.post('/signup', controller.shoperSignUp);
-router.post('/signin', controller.shoperSignIn);
+router.post('/signup', controller.ownerSignUp);
+router.post('/signin', controller.ownerSignIn);
 router.put(
   '/update-password',
   userAuthorization,
-  controller.updateShoperPassword,
+  controller.updateOwnerPassword,
 );
-router.get('/profile', userAuthorization, controller.getShoperProfile);
-router.patch('/profile', userAuthorization, controller.updateShoperProfile);
+router.get('/profile', userAuthorization, controller.getOwnerProfile);
+router.patch('/profile', userAuthorization, controller.updateOwnerProfile);
 
 router.put(
   '/basic-info',

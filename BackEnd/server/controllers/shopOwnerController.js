@@ -11,7 +11,7 @@ const {
 const model = require('../models/shopOwnerModel');
 
 module.exports = {
-  shoperSignUp: async (req, res) => {
+  ownerSignUp: async (req, res) => {
     try {
       const data = req.body;
 
@@ -39,7 +39,7 @@ module.exports = {
         } else {
           const hashedPassword = await bcrypt.hash(password, 10);
 
-          const [result] = await model.insertNewShoper(
+          const [result] = await model.insertNewOwner(
             name,
             email,
             hashedPassword,
@@ -71,7 +71,7 @@ module.exports = {
       errorHandler.serverError(res, error, 'internalServer');
     }
   },
-  shoperSignIn: async (req, res) => {
+  ownerSignIn: async (req, res) => {
     try {
       const data = req.body;
 
@@ -122,7 +122,7 @@ module.exports = {
       errorHandler.serverError(res, error, 'internalServer');
     }
   },
-  getShoperProfile: async (req, res) => {
+  getOwnerProfile: async (req, res) => {
     try {
       const currentID = extractUserIDFromToken(req);
       const userRow = await model.getByID(currentID);
@@ -143,7 +143,7 @@ module.exports = {
       errorHandler.clientError(res, 'userNotFound', 400);
     }
   },
-  updateShoperProfile: async (req, res) => {
+  updateOwnerProfile: async (req, res) => {
     try {
       const currentID = extractUserIDFromToken(req);
       const { name, email } = req.body;
@@ -175,7 +175,7 @@ module.exports = {
       errorHandler.serverError(res, error, 'internalServer');
     }
   },
-  updateShoperEmail: async (req, res) => {
+  updateOwnerEmail: async (req, res) => {
     try {
       const currentID = extractUserIDFromToken(req);
       const { name, email } = req.body;
@@ -203,7 +203,7 @@ module.exports = {
       errorHandler.serverError(res, error, 'internalServer');
     }
   },
-  updateShoperPassword: async (req, res) => {
+  updateOwnerPassword: async (req, res) => {
     const currentID = extractUserIDFromToken(req);
     const { new_password } = req.body;
 
