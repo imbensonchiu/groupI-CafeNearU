@@ -57,4 +57,24 @@ module.exports = {
       return false;
     }
   },
+  checkCustomerLogin: async (req, res, next) => {
+    try {
+      if (!req.header('Authorization')) {
+        process.env.HAS_ACCOUNT = false;
+        next();
+      }
+      // Verify user token
+      const token = req.header('Authorization').replace('Bearer ', '');
+
+      const decoded = jwt.verify(token, jwtSecret);
+      const userData = {
+        id: decoded.id,
+        name: decoded.name,
+      };
+
+      next();
+    } catch (error) {
+      errorHandler.clientError(res, 'invalidToken', 403);
+    }
+  },
 };

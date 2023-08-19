@@ -45,7 +45,7 @@ module.exports = {
         basicQuery += ` AND dog = true`;
       }
       if (min_order) {
-        basicQuery += ` AND min_order > ${min_order}`;
+        basicQuery += ` AND min_order < ${min_order}`;
       }
       if (time_limit) {
         basicQuery += ` AND time_limit = true`;
