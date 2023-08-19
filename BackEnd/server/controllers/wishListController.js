@@ -18,7 +18,7 @@ module.exports = {
           customer_id,
           wishlist_name,
         );
-        console.log(result);
+
         const responseData = {
           data: {
             wishlist: {
@@ -39,9 +39,18 @@ module.exports = {
     try {
       const customer_id = extractUserIDFromToken(req);
       try {
+        const result = await wishListModel.getWishList(customer_id);
+
+        const wishlists = result.map((item) => ({
+          id: item.id,
+          name: item.name,
+          cover: item.cover,
+        }));
+
         const responseData = {
-          data: {},
+          data: { wishlists },
         };
+
         res.status(200).json(responseData);
       } catch (error) {
         errorHandler.serverError(res, error, 'sqlquery');
@@ -62,6 +71,7 @@ module.exports = {
       if (isCafeInWishlist) {
         return errorHandler.clientError(res, 'cafeExistsInWishlist', 400);
       }
+      // 補: isCafeExist
       try {
         await wishListModel.addCafeToWishList(wishlist_id, cafe_id);
 
@@ -114,7 +124,6 @@ module.exports = {
 
         res.status(200).json(responseData);
       } catch (error) {
-        console.log(error);
         errorHandler.serverError(res, error, 'sqlquery');
       }
     } catch (error) {
@@ -123,10 +132,50 @@ module.exports = {
   },
   getCafeFromWishList: async (req, res) => {
     try {
-      // ...
+      const { wishlist_id } = req.params;
+      const customer_id = extractUserIDFromToken(req);
+
+      const isWishlistExist = await wishListModel.isWishlistExist(
+        wishlist_id,
+        customer_id,
+      );
+      if (!isWishlistExist) {
+        return errorHandler.clientError(res, 'wishlistNotExists', 400);
+      }
+
       try {
+        const result = await wishListModel.getCafeFromWishList(wishlist_id);
+
+        const shops = result.map((shop) => {
+          const seats = [];
+
+          const seatIcons = shop.seat_icons.split(',');
+          const seatTypes = shop.seat_types.split(',');
+          const availableSeats = shop.available_seats.split(',');
+          const totalSeats = shop.total_seats.split(',');
+
+          for (let i = 0; i < seatIcons.length; i++) {
+            seats.push({
+              icon: seatIcons[i],
+              type: seatTypes[i],
+              available_seats: parseInt(availableSeats[i]),
+              total_seats: parseInt(totalSeats[i]),
+            });
+          }
+
+          return {
+            id: shop.id,
+            name: shop.name,
+            primary_image: shop.primary_image,
+            address: shop.address,
+            opening_hour: shop.opening_hour,
+            seats: seats,
+            min_order: shop.min_order,
+          };
+        });
+
         const responseData = {
-          data: {},
+          data: { shops },
         };
         res.status(200).json(responseData);
       } catch (error) {
