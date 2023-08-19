@@ -170,12 +170,12 @@ module.exports = {
       const {
         context,
         is_quiet,
-        average_total_rating,
-        average_cleanliness,
-        average_service,
-        average_food,
-        average_wifi,
-        average_atmosphere,
+        total_rating,
+        cleanliness,
+        service,
+        food,
+        wifi,
+        atmosphere,
       } = data;
 
       if (!context || context.trim() == '') {
@@ -187,12 +187,12 @@ module.exports = {
           context,
           cafe_id,
           customer_id,
-          average_total_rating,
-          average_cleanliness,
-          average_service,
-          average_food,
-          average_wifi,
-          average_atmosphere,
+          total_rating,
+          cleanliness,
+          service,
+          food,
+          wifi,
+          atmosphere,
           is_quiet,
         );
 
@@ -209,6 +209,7 @@ module.exports = {
 
         res.status(200).json(responseData);
       } catch (error) {
+        console.log(error);
         errorHandler.serverError(res, error, 'sqlquery');
       }
     } catch (error) {
