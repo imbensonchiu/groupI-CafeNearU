@@ -112,27 +112,27 @@ module.exports = {
     context,
     cafe_id,
     customer_id,
-    average_total_rating,
-    average_cleanliness,
-    average_service,
-    average_food,
-    average_wifi,
-    average_atmosphere,
+    total_rating,
+    cleanliness,
+    service,
+    food,
+    wifi,
+    atmosphere,
     is_quiet,
   ) => {
     const query =
-      'INSERT INTO `comments` (`context`, `cafe_id`, `customer_id`, `average_total_rating`, `average_cleanliness`, `average_service`, `average_food`, `average_wifi`, `average_atmosphere`, `is_quiet`,`created_at`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CONVERT_TZ(NOW(), "UTC", "Asia/Taipei"))';
+      'INSERT INTO `comments` (`context`, `cafe_id`, `customer_id`, `total_rating`, `cleanliness`, `service`, `food`, `wifi`, `atmosphere`, `is_quiet`,`created_at`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CONVERT_TZ(NOW(), "UTC", "Asia/Taipei"))';
     try {
       return await pool.query(query, [
         context,
         cafe_id,
         customer_id,
-        average_total_rating,
-        average_cleanliness,
-        average_service,
-        average_food,
-        average_wifi,
-        average_atmosphere,
+        total_rating,
+        cleanliness,
+        service,
+        food,
+        wifi,
+        atmosphere,
         is_quiet,
       ]);
     } finally {
