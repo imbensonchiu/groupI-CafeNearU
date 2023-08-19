@@ -65,7 +65,6 @@ module.exports = {
           res.status(200).json(responseData);
         }
       } catch (error) {
-        console.log(error);
         errorHandler.serverError(res, error, 'sqlquery');
       }
     } catch (error) {
@@ -94,7 +93,7 @@ module.exports = {
         const user = await model.getByEmail(email);
         if (
           user &&
-          validateProvider(user.provider) &&
+          validateProvider(provider) &&
           (await bcrypt.compare(password, user.password))
         ) {
           // Generate JWT
