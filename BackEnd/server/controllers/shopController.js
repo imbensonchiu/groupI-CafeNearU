@@ -88,7 +88,6 @@ module.exports = {
         shopArr.push({ ...obj });
       }
     }
-    console.log('?');
     if (result.length < itemsPerQuery) {
       res.status(200).json({ data: { shops: shopArr, next_cursor: null } });
     } else {
