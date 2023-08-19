@@ -28,11 +28,29 @@ module.exports = {
       pool.releaseConnection();
     }
   },
-  updateProfile: async (currentID, name, school) => {
-    const query = 'UPDATE `customers` SET name = ?, school = ? WHERE id = ?';
+  updateProfile: async (customer_id, name, school, email) => {
     try {
-      const [result] = await pool.query(query, [name, school, currentID]);
-      return result[0];
+      const updateFields = [];
+      const params = [];
+
+      if (name) {
+        updateFields.push('name = ?');
+        params.push(name);
+      }
+      if (school) {
+        updateFields.push('school = ?');
+        params.push(school);
+      }
+      if (email) {
+        updateFields.push('email = ?');
+        params.push(email);
+      }
+
+      const query = `UPDATE customers SET ${updateFields.join(
+        ', ',
+      )} WHERE id = ?`;
+      const [result] = await pool.query(query, [...params, customer_id]);
+      return result;
     } finally {
       pool.releaseConnection();
     }
