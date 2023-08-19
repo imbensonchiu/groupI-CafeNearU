@@ -30,7 +30,7 @@ module.exports = {
       cat,
       dog,
       min_order,
-      time_limit,
+      no_time_limit,
     } = req.query;
 
     let userId;
@@ -48,7 +48,7 @@ module.exports = {
       cat,
       dog,
       min_order,
-      time_limit,
+      no_time_limit,
       userId,
       cursor,
       itemsPerQuery,
