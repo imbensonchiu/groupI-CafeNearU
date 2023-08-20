@@ -103,21 +103,19 @@ module.exports = {
   setSeatType: async (userId, seats) => {
     const findSeats = `SELECT id FROM seats WHERE cafe_id = ?`;
     const deleteSeats = `DELETE FROM seats WHERE cafe_id = ?`;
-    const insertSeats = `INSERT INTO seats (icon, type, total_seats,cafe_id) VALUES (?, ?, ?, ?)`;
+    const insertSeats = `INSERT INTO seats (icon, type, total_seats,cafe_id) VALUES ?`;
     try {
       const [hasSeats] = await pool.query(findSeats, userId);
       if (hasSeats.length !== 0) {
-        console.log('Delete Seats');
         await pool.query(deleteSeats, userId);
       }
-      for (let i = 0; i < seats.length; i++) {
-        await pool.query(insertSeats, [
-          seats[i].icon,
-          seats[i].type,
-          seats[i].total_seats,
-          userId,
-        ]);
-      }
+      const seatTypeArr = seats.map((item) => [
+        seats.icon,
+        seats.type,
+        item.total_seats,
+        userId,
+      ]);
+      await pool.query(insertSeats, [seatTypeArr]);
     } finally {
       pool.releaseConnection();
     }
