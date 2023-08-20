@@ -16,7 +16,7 @@ export default function Wish() {
 
   return (
     <>
-      <div className=" w-[100%] md:w-[15%] h-72 ">
+      <div className=" w-[100%] md:w-[20%] h-72 ">
         <Card
           className="w-[60%] md:w-full h-[100%] transform hover:scale-110 transition-transform  border border-[#00000] shadow-ld cursor-pointer"
           onClick={handletowishlist}
