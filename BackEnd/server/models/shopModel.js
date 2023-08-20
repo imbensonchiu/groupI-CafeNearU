@@ -63,13 +63,8 @@ module.exports = {
       GROUP BY shops.id
       LIMIT ${itemsPerQuery}`;
 
-      let result;
-      if (userId) {
-        [result] = await pool.query(basicQuery, [userId, cursor]);
-      } else {
-        [result] = await pool.query(basicQuery, [cursor]);
-      }
-
+      const queryParams = userId ? [userId, cursor] : [cursor];
+      const [result] = await pool.query(basicQuery, queryParams);
       return result;
     } finally {
       await pool.releaseConnection();

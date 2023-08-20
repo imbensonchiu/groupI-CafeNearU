@@ -13,8 +13,7 @@ function generateImageURL(image) {
   if (!image || !image[0]?.filename) {
     return null;
   }
-  const ip = '13.211.10.154';
-  return `https://${ip}/shopPics/${image[0].filename}`;
+  return `https://${process.env.HOSTNAME}/shopPics/${image[0].filename}`;
 }
 
 function hasJsonStructure(str) {
