@@ -32,14 +32,14 @@ export default function Header() {
 
     return (
         <>
-            <div className="fixed top-0  w-full h-[86px] flex-shrink-0 bg-white text-gray-600 text-center font-train-one font-normal flex justify-between items-center px-200  border-d shadow-md z-[100]">
+            <div className="w-full h-[86px] flex-shrink-0 bg-white text-gray-600 text-center font-train-one font-normal flex justify-between items-center px-200  border-d shadow-md z-[100]">
                 <div className="font-logo text-4xl ml-[10%] text-5c5c5c text-center font-train-one font-normal">
                     CafeNearU
                 </div>
                 <div className="relative flex items-center">
                     <div className="absolute left-0 top-0 h-full flex items-center justify-center w-12">
                         <img
-                            src="search.svg"
+                            src="../search.svg"
                             alt="Avatar"
                             className="w-6 h-6 text-gray-600"
                         />
@@ -53,7 +53,7 @@ export default function Header() {
                 <div className="me-[10%] flex items-center">
                     <div className="relative">
                         <img
-                            src="account_circle.svg"
+                            src="../account_circle.svg"
                             alt="main"
                             className="w-12 h-12 rounded-full cursor-pointer"
                             onMouseOver={toggleMenu}
