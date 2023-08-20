@@ -375,12 +375,16 @@ module.exports = {
       if (header !== 'application/json') {
         return errorHandler.clientError(res, 'contentTypeValidate', 400);
       }
+
       const userId = extractUserIDFromToken(req);
+
       const { menu } = req.body;
       if (!menu || menu.length === 0) {
         return errorHandler.clientError(res, 'inputFeild', 400);
       }
+
       await model.menuUpdate(userId, menu);
+
       res.status(200).json({
         data: {
           shops: {
@@ -398,12 +402,16 @@ module.exports = {
       if (header !== 'application/json') {
         return errorHandler.clientError(res, 'contentTypeValidate', 400);
       }
+
       const userId = extractUserIDFromToken(req);
+
       const { seats } = req.body;
       if (!seats || seats.length === 0) {
         return errorHandler.clientError(res, 'inputFeild', 400);
       }
+
       await model.setSeatType(userId, seats);
+
       res.status(200).json({
         data: {
           shops: {

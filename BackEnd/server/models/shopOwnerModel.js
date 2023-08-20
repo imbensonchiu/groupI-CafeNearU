@@ -76,30 +76,26 @@ module.exports = {
   menuUpdate: async (userId, menu) => {
     const findMenu = `SELECT id FROM menus WHERE cafe_id = ?`;
     const deleteMenu = `DELETE FROM menus WHERE cafe_id = ?`;
-    const insertMenu = `INSERT INTO menus (category, item, price, cafe_id) VALUES (?, ?, ?, ?)`;
+    const insertMenu = `INSERT INTO menus (category, item, price, cafe_id) VALUES ?`;
     const recordUpdateTime = `UPDATE shops SET menu_last_updated = CONVERT_TZ(NOW(), 'UTC', 'Asia/Taipei') WHERE id = ?`;
     const conn = await pool.getConnection();
     await conn.beginTransaction();
     try {
       const [hasMenu] = await conn.query(findMenu, userId);
       if (hasMenu.length !== 0) {
-        console.log('Delete Menu');
         await conn.query(deleteMenu, userId);
       }
-      for (let i = 0; i < menu.length; i++) {
-        await conn.query(insertMenu, [
-          menu[i].category,
-          menu[i].item,
-          menu[i].price,
-          userId,
-        ]);
-      }
+      const menuArr = menu.map((item) => [
+        item.category,
+        item.item,
+        item.price,
+        userId,
+      ]);
+      await conn.query(insertMenu, [menuArr]);
       await conn.query(recordUpdateTime, [userId]);
       await conn.commit();
-      console.log('Transaction committed.');
     } catch (error) {
       await conn.rollback();
-      console.error('Transaction rolled back:', error);
     } finally {
       pool.releaseConnection();
     }
