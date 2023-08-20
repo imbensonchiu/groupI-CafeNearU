@@ -3,9 +3,9 @@
 import { IconButton, Switch, Button, Dialog } from "@material-tailwind/react";
 import { useState } from "react";
 
-import Header from "../components/header.jsx";
-import Footer from "../components/footer.jsx";
-import Filter from "../components/filter.jsx";
+import Header from "../components/Header.jsx";
+import Footer from "../components/Footer.jsx";
+import Filter from "../components/Filter.jsx";
 import storesHome from "../components/homepage/stores.js";
 import StoreCard from "../components/StoreCard";
 
@@ -16,72 +16,75 @@ export default function h() {
   return (
     <>
       <Header />
-      <div id="categories" className=" mx-[10%] justify-between flex flex-row">
+      <div id="categories" className="mx-[10%] justify-between flex flex-row">
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
         />
 
-        <div className="flex items-end mt-28 gap-8 mb-3 flex-nowrap  ">
-          <div className="flex flex-col justify-center items-center relative">
+        <div className="flex w-full items-end mt-24 gap-8 mb-3 flex-nowrap  ">
+          <div className="flex mb-4 w-[60px] flex-col justify-center items-center relative">
             <IconButton variant="text" className="rounded-full">
               <span className="material-symbols-outlined">home</span>
             </IconButton>
             <span className="self-center text-xs lg:text-sm">我的搜尋</span>
           </div>
+
           <div className="h-full border-r border-gray-300 border-w-2 mb-1"></div>
-          <div className="flex flex-col">
-            <IconButton variant="text" className="rounded-full">
-              <span className="material-symbols-outlined">work</span>
-            </IconButton>
-            <span className="self-center  text-xs lg:text-sm">工作</span>
-          </div>
-          <div className="flex flex-col">
-            <IconButton variant="text" className="rounded-full">
-              <span className="material-symbols-outlined">local_cafe</span>
-            </IconButton>
-            <span className="self-center  text-xs lg:text-sm">放鬆</span>
-          </div>
-          <div className="flex flex-col">
-            <IconButton variant="text" className="rounded-full">
-              <span class="material-symbols-outlined">groups</span>
-            </IconButton>
-            <span className="self-center text-xs lg:text-sm">聚會</span>
-          </div>
-          <div className="flex flex-col">
-            <IconButton variant="text" className="rounded-full">
-              <span class="material-symbols-outlined">pets</span>
-            </IconButton>
-            <span className="self-center  text-xs lg:text-sm">寵物</span>
-          </div>
-          <div className="flex flex-col">
-            <IconButton variant="text" className="rounded-full">
-              <span class="material-symbols-outlined">schedule</span>
-            </IconButton>
-            <span className="self-center text-xs lg:text-sm">不限時</span>
-          </div>
-          <div className="flex flex-col">
-            <IconButton variant="text" className="rounded-full">
-              <span class="material-symbols-outlined">cookie</span>
-            </IconButton>
-            <span className="self-center  text-xs lg:text-sm">甜點</span>
-          </div>
-          <div className="flex flex-col">
-            <IconButton variant="text" className="rounded-full">
-              <span class="material-symbols-outlined">power</span>
-            </IconButton>
-            <span className="self-center  text-xs lg:text-sm">插座</span>
-          </div>
-          <div className="flex flex-col">
-            <IconButton variant="text" className="rounded-full">
-              <span class="material-symbols-outlined">casino</span>
-            </IconButton>
-            <span className="self-center text-xs lg:text-sm">好手氣</span>
+          <div className="flex w-[70%] items-end gap-8 flex-nowrap overflow-scroll ">
+            <div className="flex flex-col">
+              <IconButton variant="text" className="rounded-full">
+                <span className="material-symbols-outlined">work</span>
+              </IconButton>
+              <span className="self-center  text-xs lg:text-sm">工作</span>
+            </div>
+            <div className="flex flex-col">
+              <IconButton variant="text" className="rounded-full">
+                <span className="material-symbols-outlined">local_cafe</span>
+              </IconButton>
+              <span className="self-center  text-xs lg:text-sm">放鬆</span>
+            </div>
+            <div className="flex flex-col">
+              <IconButton variant="text" className="rounded-full">
+                <span class="material-symbols-outlined">groups</span>
+              </IconButton>
+              <span className="self-center text-xs lg:text-sm">聚會</span>
+            </div>
+            <div className="flex flex-col">
+              <IconButton variant="text" className="rounded-full">
+                <span class="material-symbols-outlined">pets</span>
+              </IconButton>
+              <span className="self-center  text-xs lg:text-sm">寵物</span>
+            </div>
+            <div className="flex flex-col">
+              <IconButton variant="text" className="rounded-full">
+                <span class="material-symbols-outlined">schedule</span>
+              </IconButton>
+              <span className="self-center text-xs lg:text-sm">不限時</span>
+            </div>
+            <div className="flex flex-col">
+              <IconButton variant="text" className="rounded-full">
+                <span class="material-symbols-outlined">cookie</span>
+              </IconButton>
+              <span className="self-center  text-xs lg:text-sm">甜點</span>
+            </div>
+            <div className="flex flex-col">
+              <IconButton variant="text" className="rounded-full">
+                <span class="material-symbols-outlined">power</span>
+              </IconButton>
+              <span className="self-center  text-xs lg:text-sm">插座</span>
+            </div>
+            <div className="flex flex-col">
+              <IconButton variant="text" className="rounded-full">
+                <span class="material-symbols-outlined">casino</span>
+              </IconButton>
+              <span className="self-center text-xs lg:text-sm">好手氣</span>
+            </div>
           </div>
         </div>
         <button
           onClick={handleOpen}
-          class="bg-[#D0B8A8] h-12 mt-28 flex items-center justify-center space-x-2 font-bold text-white px-4 rounded-sm"
+          class="bg-[#D0B8A8] w-[15%] h-12 mt-28 hidden md:flex items-center justify-center space-x-2 font-bold text-white px-4 rounded-sm"
         >
           <img
             src="sliders.png"
@@ -93,21 +96,23 @@ export default function h() {
         </button>
       </div>
       <Dialog
-        size="xs"
+        size="sm"
         open={open}
         handler={handleOpen}
-        className="bg-transparent shadow-none"
+        className="bg-transparent shadow-none "
       >
         <Filter />
       </Dialog>
-      <hr className="border-gray-300" />
-      <div className="flex">
-        <div className="container w-[55%] ml-[10%] grid grid-cols-9 gap-8 mt-8">
-          <span className="col-span-2 col-start-1 self-center text-2xl me-8">
-            顯示23間咖啡廳
-          </span>
 
-          <div className="w-[75%] col-span-2 col-start-3 relative flex items-center border-black border-2 rounded-full">
+      <hr className="border-gray-300 w-full" />
+      <div className="flex w-full ">
+        <div className="container w-[90%] mx-auto md:mx-[0%] md:w-[50%] md:ml-[10%] justify-between grid grid-cols-9 gap-8 mt-8">
+          <div className="flex justify-between items-center col-span-9 col-start-1  space-x-2">
+            <span className="col-span-6 md:col-span-3 col-start-1 self-center text-xl md:text-2xl me-8">
+              顯示23間咖啡廳
+            </span>
+
+            {/* <div className="w-[75%] col-span-2 col-start-3 relative flex items-center border-black border-2 rounded-full">
             <div className="self-center text-lg ml-4">低消價格</div>
 
             <Switch
@@ -121,16 +126,30 @@ export default function h() {
                 className: "ml-1 before:hidden left-0.5 border-none",
               }}
             />
+          </div> */}
+
+            <button
+              onClick={handleOpen}
+              class="bg-[#D0B8A8] md:hidden w-[30%] col-start-5 h-12  flex items-center justify-center space-x-2 font-bold text-white rounded-sm"
+            >
+              <img
+                src="sliders.png"
+                class="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              />
+              <span>篩選條件</span>
+            </button>
+            <Button className="hidden md:flex md:col-span-2 md:col-start-7 bg-[#D0B8A8]  h-12 text-sm ">
+              下一頁
+            </Button>
           </div>
 
-          <Button className="ml-[30%] w-[50%] col-span-2 col-start-8 bg-[#D0B8A8] px-2 py-2 text-md ">
-            下一頁
-          </Button>
-
-          <div className="col-span-9 grid grid-cols-9 gap-8 justify-center">
+          <div class="col-span-9 md:hidden h-[300px] bg-gray-200 "></div>
+          <div className="col-span-9 grid grid-cols-9 gap-4 justify-center">
             {storesHome.data.shops.workspace.map((store) => (
               <StoreCard
-                className={"rounded-xl col-span-6 lg:col-span-3"}
+                className={"rounded-xl col-span-9 md:col-span-3 "}
                 key={store.id}
                 store={store}
               />
@@ -144,7 +163,7 @@ export default function h() {
             ))} */}
           </div>
         </div>
-        <div class="w-[25%] h-[920px] bg-gray-200 "></div>
+        <div class="hidden md:block w-[30%] h-[920px] bg-gray-200 "></div>
       </div>
       <Footer className="fixed bottom-0" />
     </>

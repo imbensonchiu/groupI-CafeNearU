@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Login from "./login.jsx";
-import Signup from "./signup.jsx";
+import Login from "./Login.jsx";
+import Signup from "./Signup.jsx";
 import { Dialog } from "@material-tailwind/react";
 
 export default function Header() {
@@ -20,10 +20,25 @@ export default function Header() {
   const [opensignup, setopensignup] = useState(false);
   const handleOpensignup = () => setopensignup((cur) => !cur);
 
+  const handletowishlist = () => {
+    window.location.href = "/wishlist";
+  };
+
+  const handletopersonal = () => {
+    window.location.href = "/account";
+  };
+
+  const handleGoToHomePage = () => {
+    window.location.href = "/";
+  };
+
   return (
     <>
       <div className="fixed top-0  w-full h-[86px] flex-shrink-0 bg-white text-gray-600 text-center font-train-one font-normal flex justify-between items-center px-200  border-d shadow-md z-[100]">
-        <div className="font-logo text-4xl ml-[10%] text-5c5c5c text-center font-train-one font-normal">
+        <div
+          className="font-logo text-3xl md:text-4xl ml-[10%] text-5c5c5c text-center font-train-one font-normal  cursor-pointer"
+          onClick={handleGoToHomePage}
+        >
           CafeNearU
         </div>
         <div className="relative flex items-center">
@@ -71,11 +86,17 @@ export default function Header() {
                   <hr className="border-gray-300 " />
                 </ul>
                 {/* <ul className="">
-                  <li className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl">
+                  <li
+                    className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl first:hover:rounded-t-2xl last:hover:rounded-b-2xl"
+                    onClick={handletowishlist}
+                  >
                     心願單
                   </li>
                   <hr className="border-gray-300" />
-                  <li className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl">
+                  <li
+                    className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl"
+                    onClick={handletopersonal}
+                  >
                     個人資料
                   </li>
                   <hr className="border-gray-300 " />
@@ -101,7 +122,7 @@ export default function Header() {
         <Login />
       </Dialog>
       <Dialog
-        size="xs"
+        size="sm"
         open={opensignup}
         handler={handleOpensignup}
         className="bg-transparent shadow-none"

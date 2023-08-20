@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 
-import Login from "../components/login.jsx";
+import Login from "./Login.jsx";
 
 import {
   Card,
@@ -20,7 +20,14 @@ import {
 
 export default function Filter() {
   const [username, setUsername] = useState("");
-  const [activeButton, setActiveButton] = useState("guest");
+  const [activeButton, setActiveButton] = useState("all");
+  const [picButton, setpicButton] = useState("cafe.gif");
+  const [defiButton, setdefiButton] = useState("就知道你什麼都喜歡");
+
+  const [activeButton2, setActiveButton2] = useState("alltime");
+  const handleButtonClick2 = (buttonType) => {
+    setActiveButton2(buttonType);
+  };
 
   const handleInputChange = (event) => {
     setUsername(event.target.value);
@@ -37,65 +44,90 @@ export default function Filter() {
 
   return (
     <>
-      <Card className="w-[700px] mx-auto">
+      <Card className="w-full">
         <div className="px-4 py-3 text-center font-bold text-xl text-[#030712]">
           篩選條件
         </div>
         <hr className="border-gray-300" />
-        <div className="flex items-center">
-          <div className="container mx-auto flex-row items-center justify-start py-4">
-            <p className="text-[#030712] text-xl ml-8 me-2 mb-4 text-left font-bold">
-              咖啡廳類型
-            </p>
-            <ButtonGroup
-              variant="outlined"
-              size="lg"
-              className="flex ml-8 items-center"
-            >
-              <Button
-                className={`${activeButton === "all" ? "bg-[#D0B8A8]" : ""}`}
-                onClick={() => handleButtonClick("all")}
-              >
-                所有
-              </Button>
-              <Button
-                className={`${activeButton === "work" ? "bg-[#D0B8A8]" : ""}`}
-                onClick={() => handleButtonClick("work")}
-              >
-                工作
-              </Button>
-              <Button
-                className={`${activeButton === "free" ? "bg-[#D0B8A8]" : ""}`}
-                onClick={() => handleButtonClick("free")}
-              >
-                休閒
-              </Button>
-              <Button
-                className={`${activeButton === "gather" ? "bg-[#D0B8A8]" : ""}`}
-                onClick={() => handleButtonClick("gather")}
-              >
-                寵物
-              </Button>
-            </ButtonGroup>
-            <p className="text-[#030712] text-md mt-1 ml-12 mb-2 text-left">
-              工作的定義是什麼呢
-            </p>{" "}
-          </div>
 
-          <img
-            src="cafe.gif"
-            alt="cafe"
-            className="w-60 h-28 text-gray-600 me-16"
-          />
+        <div className="container mx-auto flex-row items-center justify-start py-4">
+          <p className="text-[#030712] text-xl ml-8 me-2 mb-4 text-left font-bold">
+            咖啡廳類型
+          </p>
+          <div className="ml-8 me-8 flex flex-col md:flex-row items-center">
+            <div className="flex-col w-full md:w-[60%]">
+              <img
+                src={picButton}
+                alt="cafe"
+                className=" md:hidden block mb-4 w-[60%] md:w-[40%] h-28 text-gray-600 md:mt-0"
+              />
+              <ButtonGroup
+                variant="outlined"
+                size="lg"
+                className="flex items-center"
+              >
+                <Button
+                  className={`${activeButton === "all" ? "bg-[#D0B8A8]" : ""}`}
+                  onClick={() => {
+                    handleButtonClick("all");
+                    setpicButton("cafe.gif");
+                    setdefiButton("就知道你什麼都喜歡");
+                  }}
+                >
+                  所有
+                </Button>
+                <Button
+                  className={`${activeButton === "work" ? "bg-[#D0B8A8]" : ""}`}
+                  onClick={() => {
+                    handleButtonClick("work");
+                    setpicButton("working.gif");
+                    setdefiButton("工作的定義");
+                  }}
+                >
+                  工作
+                </Button>
+                <Button
+                  className={`${activeButton === "free" ? "bg-[#D0B8A8]" : ""}`}
+                  onClick={() => {
+                    handleButtonClick("free");
+                    setpicButton("tea.gif");
+                    setdefiButton("舒服的放鬆");
+                  }}
+                >
+                  休閒
+                </Button>
+                <Button
+                  className={`${
+                    activeButton === "gather" ? "bg-[#D0B8A8]" : ""
+                  }`}
+                  onClick={() => {
+                    handleButtonClick("gather");
+                    setpicButton("cat.gif");
+                    setdefiButton("貓咪好療癒");
+                  }}
+                >
+                  寵物
+                </Button>
+              </ButtonGroup>
+              <p className="text-[#030712] text-md mt-1 ml-4 mb-2 text-left">
+                {defiButton}
+              </p>
+            </div>
+            <img
+              src={picButton}
+              alt="cafe"
+              className=" hidden md:block w-full md:w-[40%] h-28 text-gray-600 md:mt-0"
+            />
+          </div>
         </div>
 
         <hr className="border-gray-300 w-11/12 mx-auto" />
 
-        <div className="container mx-auto flex-row items-center justify-start ml-8 py-4">
+        <div className="container w-[100%] mx-auto flex-row items-center justify-start ml-8 py-4">
           <p className="text-[#030712] text-xl me-2 mb-2 text-left font-bold">
             設備與服務
           </p>
-          <div className="flex gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <Checkbox label="有插座" />
             <Checkbox label="WIFI" />
             <Checkbox label="店狗" />
@@ -153,20 +185,15 @@ export default function Filter() {
             className="flex items-center"
           >
             <Button
-              className={`${activeButton === "alltime" ? "bg-[#D0B8A8]" : ""}`}
-              onClick={() => handleButtonClick("alltime")}
+              className={`${activeButton2 === "alltime" ? "bg-[#D0B8A8]" : ""}`}
+              onClick={() => handleButtonClick2("alltime")}
             >
               所有
             </Button>
+
             <Button
-              className={`${activeButton === "limit" ? "bg-[#D0B8A8]" : ""}`}
-              onClick={() => handleButtonClick("limit")}
-            >
-              有限時
-            </Button>
-            <Button
-              className={`${activeButton === "unlimit" ? "bg-[#D0B8A8]" : ""}`}
-              onClick={() => handleButtonClick("unlimit")}
+              className={`${activeButton2 === "unlimit" ? "bg-[#D0B8A8]" : ""}`}
+              onClick={() => handleButtonClick2("unlimit")}
             >
               不限時
             </Button>

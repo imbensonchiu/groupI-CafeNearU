@@ -3,10 +3,10 @@
 
 import { useState } from "react";
 
-import Login from "../components/login.jsx";
-import Header from "../components/header.jsx";
-import Signup from "../components/signup.jsx";
-import Footer from "../components/footer.jsx";
+import Login from "../components/Login.jsx";
+import Header from "../components/Header.jsx";
+import Signup from "../components/Signup.jsx";
+import Footer from "../components/Footer.jsx";
 import {
   Button,
   Dialog,
@@ -19,12 +19,6 @@ import {
   Checkbox,
 } from "@material-tailwind/react";
 
-import {
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
-} from "@material-tailwind/react";
-
 export default function h() {
   const [inputDisabled, setInputDisabled] = useState(true);
 
@@ -33,7 +27,7 @@ export default function h() {
   };
   const [isEditing, setIsEditing] = useState(false);
   const [info, setInfo] = useState("自我介紹文字");
-  const [interest, setInterest] = useState("興趣文字");
+  const [interest, setInterest] = useState("才不告訴你哩");
   const [password, setPassword] = useState("密碼");
 
   const handleEditClick = () => {
@@ -80,17 +74,20 @@ export default function h() {
         編輯大頭貼
       </div>
 
-      <div class="w-64 h-64 ml-[10%] rounded-full bg-white flex">
+      <div class="relative w-64 h-64 ml-[10%] mb-4 rounded-full overflow-hidden bg-white flex group">
         <img
           src={defaultImageSrc}
           alt="User"
           width={180}
           height={180}
-          className="w-64 h-64"
+          className="w-64 h-64 object-cover"
           onDrop={handleDrop}
           onDragOver={handleDragOver}
-          style={{ cursor: "pointer", objectFit: "cover" }}
+          style={{ cursor: "pointer" }}
         />
+        <div class="text-lg absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+          <p>拖曳於此編輯大頭貼</p>
+        </div>
       </div>
 
       <div className="ml-[10%] w-[30%]">
@@ -110,7 +107,9 @@ export default function h() {
                   onChange={handleInfoChange}
                 />
               ) : (
-                <div className="border-b border-gray-300">{info}</div>
+                <div className="border-b border-gray-300 text-gray-500">
+                  {info}
+                </div>
               )}
             </div>
             <div className="flex items-center justify-between mb-4">
@@ -127,7 +126,9 @@ export default function h() {
                   onChange={handleInterestChange}
                 />
               ) : (
-                <div className="border-b border-gray-300">{interest}</div>
+                <div className="border-b border-gray-300 text-gray-500">
+                  {interest}
+                </div>
               )}
             </div>
             <Button
@@ -137,14 +138,25 @@ export default function h() {
             >
               {isEditing ? "儲存個人資料" : "編輯個人資料"}
             </Button>
-
+            <div className="flex items-center justify-between mt-4 mb-4">
+              <div className="flex items-center">
+                <div className="text-xl font-bold">帳號</div>
+              </div>
+            </div>
+            <div>
+              <div className="border-b border-gray-300 text-gray-500">
+                20230819@appworks.tw
+              </div>
+            </div>
             <div className="flex items-center justify-between mt-4 mb-4">
               <div className="flex items-center">
                 <div className="text-xl font-bold">密碼</div>
               </div>
             </div>
             <div>
-              <div className="border-b border-gray-300">{password}</div>
+              <div className="border-b border-gray-300 text-gray-500">
+                {password}
+              </div>
             </div>
             <Button onClick={handleOpen} variant="gradient" className="mt-4">
               修改密碼
