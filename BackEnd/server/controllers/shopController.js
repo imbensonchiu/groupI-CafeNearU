@@ -50,39 +50,22 @@ module.exports = {
     );
 
     let shopArr = [];
-    if (process.env.HAS_ACCOUNT === 'true') {
-      for (let i = 0; i < itemsPerPage; i++) {
-        if (result[i] === undefined) {
-          break;
-        }
-        const obj = {
-          id: result[i].id,
-          name: result[i].shop_name,
-          primary_image: result[i].primary_image,
-          address: result[i].address,
-          operating_status: result[i].operating_status,
-          wishlist_item: result[i].wishlist_item,
-          seats: JSON.parse(`[${result[i].seat_info}]`),
-        };
-        shopArr.push({ ...obj });
+    for (let i = 0; i < itemsPerPage; i++) {
+      if (result[i] === undefined) {
+        break;
       }
-    } else {
-      for (let i = 0; i < itemsPerPage; i++) {
-        if (result[i] === undefined) {
-          console.log("I'm out");
-          break;
-        }
-        const obj = {
-          id: result[i].id,
-          name: result[i].shop_name,
-          primary_image: result[i].primary_image,
-          address: result[i].address,
-          operating_status: result[i].operating_status,
-          seats: JSON.parse(`[${result[i].seat_info}]`),
-        };
-        shopArr.push({ ...obj });
-      }
+      const obj = {
+        id: result[i].id,
+        name: result[i].shop_name,
+        primary_image: result[i].primary_image,
+        address: result[i].address,
+        operating_status: result[i].operating_status,
+        wishlist_item: result[i].wishlist_item,
+        seats: JSON.parse(`[${result[i].seat_info}]`),
+      };
+      shopArr.push(obj);
     }
+
     if (result.length < itemsPerQuery) {
       res.status(200).json({ data: { shops: shopArr, next_cursor: null } });
     } else {

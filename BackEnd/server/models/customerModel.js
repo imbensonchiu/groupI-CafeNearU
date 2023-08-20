@@ -65,7 +65,7 @@ module.exports = {
     }
   },
   updatePicture: async (currentID, filename) => {
-    const pictureURL = `https://${process.env.HOST_NAME}/public/avatars/${filename}`;
+    const pictureURL = `https://${process.env.HOST_NAME}/avatars/${filename}`;
     const updateQuery = 'UPDATE `customers` SET picture = ? WHERE id = ?';
     await pool.query(updateQuery, [pictureURL, currentID]);
     return pictureURL;
