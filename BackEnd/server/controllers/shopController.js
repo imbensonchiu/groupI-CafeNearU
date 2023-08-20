@@ -14,12 +14,10 @@ module.exports = {
   search: async (req, res) => {
     const itemsPerPage = 6;
     const itemsPerQuery = itemsPerPage + 1;
-    let cursor = 0;
     const cursorStr = req.query.cursor;
-    if (cursorStr) {
-      cursor = Buffer.from(cursorStr, 'base64').toString('utf-8');
-      console.log(cursor);
-    }
+    const cursor = cursorStr
+      ? parseInt(Buffer.from(cursorStr, 'base64').toString('utf-8'))
+      : 0;
 
     const {
       keyword = null,
@@ -33,11 +31,8 @@ module.exports = {
       no_time_limit,
     } = req.query;
 
-    let userId;
-    if (process.env.HAS_ACCOUNT === 'true') {
-      console.log('user has login');
-      userId = extractUserIDFromToken(req);
-    }
+    const userId =
+      process.env.HAS_ACCOUNT === 'true' ? extractUserIDFromToken(req) : null;
 
     const result = await model.search(
       keyword,

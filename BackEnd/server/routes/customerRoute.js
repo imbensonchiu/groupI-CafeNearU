@@ -27,7 +27,7 @@ router.patch(
 router.put(
   '/picture',
   userAuthorization,
-  upload.single('avatar'),
+  upload.single('picture'),
   customerController.updateCustomerPicture,
 );
 

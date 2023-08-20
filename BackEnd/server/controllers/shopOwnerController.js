@@ -375,12 +375,16 @@ module.exports = {
       if (header !== 'application/json') {
         return errorHandler.clientError(res, 'contentTypeValidate', 400);
       }
+
       const userId = extractUserIDFromToken(req);
+
       const { menu } = req.body;
       if (!menu || menu.length === 0) {
         return errorHandler.clientError(res, 'inputFeild', 400);
       }
+
       await model.menuUpdate(userId, menu);
+
       res.status(200).json({
         data: {
           shops: {
@@ -398,12 +402,16 @@ module.exports = {
       if (header !== 'application/json') {
         return errorHandler.clientError(res, 'contentTypeValidate', 400);
       }
+
       const userId = extractUserIDFromToken(req);
+
       const { seats } = req.body;
       if (!seats || seats.length === 0) {
         return errorHandler.clientError(res, 'inputFeild', 400);
       }
+
       await model.setSeatType(userId, seats);
+
       res.status(200).json({
         data: {
           shops: {
@@ -421,8 +429,11 @@ module.exports = {
       if (header !== 'application/json') {
         return errorHandler.clientError(res, 'contentTypeValidate', 400);
       }
+
       const userId = extractUserIDFromToken(req);
+
       const { operating_status, type, available_seats } = req.body;
+
       if (
         !operating_status ||
         !type ||
@@ -432,11 +443,14 @@ module.exports = {
       ) {
         return errorHandler.clientError(res, 'inputFeild', 400);
       }
+
       const result = await model.checkSeatSetting(userId, type);
       if (result === 'Seat Not Found') {
         return errorHandler.clientError(res, 'seatNotFound', 400);
       }
+
       await model.statusUpdate(userId, operating_status, type, available_seats);
+
       res.status(200).json({
         data: {
           shops: {
@@ -454,19 +468,20 @@ module.exports = {
       if (header !== 'application/json') {
         return errorHandler.clientError(res, 'contentTypeValidate', 400);
       }
+
       const userId = extractUserIDFromToken(req);
+
       const { is_published } = req.body;
       if (typeof is_published !== 'boolean') {
         return errorHandler.clientError(res, 'booleanValidate', 400);
       }
       if (is_published === false) {
         const isUnpub = await model.isUnpub(userId);
-        console.log(isUnpub);
         if (isUnpub) {
           return errorHandler.clientError(res, 'UnpublishedProfile', 400);
         }
       }
-      const checkInfo = await model.hasBasicInfo(userId);
+      const checkInfo = await model.canBePublished(userId);
       if (
         checkInfo.shop_name === null ||
         checkInfo.menu_last_updated === null ||
@@ -474,6 +489,7 @@ module.exports = {
       ) {
         return errorHandler.clientError(res, 'missingRequiredInfo', 400);
       }
+
       await model.changeProfilePubStatus(userId, is_published);
       res.status(200).json({
         data: {
