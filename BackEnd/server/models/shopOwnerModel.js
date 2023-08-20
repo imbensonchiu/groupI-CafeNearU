@@ -65,9 +65,8 @@ module.exports = {
     try {
       await pool.query(insertBasicInfo, [
         ...arr,
-        // 有時間試試看活的 json 能傳進去嗎
-        JSON.stringify(rules),
-        JSON.stringify(service_and_equipment),
+        rules,
+        service_and_equipment,
         userId,
       ]);
     } finally {

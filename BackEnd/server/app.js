@@ -28,9 +28,9 @@ app.use('/api/1.0/wishLists', wishListRoutes);
 app.use('/api/1.0/shop-owners', shopOwnerRoutes);
 app.use('/api/1.0/shops', shopRoutes);
 
-const intervalTime = 30000; // 30s
+/*const intervalTime = 30000; // 30s
 updateCommentDashboard();
-setInterval(updateCommentDashboard, intervalTime);
+setInterval(updateCommentDashboard, intervalTime);*/
 
 client.on('clientError', async (error) => {
   const guild = await client.guilds.fetch(process.env.DISCORD_SERVER_ID);

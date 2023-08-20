@@ -23,6 +23,8 @@ const errorMessages = {
     booleanValidate: 'Invalid Input Format (should be boolean)',
     missingRequiredInfo: 'Incomplete Shop Information',
     UnpublishedProfile: 'Cannot unpublish an unpublished profile',
+    extractDataFailed:
+      'Unable to extract filter data. Please verify your input',
 
     // 401 Client Error (Token error)
     noToken: 'No token provided',
