@@ -25,6 +25,7 @@ const errorMessages = {
     UnpublishedProfile: 'Cannot unpublish an unpublished profile',
     extractDataFailed:
       'Unable to extract filter data. Please verify your input',
+    profileNotFound: 'Proflile Not Found',
 
     // 401 Client Error (Token error)
     noToken: 'No token provided',

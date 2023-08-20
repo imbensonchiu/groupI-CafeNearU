@@ -15,6 +15,7 @@ module.exports = {
     cursor,
     itemsPerQuery,
   ) => {
+    let queryParams = [];
     let basicQuery = `SELECT shops.id, shop_name, primary_image,
     address, operating_status, 
     GROUP_CONCAT(
@@ -22,48 +23,52 @@ module.exports = {
       '", "available_seats": ', seats.available_seats,
       ', "total_seats": ', seats.total_seats, ' }'
     ) AS seat_info`;
-    try {
-      if (keyword) {
-        basicQuery += ` AND (shop_name LIKE '%${keyword}%' OR address LIKE '%${keyword}%')`;
-      }
-      if (type) {
-        basicQuery += ` AND shops.type = "${type}"`;
-      }
-      if (plug) {
-        basicQuery += ` AND plug = true`;
-      }
-      if (wifi) {
-        basicQuery += ` AND wifi = true`;
-      }
-      if (smoking_area) {
-        basicQuery += ` AND smoking_area = true`;
-      }
-      if (cat) {
-        basicQuery += ` AND cat = true`;
-      }
-      if (dog) {
-        basicQuery += ` AND dog = true`;
-      }
-      if (min_order) {
-        basicQuery += ` AND min_order < ${min_order}`;
-      }
-      if (no_time_limit) {
-        basicQuery += ` AND time_limit = false`;
-      }
-      if (userId) {
-        basicQuery += `, IF(
+
+    if (keyword) {
+      basicQuery += ` AND (shop_name LIKE ？ OR address LIKE ?)`;
+      queryParams.push(`%${keyword}%`, `%${keyword}%`);
+    }
+    if (type) {
+      basicQuery += ` AND shops.type = ?`;
+      queryParams.push(`${type}`);
+    }
+    if (plug) {
+      basicQuery += ` AND plug = true`;
+    }
+    if (wifi) {
+      basicQuery += ` AND wifi = true`;
+    }
+    if (smoking_area) {
+      basicQuery += ` AND smoking_area = true`;
+    }
+    if (cat) {
+      basicQuery += ` AND cat = true`;
+    }
+    if (dog) {
+      basicQuery += ` AND dog = true`;
+    }
+    if (min_order) {
+      basicQuery += ` AND min_order < ?`;
+      queryParams.push(`${min_order}`);
+    }
+    if (no_time_limit) {
+      basicQuery += ` AND time_limit = false`;
+    }
+    if (userId) {
+      basicQuery += `, IF(
           (SELECT wishlists.id FROM wishlists 
           LEFT JOIN wishlist_items 
           ON wishlists.id = wishlist_items.wishlist_id 
           WHERE wishlist_items.cafe_id = shops.id AND customer_id = ? ) > 0, true, false) AS wishlist_item`;
-      }
-      basicQuery += ` FROM shops
+      queryParams.push(userId);
+    }
+    basicQuery += ` FROM shops
       LEFT JOIN seats ON shops.id = seats.cafe_id
       WHERE is_published = true AND shops.id > ?
       GROUP BY shops.id
-      LIMIT ${itemsPerQuery}`;
-
-      const queryParams = userId ? [userId, cursor] : [cursor];
+      LIMIT ? ;`;
+    queryParams.push(cursor, itemsPerQuery);
+    try {
       const [result] = await pool.query(basicQuery, queryParams);
       return result;
     } finally {
@@ -166,5 +171,15 @@ module.exports = {
   },
   getComments: () => {
     return 'get all comment';
+  },
+  findPublishedCafeProfileById: async (cafeId) => {
+    const query = `SELECT id FROM shops WHERE id = ? AND is_published = true`;
+    try {
+      const [[result]] = await pool.query(query, cafeId);
+      console.log('result:', result);
+      return result;
+    } finally {
+      await pool.releaseConnection();
+    }
   },
 };

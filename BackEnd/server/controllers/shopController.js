@@ -78,6 +78,13 @@ module.exports = {
   },
   getBasicInfo: async (req, res) => {
     const cafeId = req.params.id * 1;
+    const cafeProfileExistence = await model.findPublishedCafeProfileById(
+      cafeId,
+    );
+    console.log(cafeProfileExistence);
+    if (!cafeProfileExistence) {
+      return errorHandler.clientError(res, 'profileNotFound', 404);
+    }
     let userId;
     if (process.env.HAS_ACCOUNT === 'true') {
       console.log('user has login');
