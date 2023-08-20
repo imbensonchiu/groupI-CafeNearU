@@ -140,10 +140,8 @@ module.exports = {
       await conn.query(updateSeatStatus, [available_seats, type, userId]);
       await conn.query(updateOperatingStatus, [operating_status, userId]);
       await conn.commit();
-      console.log('Transaction committed.');
     } catch (error) {
       await conn.rollback();
-      console.error('Transaction rolled back:', error);
     } finally {
       pool.releaseConnection();
     }
@@ -165,7 +163,7 @@ module.exports = {
       pool.releaseConnection();
     }
   },
-  hasBasicInfo: async (userId) => {
+  canBePublished: async (userId) => {
     const query = `select shop_name, menu_last_updated, status_last_updated from shops where id = ?;`;
     try {
       const [[result]] = await pool.query(query, [userId]);
