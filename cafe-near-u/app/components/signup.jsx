@@ -29,7 +29,7 @@ export default function Signup() {
 
   return (
     <>
-      <Card className="w-[600px] mx-auto">
+      <Card className="w-full mx-auto ">
         <div className="px-4 py-3 text-center font-bold text-xl text-[#030712] ">
           註冊
         </div>

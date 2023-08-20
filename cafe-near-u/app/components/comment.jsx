@@ -27,7 +27,7 @@ export default function Comment() {
 
   return (
     <>
-      <Card className="w-[500px] mx-auto">
+      <Card className="w- mx-auto">
         <div className="px-4 py-3 text-center font-bold text-xl text-[#030712]">
           評價
         </div>
@@ -138,7 +138,7 @@ export default function Comment() {
               } hover:bg-black hover:text-white`}
               onClick={() => handleButtonClick("guest")}
             >
-              客人
+              安靜
             </Button>
             <Button
               className={`${
@@ -146,7 +146,7 @@ export default function Comment() {
               } hover:bg-black hover:text-white`}
               onClick={() => handleButtonClick("store")}
             >
-              店家
+              熱鬧
             </Button>
           </ButtonGroup>
         </div>

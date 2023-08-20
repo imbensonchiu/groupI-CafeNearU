@@ -14,13 +14,13 @@ import {
 export default function Addwish() {
   return (
     <>
-      <Card className=" w-[30%] mx-auto">
+      <Card className=" w-full mx-auto">
         <div className="px-4 py-3 text-center font-bold text-xl text-[#030712]">
           收藏口袋名單
         </div>
         <hr className="border-gray-300 mb-8" />
         <div className="flex flex-wrap justify-center ">
-          <Card className="w-[45%] h-60 mb-8 transform hover:scale-110 transition-transform  border border-[#00000] ">
+          <Card className="w-[45%] h-48 md:h-60 mb-8 transform hover:scale-110 transition-transform  border border-[#00000] ">
             <CardHeader floated={false} className="h-80">
               <img
                 src="duck.jpg"
@@ -34,7 +34,7 @@ export default function Addwish() {
               </Typography>
             </CardBody>
           </Card>
-          <Card className="ml-[5%] w-[45%] h-60 mb-8 transform hover:scale-110 transition-transform">
+          <Card className="ml-[5%] w-[45%] h-48 md:h-60 mb-8 transform hover:scale-110 transition-transform">
             <CardHeader floated={false} className="h-80">
               <img
                 src="duck.jpg"
@@ -48,6 +48,20 @@ export default function Addwish() {
               </Typography>
             </CardBody>
           </Card>
+          {/* <Card className="w-[45%] h-48 md:h-60 mb-8 transform hover:scale-110 transition-transform  border border-[#00000] ">
+            <CardHeader floated={false} className="h-80">
+              <img
+                src="duck.jpg"
+                alt="profile-picture"
+                className="h-[100%] w-[100%]"
+              />
+            </CardHeader>
+            <CardBody className="text-center p-2">
+              <Typography variant="h4" color="blue-gray" className="text-xl">
+                佩佩的口袋名單
+              </Typography>
+            </CardBody>
+          </Card> */}
         </div>
         <hr className="border-gray-300 mb-4" />
         <div className="flex justify-center items-center">
