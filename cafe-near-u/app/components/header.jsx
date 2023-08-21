@@ -4,9 +4,11 @@ import { useState } from "react";
 import Login from "./Login.jsx";
 import Signup from "./Signup.jsx";
 import { Dialog } from "@material-tailwind/react";
+import Cookies from "js-cookie";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const cookieValue = Cookies.get("token");
 
   const toggleMenu = () => {
     setIsMenuOpen(true);
@@ -32,6 +34,12 @@ export default function Header() {
     window.location.href = "/";
   };
 
+  const handleLogout = () => {
+    Cookies.remove("token");
+    Cookies.remove("userId");
+    // Cookies.remove("postid");
+    window.location.href = "/"; // 登出後重定向至登入頁面
+  };
   return (
     <>
       <div className="fixed top-0  w-full h-[86px] flex-shrink-0 bg-white text-gray-600 text-center font-train-one font-normal flex justify-between items-center px-200  border-d shadow-md z-[100]">
@@ -68,43 +76,49 @@ export default function Header() {
                 className="absolute right-0 top-[50px] w-60 bg-white border border-gray-300 rounded-2xl shadow-lg"
                 onMouseLeave={closeMenu}
               >
-                <ul className="">
-                  <li
-                    className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl first:hover:rounded-t-2xl last:hover:rounded-b-2xl"
-                    onClick={handleOpen}
-                  >
-                    登入
-                  </li>
-                  <hr className="border-gray-300" />
-                  <li
-                    className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl"
-                    onClick={handleOpensignup}
-                  >
-                    註冊
-                  </li>
+                {!cookieValue ? (
+                  <ul className="">
+                    <li
+                      className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl first:hover:rounded-t-2xl last:hover:rounded-b-2xl"
+                      onClick={handleOpen}
+                    >
+                      登入
+                    </li>
+                    <hr className="border-gray-300" />
+                    <li
+                      className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl"
+                      onClick={handleOpensignup}
+                    >
+                      註冊
+                    </li>
 
-                  <hr className="border-gray-300 " />
-                </ul>
-                {/* <ul className="">
-                  <li
-                    className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl first:hover:rounded-t-2xl last:hover:rounded-b-2xl"
-                    onClick={handletowishlist}
-                  >
-                    心願單
-                  </li>
-                  <hr className="border-gray-300" />
-                  <li
-                    className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl"
-                    onClick={handletopersonal}
-                  >
-                    個人資料
-                  </li>
-                  <hr className="border-gray-300 " />
-                  <li className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left  text-xl">
-                    登出
-                  </li>
-                  <hr className="border-gray-300 " />
-                </ul> */}
+                    <hr className="border-gray-300 " />
+                  </ul>
+                ) : (
+                  <ul className="">
+                    <li
+                      className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl first:hover:rounded-t-2xl last:hover:rounded-b-2xl"
+                      onClick={handletowishlist}
+                    >
+                      心願單
+                    </li>
+                    <hr className="border-gray-300" />
+                    <li
+                      className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl"
+                      onClick={handletopersonal}
+                    >
+                      個人資料
+                    </li>
+                    <hr className="border-gray-300 " />
+                    <li
+                      className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left  text-xl"
+                      onClick={handleLogout}
+                    >
+                      登出
+                    </li>
+                    <hr className="border-gray-300 " />
+                  </ul>
+                )}
                 <div className="text-gray-400 text-sm px-4 py-3 font-inter text-center text-lg font-logo">
                   CafeNearU
                 </div>
