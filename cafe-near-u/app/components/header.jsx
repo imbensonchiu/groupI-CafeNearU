@@ -6,7 +6,7 @@ import Signup from "./Signup.jsx";
 import { Dialog } from "@material-tailwind/react";
 import Cookies from "js-cookie";
 
-export default function Header() {
+export default function withRouter(Header) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const cookieValue = Cookies.get("token");
 
@@ -43,11 +43,16 @@ export default function Header() {
     window.location.href = "/"; // 登出後重定向至登入頁面
   };
 
+  const [searchTerm, setSearchTerm] = useState(""); // 用户输入的搜索词
+
+  const jump = (info) => {
+    window.location.href = `/searchresult/${info}`;
+  };
   return (
     <>
       <div className="fixed top-0 w-full h-[86px] flex-shrink-0 bg-white text-gray-600 text-center font-train-one font-normal flex justify-between items-center px-2 sm:px-4 border-d shadow-md z-[100]">
         <div
-          className="font-logo text-3xl md:text-4xl ml-10% text-5c5c5c text-center font-train-one font-normal cursor-pointer"
+          className="ml-[5%] font-logo text-3xl md:text-4xl ml-10% text-5c5c5c text-center font-train-one font-normal cursor-pointer"
           onClick={handleGoToHomePage}
         >
           CafeNearU
@@ -57,16 +62,20 @@ export default function Header() {
             <img
               src="search.svg"
               alt="Avatar"
-              className="w-6 h-6 text-gray-600"
+              className="cursor: pointer w-6 h-6 text-gray-600"
+              onClick={() => jump(searchTerm)}
             />
           </div>
           <input
             type="search"
             className="w-full h-11 px-4 pl-12 text-gray-800 placeholder-gray-400 border border-gray-300 rounded-lg shadow-md"
             placeholder="開始搜尋"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            border="none"
           />
         </div>
-        <div className="me-10% flex items-center">
+        <div className="me-[5%] flex items-center">
           <div className="relative">
             <img
               src="account_circle.svg"
