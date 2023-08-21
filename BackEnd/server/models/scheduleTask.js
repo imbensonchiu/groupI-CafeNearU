@@ -3,6 +3,31 @@ const pool = require('../util/db');
 module.exports = {
   updateCommentDashboard: async () => {
     try {
+      // Step 1: Fetch cafe_ids that are not in comment_dashboard
+      const missingCafeIDsQuery = `
+        SELECT DISTINCT c.cafe_id
+        FROM 
+          comments c
+        LEFT JOIN 
+          comment_dashboard cd
+          ON c.cafe_id = cd.cafe_id
+        WHERE cd.cafe_id IS NULL; 
+      `;
+      const [missingCafeIdsResult] = await pool.query(missingCafeIDsQuery);
+      const missingCafeIds = missingCafeIdsResult.map((row) => row.cafe_id);
+
+      // Step 2: Insert missing cafe_ids into comment_dashboard
+      if (missingCafeIds.length > 0) {
+        const insertQuery = `
+                INSERT INTO comment_dashboard (cafe_id) VALUES ?;
+              `;
+        const insertValues = missingCafeIds.map((cafe_id) => [cafe_id]);
+        await pool.query(insertQuery, [insertValues]);
+
+        console.log('新增 cafe_id 到 comment_dashboard 成功');
+      }
+
+      // Step 3: Update comment_dashboard with aggregated data
       const query = `WITH NewRatings AS (
             SELECT
                 cafe_id,
@@ -51,10 +76,12 @@ module.exports = {
             cd.is_quiet = qs.quiet_percentage,
             cd.comment_count = cc.total_comments;`;
 
-      await pool.execute(query);
-      console.log('資料更新成功');
+      const [result] = await pool.execute(query);
+      console.log(
+        `comment_dashboard 資料更新成功，更新 ${result.changedRows} 筆資料`,
+      );
     } catch (error) {
-      console.log('資料更新失敗:', error);
+      console.log('comment_dashboard 資料更新失敗:', error);
     } finally {
       pool.releaseConnection();
     }

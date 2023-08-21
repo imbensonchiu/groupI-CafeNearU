@@ -6,9 +6,55 @@ const {
   extractUserIDFromToken,
   validateEmail,
   validateProvider,
-  hasJsonStructure,
 } = require('../util/common');
 const model = require('../models/shopOwnerModel');
+
+function generateImageURL(image) {
+  if (!image || !image[0]?.filename) {
+    return null;
+  }
+  return `https://${process.env.HOSTNAME}/shopPics/${image[0].filename}`;
+}
+
+function hasJsonStructure(str) {
+  if (typeof str !== 'string') {
+    return false;
+  }
+  try {
+    const result = JSON.parse(str);
+    const type = Object.prototype.toString.call(result);
+    return type === '[object Object]' || type === '[object Array]';
+  } catch (err) {
+    return false;
+  }
+}
+
+function extractFilterData(rules, service_and_equipment) {
+  try {
+    rules = JSON.parse(rules);
+    service_and_equipment = JSON.parse(service_and_equipment);
+    const time_limit = rules[0].heading;
+    const min_order = rules[1].heading;
+    const plug = service_and_equipment[0].content;
+    const wifi = service_and_equipment[1].content;
+    const smoking_area = service_and_equipment[2].content;
+    const dog = service_and_equipment[3].content;
+    const cat = service_and_equipment[4].content;
+    return [time_limit, min_order, plug, wifi, smoking_area, dog, cat];
+  } catch (err) {
+    return 'Extract data Failed';
+  }
+}
+
+function checkInputField(basicInfoArr) {
+  let allFieldsValid = true;
+  basicInfoArr.forEach(function (el) {
+    if (typeof el === 'undefined' || (typeof el === 'string' && !el.trim())) {
+      allFieldsValid = false;
+    }
+  });
+  return allFieldsValid;
+}
 
 module.exports = {
   ownerSignUp: async (req, res) => {
@@ -235,21 +281,17 @@ module.exports = {
       if (!header.includes('multipart/form-data')) {
         return errorHandler.clientError(res, 'contentTypeValidate', 400);
       }
+
       const userId = extractUserIDFromToken(req);
 
-      const ip = '13.211.10.154';
       if (typeof req.files.primary_image === 'undefined') {
         return errorHandler.clientError(res, 'inputFeild', 400);
       }
 
-      const primaryImg = `https://${ip}/shopPics/${req.files.primary_image[0].filename}`;
+      const primaryImg = generateImageURL(req.files.primary_image);
+      const secondaryImg1 = generateImageURL(req.files.secondary_image_1);
+      const secondaryImg2 = generateImageURL(req.files.secondary_image_2);
 
-      const secondaryImg1 = req.files.secondary_image_1
-        ? `https://${ip}/shopPics/${req.files.secondary_image_1[0].filename}`
-        : null;
-      const secondaryImg2 = req.files.secondary_image_2
-        ? `https://${ip}/shopPics/${req.files.secondary_image_2[0].filename}`
-        : null;
       const {
         name,
         type,
@@ -262,36 +304,25 @@ module.exports = {
         facebook = null,
         ig = null,
         line = null,
+        rules,
+        service_and_equipment,
       } = req.body;
-      if (!hasJsonStructure(req.body.rules)) {
-        return errorHandler.clientError(res, 'jsonValidate', 400);
-      }
-      const rules = JSON.parse(req.body.rules);
-      const time_limit = rules[0].heading;
-      const min_order = rules[1].heading;
-      if (!hasJsonStructure(req.body.service_and_equipment)) {
-        return errorHandler.clientError(res, 'jsonValidate', 400);
-      }
-      const service_and_equipment = JSON.parse(req.body.service_and_equipment);
-      const plug = service_and_equipment[0].content;
-      const wifi = service_and_equipment[1].content;
-      const smoking_area = service_and_equipment[2].content;
-      const dog = service_and_equipment[3].content;
-      const cat = service_and_equipment[4].content;
 
-      if (!name || !address || !type || !opening_hour || !closing_hour) {
-        return errorHandler.clientError(res, 'inputFeild', 400);
+      if (!hasJsonStructure(opening_hour)) {
+        return errorHandler.clientError(res, 'jsonValidate', 400);
       }
-      if (
-        typeof time_limit === 'undefined' ||
-        typeof min_order === 'undefined' ||
-        typeof plug === 'undefined' ||
-        typeof wifi === 'undefined' ||
-        typeof smoking_area === 'undefined' ||
-        typeof dog === 'undefined' ||
-        typeof cat === 'undefined'
-      ) {
-        return errorHandler.clientError(res, 'inputFeild', 400);
+      if (!hasJsonStructure(closing_hour)) {
+        return errorHandler.clientError(res, 'jsonValidate', 400);
+      }
+      if (!hasJsonStructure(rules)) {
+        return errorHandler.clientError(res, 'jsonValidate', 400);
+      }
+      if (!hasJsonStructure(service_and_equipment)) {
+        return errorHandler.clientError(res, 'jsonValidate', 400);
+      }
+      const filterType = extractFilterData(rules, service_and_equipment);
+      if (filterType === 'Extract data Failed') {
+        return errorHandler.clientError(res, 'extractDataFailed', 400);
       }
       const basicInfo = [
         name,
@@ -305,27 +336,27 @@ module.exports = {
         facebook,
         ig,
         line,
-        time_limit,
-        min_order,
-        plug,
-        wifi,
-        smoking_area,
-        dog,
-        cat,
+        ...filterType,
         primaryImg,
         secondaryImg1,
         secondaryImg2,
       ];
+      if (!checkInputField(basicInfo)) {
+        return errorHandler.clientError(res, 'inputFeild', 400);
+      }
+
       const user = await model.getByID(userId);
       if (!user) {
         return errorHandler.clientError(res, 'emailExist', 403);
       }
+
       await model.basicInfoUpdate(
         userId,
         basicInfo,
         rules,
         service_and_equipment,
       );
+
       res.status(200).json({
         data: {
           shops: {
@@ -343,12 +374,16 @@ module.exports = {
       if (header !== 'application/json') {
         return errorHandler.clientError(res, 'contentTypeValidate', 400);
       }
+
       const userId = extractUserIDFromToken(req);
+
       const { menu } = req.body;
       if (!menu || menu.length === 0) {
         return errorHandler.clientError(res, 'inputFeild', 400);
       }
+
       await model.menuUpdate(userId, menu);
+
       res.status(200).json({
         data: {
           shops: {
@@ -366,12 +401,16 @@ module.exports = {
       if (header !== 'application/json') {
         return errorHandler.clientError(res, 'contentTypeValidate', 400);
       }
+
       const userId = extractUserIDFromToken(req);
+
       const { seats } = req.body;
       if (!seats || seats.length === 0) {
         return errorHandler.clientError(res, 'inputFeild', 400);
       }
+
       await model.setSeatType(userId, seats);
+
       res.status(200).json({
         data: {
           shops: {
@@ -389,8 +428,11 @@ module.exports = {
       if (header !== 'application/json') {
         return errorHandler.clientError(res, 'contentTypeValidate', 400);
       }
+
       const userId = extractUserIDFromToken(req);
+
       const { operating_status, type, available_seats } = req.body;
+
       if (
         !operating_status ||
         !type ||
@@ -400,11 +442,14 @@ module.exports = {
       ) {
         return errorHandler.clientError(res, 'inputFeild', 400);
       }
+
       const result = await model.checkSeatSetting(userId, type);
       if (result === 'Seat Not Found') {
         return errorHandler.clientError(res, 'seatNotFound', 400);
       }
+
       await model.statusUpdate(userId, operating_status, type, available_seats);
+
       res.status(200).json({
         data: {
           shops: {
@@ -422,19 +467,20 @@ module.exports = {
       if (header !== 'application/json') {
         return errorHandler.clientError(res, 'contentTypeValidate', 400);
       }
+
       const userId = extractUserIDFromToken(req);
+
       const { is_published } = req.body;
       if (typeof is_published !== 'boolean') {
         return errorHandler.clientError(res, 'booleanValidate', 400);
       }
       if (is_published === false) {
         const isUnpub = await model.isUnpub(userId);
-        console.log(isUnpub);
         if (isUnpub) {
           return errorHandler.clientError(res, 'UnpublishedProfile', 400);
         }
       }
-      const checkInfo = await model.hasBasicInfo(userId);
+      const checkInfo = await model.canBePublished(userId);
       if (
         checkInfo.shop_name === null ||
         checkInfo.menu_last_updated === null ||
@@ -442,6 +488,7 @@ module.exports = {
       ) {
         return errorHandler.clientError(res, 'missingRequiredInfo', 400);
       }
+
       await model.changeProfilePubStatus(userId, is_published);
       res.status(200).json({
         data: {

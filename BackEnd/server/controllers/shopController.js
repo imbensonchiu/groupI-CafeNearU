@@ -14,12 +14,10 @@ module.exports = {
   search: async (req, res) => {
     const itemsPerPage = 6;
     const itemsPerQuery = itemsPerPage + 1;
-    let cursor = 0;
     const cursorStr = req.query.cursor;
-    if (cursorStr) {
-      cursor = Buffer.from(cursorStr, 'base64').toString('utf-8');
-      console.log(cursor);
-    }
+    const cursor = cursorStr
+      ? parseInt(Buffer.from(cursorStr, 'base64').toString('utf-8'))
+      : 0;
 
     const {
       keyword = null,
@@ -33,11 +31,8 @@ module.exports = {
       no_time_limit,
     } = req.query;
 
-    let userId;
-    if (process.env.HAS_ACCOUNT === 'true') {
-      console.log('user has login');
-      userId = extractUserIDFromToken(req);
-    }
+    const userId =
+      process.env.HAS_ACCOUNT === 'true' ? extractUserIDFromToken(req) : null;
 
     const result = await model.search(
       keyword,
@@ -55,39 +50,22 @@ module.exports = {
     );
 
     let shopArr = [];
-    if (process.env.HAS_ACCOUNT === 'true') {
-      for (let i = 0; i < itemsPerPage; i++) {
-        if (result[i] === undefined) {
-          break;
-        }
-        const obj = {
-          id: result[i].id,
-          name: result[i].shop_name,
-          primary_image: result[i].primary_image,
-          address: result[i].address,
-          operating_status: result[i].operating_status,
-          wishlist_item: result[i].wishlist_item,
-          seats: JSON.parse(`[${result[i].seat_info}]`),
-        };
-        shopArr.push({ ...obj });
+    for (let i = 0; i < itemsPerPage; i++) {
+      if (result[i] === undefined) {
+        break;
       }
-    } else {
-      for (let i = 0; i < itemsPerPage; i++) {
-        if (result[i] === undefined) {
-          console.log("I'm out");
-          break;
-        }
-        const obj = {
-          id: result[i].id,
-          name: result[i].shop_name,
-          primary_image: result[i].primary_image,
-          address: result[i].address,
-          operating_status: result[i].operating_status,
-          seats: JSON.parse(`[${result[i].seat_info}]`),
-        };
-        shopArr.push({ ...obj });
-      }
+      const obj = {
+        id: result[i].id,
+        name: result[i].shop_name,
+        primary_image: result[i].primary_image,
+        address: result[i].address,
+        operating_status: result[i].operating_status,
+        wishlist_item: result[i].wishlist_item,
+        seats: JSON.parse(`[${result[i].seat_info}]`),
+      };
+      shopArr.push(obj);
     }
+
     if (result.length < itemsPerQuery) {
       res.status(200).json({ data: { shops: shopArr, next_cursor: null } });
     } else {
@@ -100,6 +78,13 @@ module.exports = {
   },
   getBasicInfo: async (req, res) => {
     const cafeId = req.params.id * 1;
+    const cafeProfileExistence = await model.findPublishedCafeProfileById(
+      cafeId,
+    );
+    console.log(cafeProfileExistence);
+    if (!cafeProfileExistence) {
+      return errorHandler.clientError(res, 'profileNotFound', 404);
+    }
     let userId;
     if (process.env.HAS_ACCOUNT === 'true') {
       console.log('user has login');

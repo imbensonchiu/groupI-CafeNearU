@@ -13,9 +13,11 @@ export default function Header() {
   const toggleMenu = () => {
     setIsMenuOpen(true);
   };
+
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
 
@@ -40,11 +42,12 @@ export default function Header() {
     // Cookies.remove("postid");
     window.location.href = "/"; // 登出後重定向至登入頁面
   };
+
   return (
     <>
-      <div className="fixed top-0  w-full h-[86px] flex-shrink-0 bg-white text-gray-600 text-center font-train-one font-normal flex justify-between items-center px-200  border-d shadow-md z-[100]">
+      <div className="fixed top-0 w-full h-[86px] flex-shrink-0 bg-white text-gray-600 text-center font-train-one font-normal flex justify-between items-center px-2 sm:px-4 border-d shadow-md z-[100]">
         <div
-          className="font-logo text-3xl md:text-4xl ml-[10%] text-5c5c5c text-center font-train-one font-normal  cursor-pointer"
+          className="font-logo text-3xl md:text-4xl ml-10% text-5c5c5c text-center font-train-one font-normal cursor-pointer"
           onClick={handleGoToHomePage}
         >
           CafeNearU
@@ -59,11 +62,11 @@ export default function Header() {
           </div>
           <input
             type="search"
-            className="w-[100%] h-11 px-4 pl-12 text-gray-800 placeholder-gray-400 border border-gray-300 rounded-lg shadow-md"
+            className="w-full h-11 px-4 pl-12 text-gray-800 placeholder-gray-400 border border-gray-300 rounded-lg shadow-md"
             placeholder="開始搜尋"
           />
         </div>
-        <div className="me-[10%] flex items-center">
+        <div className="me-10% flex items-center">
           <div className="relative">
             <img
               src="account_circle.svg"
@@ -91,8 +94,7 @@ export default function Header() {
                     >
                       註冊
                     </li>
-
-                    <hr className="border-gray-300 " />
+                    <hr className="border-gray-300" />
                   </ul>
                 ) : (
                   <ul className="">
@@ -104,19 +106,19 @@ export default function Header() {
                     </li>
                     <hr className="border-gray-300" />
                     <li
-                      className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl"
+                      className="px-4 py-3 hover-bg-gray-100 cursor-pointer text-left font-bold text-xl"
                       onClick={handletopersonal}
                     >
                       個人資料
                     </li>
-                    <hr className="border-gray-300 " />
+                    <hr className="border-gray-300" />
                     <li
-                      className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left  text-xl"
+                      className="px-4 py-3 hover-bg-gray-100 cursor-pointer text-left text-xl"
                       onClick={handleLogout}
                     >
                       登出
                     </li>
-                    <hr className="border-gray-300 " />
+                    <hr className="border-gray-300" />
                   </ul>
                 )}
                 <div className="text-gray-400 text-sm px-4 py-3 font-inter text-center text-lg font-logo">

@@ -8,5 +8,6 @@
   "vs-code-prettier-eslint.prettierLast": "false",
   "[javascriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  } // set as "true" to run 'prettier' last not first
+  },
+  "compile-hero.disable-compile-files-on-did-save-code": false // set as "true" to run 'prettier' last not first
 }

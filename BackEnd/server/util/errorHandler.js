@@ -1,3 +1,5 @@
+const client = require('./discord');
+
 const errorMessages = {
   client: {
     // 400 Client Error
@@ -21,6 +23,9 @@ const errorMessages = {
     booleanValidate: 'Invalid Input Format (should be boolean)',
     missingRequiredInfo: 'Incomplete Shop Information',
     UnpublishedProfile: 'Cannot unpublish an unpublished profile',
+    extractDataFailed:
+      'Unable to extract filter data. Please verify your input',
+    profileNotFound: 'Proflile Not Found',
 
     // 401 Client Error (Token error)
     noToken: 'No token provided',
@@ -43,6 +48,7 @@ const errorMessages = {
 module.exports = {
   clientError: (res, errorKey, statusCode = 400) => {
     const errorMessage = errorMessages.client[errorKey];
+    client.emit('clientError', errorMessage);
     res.status(statusCode).json({ error: errorMessage });
   },
   serverError: (res, error, errorKey) => {
@@ -54,6 +60,7 @@ module.exports = {
       console.error('MySQL error message:', error.sqlMessage);
       console.error('MySQL query:', error.sql);
     }
+    client.emit('serverError', errorMessage);
     res.status(500).json({ error: errorMessage });
   },
 };

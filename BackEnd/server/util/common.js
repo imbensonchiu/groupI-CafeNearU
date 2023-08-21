@@ -44,7 +44,7 @@ module.exports = {
   validateProvider: (provider) => {
     return provider === 'native' || provider === 'google';
   },
-  hasJsonStructure: (str) => {
+  /*hasJsonStructure: (str) => {
     if (typeof str !== 'string') {
       return false;
     }
@@ -56,7 +56,7 @@ module.exports = {
     } catch (err) {
       return false;
     }
-  },
+  },*/
   checkCustomerLogin: async (req, res, next) => {
     try {
       if (!req.header('Authorization')) {
