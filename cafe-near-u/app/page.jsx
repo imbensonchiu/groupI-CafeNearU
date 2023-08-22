@@ -96,7 +96,7 @@ export default function Home() {
                 jump("type=寵物");
               }}
             >
-              <span class="material-symbols-outlined">pets</span>
+              <span className="material-symbols-outlined">pets</span>
             </IconButton>
             <span className="self-center  text-xs lg:text-sm">寵物</span>
           </div>
@@ -108,7 +108,7 @@ export default function Home() {
                 jump("no_time_limit=true");
               }}
             >
-              <span class="material-symbols-outlined">schedule</span>
+              <span className="material-symbols-outlined">schedule</span>
             </IconButton>
             <span className="self-center text-xs lg:text-sm">不限時</span>
           </div>
@@ -126,13 +126,13 @@ export default function Home() {
                 jump("plug=true");
               }}
             >
-              <span class="material-symbols-outlined">power</span>
+              <span className="material-symbols-outlined">power</span>
             </IconButton>
             <span className="self-center  text-xs lg:text-sm">插座</span>
           </div>
           <div className="flex flex-col">
             <IconButton variant="text" className="rounded-full">
-              <span class="material-symbols-outlined">casino</span>
+              <span className="material-symbols-outlined">casino</span>
             </IconButton>
             <span className="self-center text-xs lg:text-sm">好手氣</span>
           </div>
