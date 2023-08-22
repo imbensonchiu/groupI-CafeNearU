@@ -1,20 +1,28 @@
 "use client";
 
 import { Carousel, Dialog } from "@material-tailwind/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Addwish from "./Like.jsx";
 import Cookies from "js-cookie";
 
 export default function StoreCard({ className, store }) {
   const cookieValue = Cookies.get("token");
-  const { name, primary_image, operating_status, min_order, seats } = store;
+  const {
+    id,
+    name,
+    primary_image,
+    wishlist_item,
+    operating_status,
+    min_order,
+    seats,
+  } = store;
 
   let seat = seats.some((elem) => elem.available_seats);
   const [liked, setLiked] = useState(false);
   const [open, setOpen] = useState(false);
   const toggleLike = () => {
     setLiked(!liked); // 切换 liked 状态
-
+    Cookies.set("storeid", id);
     // 根据 liked 状态决定是否打开对话框
     if (!liked) {
       handleOpen(); // 打开对话框
@@ -22,8 +30,48 @@ export default function StoreCard({ className, store }) {
       handleClose(); // 关闭对话框
     }
   };
+  useEffect(() => {
+    setLiked(wishlist_item);
+    console.log(wishlist_item);
+  }, []);
 
   const handleOpen = () => setOpen((cur) => !cur);
+
+  // const handleClose = () => setOpen((cur) => !cur);
+  const handleClose = async () => {
+    const cafe = Cookies.get("storeid");
+    const token = Cookies.get("token");
+    console.log(id);
+    // preventDefault();
+
+    try {
+      const requestData = {
+        wishlist_id: String(id),
+        cafe_id: String(cafe),
+      };
+      const response = await fetch(
+        `https://13.211.10.154/api/1.0/wishlists/${id}/cafe/${cafe}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
+      const responseData = await response.json();
+      console.log(responseData);
+
+      if (response.ok) {
+        console.log("把店家從心願單刪除成功");
+      } else {
+        console.error("把店家從心願單刪除失敗");
+      }
+    } catch (error) {
+      console.error("把店家從心願單刪除發生錯誤:", error);
+    }
+  };
 
   return (
     <div className={`relative flex flex-col justify-center  ${className}`}>
@@ -39,7 +87,7 @@ export default function StoreCard({ className, store }) {
       }`}</div>
       {cookieValue && (
         <div
-          className={"absolute top-2 right-2 cursor-pointer"}
+          className={"absolute top-2 right-5 cursor-pointer"}
           onClick={toggleLike}
           style={{ cursor: "pointer" }}
         >

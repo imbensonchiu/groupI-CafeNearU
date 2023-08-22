@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 "use client";
+import Cookies from "js-cookie";
 import {
   Card,
   CardHeader,
@@ -23,6 +24,40 @@ export default function Addwish() {
     fetchWishlist();
   }, []);
 
+  const cafeid = Cookies.get("storeid");
+  const token = Cookies.get("token");
+  const handleAddtowishlist = async (id) => {
+    // preventDefault();
+
+    try {
+      const requestData = {
+        wishlist_id: String(id),
+        cafe_id: String(cafeid),
+      };
+      const response = await fetch(
+        `https://13.211.10.154/api/1.0/wishlists/${id}/cafe/${cafeid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
+      const responseData = await response.json();
+      console.log(responseData);
+
+      if (response.ok) {
+        console.log("把店家新增到心願單成功");
+      } else {
+        console.error("把店家新增到心願單失敗");
+      }
+    } catch (error) {
+      console.error("把店家新增到心願單成功發生錯誤:", error);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-wrap justify-center max-h-[80vh] overflow-y-auto">
@@ -35,7 +70,10 @@ export default function Addwish() {
             {userWishlist.map((data) => (
               <div key={data.id} className={"md:w-[45%] w-[100%]  p-2"}>
                 <>
-                  <Card className="w-[100%] h-48 md:h-60 mb-2 transform hover:scale-110 transition-transform  border border-[#00000] ">
+                  <Card
+                    className="w-[100%] h-48 md:h-60 mb-2 transform hover:scale-110 transition-transform  border border-[#00000] cursor:pointer"
+                    onClick={() => handleAddtowishlist(data.id)}
+                  >
                     <CardHeader floated={false} className="h-80">
                       <img
                         src={data.cover}
@@ -56,34 +94,6 @@ export default function Addwish() {
                 </>
               </div>
             ))}
-            {/* <Card className="w-[45%] h-48 md:h-60 mb-8 transform hover:scale-110 transition-transform  border border-[#00000] ">
-              <CardHeader floated={false} className="h-80">
-                <img
-                  src="duck.jpg"
-                  alt="profile-picture"
-                  className="h-[100%] w-[100%]"
-                />
-              </CardHeader>
-              <CardBody className="text-center p-2">
-                <Typography variant="h4" color="blue-gray" className="text-xl">
-                  佩佩的口袋名單
-                </Typography>
-              </CardBody>
-            </Card>
-            <Card className="ml-[5%] w-[45%] h-48 md:h-60 mb-8 transform hover:scale-110 transition-transform">
-              <CardHeader floated={false} className="h-80">
-                <img
-                  src="duck.jpg"
-                  alt="profile-picture"
-                  className="h-[100%] w-[100%]"
-                />
-              </CardHeader>
-              <CardBody className="text-center p-2">
-                <Typography variant="h4" color="blue-gray" className="text-xl">
-                  佩佩的口袋名單
-                </Typography>
-              </CardBody>
-            </Card> */}
           </div>
           <hr className="border-gray-300 mb-4" />
           <div className="flex justify-center items-center">

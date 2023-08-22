@@ -16,6 +16,7 @@ export default function h() {
   const handleButtonClick = (buttonType) => {
     setActiveButton(buttonType);
   };
+
   const { userWishlistitem, fetchWishlistitem } = useWishlistitem();
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function h() {
       <hr className="border-gray-300 mb-20 " />
       <div className="container mx-auto grid grid-cols-12 gap-8 mt-8">
         <div className="col-span-12 grid grid-cols-12 gap-8">
-          {storesHome.data.shops.workspace.map((store) => (
+          {userWishlistitem.map((store) => (
             <StoreCard
               className={"rounded-xl col-span-6 lg:col-span-3"}
               key={store.id}

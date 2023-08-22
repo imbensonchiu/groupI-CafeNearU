@@ -60,10 +60,10 @@ export default function withRouter(Header) {
         <div className="relative flex items-center">
           <div className="absolute left-0 top-0 h-full flex items-center justify-center w-12">
             <img
-              src="search.svg"
+              src="../search.svg"
               alt="Avatar"
               className="cursor: pointer w-6 h-6 text-gray-600"
-              onClick={() => jump(searchTerm)}
+              onClick={() => jump("keyword=" + searchTerm)}
             />
           </div>
           <input
@@ -78,7 +78,7 @@ export default function withRouter(Header) {
         <div className="me-[5%] flex items-center">
           <div className="relative">
             <img
-              src="account_circle.svg"
+              src="../account_circle.svg"
               alt="main"
               className="w-12 h-12 rounded-full cursor-pointer"
               onMouseOver={toggleMenu}

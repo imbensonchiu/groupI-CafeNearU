@@ -24,7 +24,7 @@ const userWishlistitem = () => {
 
       if (responseprofile.ok) {
         console.log("獲取心願單內容成功");
-        const userWishlists = responseData.data.wishlists;
+        const userWishlists = responseData.data.shops;
         setuserWishlistitem(userWishlists);
         console.log(responseData);
         console.log(userWishlistitem);
