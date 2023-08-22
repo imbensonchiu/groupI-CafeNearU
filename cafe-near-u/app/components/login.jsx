@@ -17,94 +17,76 @@ import {
 } from "@material-tailwind/react";
 
 export default function Login() {
-    const [activeButton, setActiveButton] = useState("guest");
-    const [dialogOpen, setDialogOpen] = useState(true);
-    const [url, seturl] = useState(
-        "https://13.211.10.154/api/1.0/customers/signin"
-    );
-    const [type, settype] = useState(
-        "https://13.211.10.154/api/1.0/customers/signin"
-    );
-    const handleButtonClick = (buttonType) => {
-        setActiveButton(buttonType);
-    };
-    useEffect(() => {
-        if (activeButton === "guest") {
-            seturl("https://13.211.10.154/api/1.0/customers/signin");
+  const [activeButton, setActiveButton] = useState("guest");
+  const [dialogOpen, setDialogOpen] = useState(true);
+  const [url, seturl] = useState(
+    "https://13.211.10.154/api/1.0/customers/signin"
+  );
+  const [type, settype] = useState(
+    "https://13.211.10.154/api/1.0/customers/signin"
+  );
+  const handleButtonClick = (buttonType) => {
+    setActiveButton(buttonType);
+  };
+  useEffect(() => {
+    if (activeButton === "guest") {
+      seturl("https://13.211.10.154/api/1.0/customers/signin");
+    } else {
+      seturl("https://13.211.10.154/api/1.0/shop-owners/signin");
+    }
+  }, [activeButton]);
+  const loginValidationSchema = Yup.object().shape({
+    email1: Yup.string()
+      .required("Email is required")
+      .email("Invalid email address"),
+    password1: Yup.string()
+      .required("Password is required")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+        "Password must contain uppercase letter, lowercase letter, and number"
+      ),
+  });
+  const formikLogin = useFormik({
+    initialValues: {
+      email1: "",
+      password1: "",
+    },
+    validationSchema: loginValidationSchema,
+    onSubmit: async (values) => {
+      const { email1, password1 } = values;
+
+      try {
+        const loginResponse = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            provider: "native",
+            email: String(email1),
+            password: String(password1),
+          }),
+        });
+
+        const loginData = await loginResponse.json();
+        console.log(loginData);
+
+        if (loginResponse.ok) {
+          console.log("登入成功");
+          document.cookie = `token=${loginData.data.access_token}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+          console.log(loginData.data.access_token);
+          // 取得id
+          // document.cookie = `userId=${loginData.data.${type}.id}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+          document.cookie = `userId=${loginData.data.customer.id}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+          //console.log(loginData.data.customer.id);
+          window.location.reload();
+
+          // window.location.href = "/";
         } else {
             seturl("https://13.211.10.154/api/1.0/shop-owners/signin");
         }
     }, [activeButton]);
-    const loginValidationSchema = Yup.object().shape({
-        email1: Yup.string()
-            .required("Email is required")
-            .email("Invalid email address"),
-        password1: Yup.string()
-            .required("Password is required")
-            .matches(
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-                "Password must contain uppercase letter, lowercase letter, and number"
-            ),
-    });
-    const formikLogin = useFormik({
-        initialValues: {
-            email1: "",
-            password1: "",
-        },
-        validationSchema: loginValidationSchema,
-        onSubmit: async (values) => {
-            const { email1, password1 } = values;
 
-            try {
-                const loginResponse = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        provider: "native",
-                        email: String(email1),
-                        password: String(password1),
-                    }),
-                });
-
-                const loginData = await loginResponse.json();
-                console.log(loginData);
-
-                if (loginResponse.ok) {
-                    console.log("登入成功");
-                    console.log(loginData.data);
-                    document.cookie = `token=${loginData.data.access_token}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
-                    console.log(loginData.data.access_token);
-                    // 取得id
-                    // document.cookie = `userId=${loginData.data.${type}.id}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
-                    document.cookie = `userId=${loginData.data.user.id}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
-                    // console.log(loginData.data.customer.id);
-                    window.location.reload();
-
-                    // window.location.href = "/";
-                } else {
-                    console.error("登入失敗:", loginData.error);
-
-                    if (
-                        loginResponse.status >= 500 &&
-                        loginResponse.status <= 599
-                    ) {
-                        // 彈出警告視窗通知開發人員和用戶
-                        alert("出現錯誤。請稍後再試或通知我們的工程團隊。");
-                        window.location.href = "/";
-                    } else {
-                        // 非5xx狀態碼的其他處理
-                        const errorMessage = `登入失敗: ${loginData.error}`;
-                        alert(errorMessage);
-                        window.location.href = "/";
-                    }
-                }
-            } catch (error) {
-                console.error("請求錯誤:", error);
-            }
-        },
-    });
     return (
         <>
             {dialogOpen && (

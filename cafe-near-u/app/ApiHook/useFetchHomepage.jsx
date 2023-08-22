@@ -2,14 +2,14 @@
 import { useState } from "react";
 import Cookies from "js-cookie";
 
-const useFetchProfile = () => {
-  const [userProfile, setUserProfile] = useState([]);
+const useFetchHomepage = () => {
+  const [homepage, sethomepage] = useState([]);
 
-  const fetchProfile = async () => {
+  const fetchHomepage = async () => {
     try {
       const token = Cookies.get("token");
       const responseprofile = await fetch(
-        `https://13.211.10.154/api/1.0/customers/profile`,
+        `https://13.211.10.154/api/1.0/home`,
         {
           method: "GET",
           headers: {
@@ -21,20 +21,21 @@ const useFetchProfile = () => {
       // console.log(responseData);
 
       if (responseprofile.ok) {
-        console.log("獲取個人資料成功");
-        const userProfiles = responseData.data.customer;
-        setUserProfile(userProfiles);
+        console.log("獲取首頁成功");
+        const homepages = responseData.data.shops;
+        sethomepage(homepages);
         console.log(responseData);
-        console.log(userProfile);
+        console.log("homepage");
+        console.log(homepages);
       } else {
-        console.error("取得個人資料失敗");
+        console.error("取得首頁失敗");
       }
     } catch (error) {
-      console.error("請求錯誤:", error);
+      console.error("取得首頁請求錯誤:", error);
     }
   };
 
-  return { userProfile, fetchProfile };
+  return { homepage, fetchHomepage };
 };
 
-export default useFetchProfile;
+export default useFetchHomepage;
