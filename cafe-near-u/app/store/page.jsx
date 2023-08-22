@@ -3,18 +3,35 @@
 import { useState } from "react";
 import HeaderStore from "../components/storeside/HeaderStore";
 import DialogEdit from "../components/storeside/DialogEdit";
-import useMenuUpdate from "../lib/store_manage/useMenuUpdate";
+
+import useStoreBasicInfo from "../lib/store_manage/useStoreBasicInfo";
+import useStatus from "../lib/store_manage/useStatus";
+
+import Cookies from "js-cookie";
 
 export default function Home() {
     const [open, setOpen] = useState(false);
     const [type, setType] = useState(0);
+
+    console.log(Cookies.get("userId"));
+
+    const { isError } = useStoreBasicInfo(Cookies.get("userId"));
+    if (isError?.status === 404) {
+        window.location.replace("/store/init/basic_info");
+    }
+    if (isError) {
+        return <div>{`發生錯誤 ${isError}`}</div>;
+    }
+
     const handleOpen = () => {
         setOpen((cur) => !cur);
     };
     return (
         <>
             <HeaderStore />
-            <DialogEdit open={open} handleOpen={handleOpen} type={type} />
+            {/*
+                <DialogEdit open={open} handleOpen={handleOpen} type={type} />
+    */}
             <div className="h-80 lg:container lg:mx-auto flex flex-col justify-end border-b">
                 <span className="text-4xl mb-8 mx-2 font-light flex flex-col md:flex-row">
                     <div className="font-medium ml-2 mb-2 md:mb-0 md:ml-0">
