@@ -2,7 +2,7 @@
 
 import { Carousel, Dialog } from "@material-tailwind/react";
 import { useState, useEffect } from "react";
-import Addwish from "./like";
+import Addwish from "./Like";
 import Cookies from "js-cookie";
 
 export default function StoreCard({ className, store }) {
