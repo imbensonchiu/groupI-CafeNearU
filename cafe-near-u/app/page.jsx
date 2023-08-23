@@ -169,7 +169,7 @@ export default function Home() {
         <div className="col-span-12 grid grid-cols-12 gap-8">
           {homepage.pet?.map((store) => (
             <StoreCard
-              className={"rounded-xl  col-span-6 lg:col-span-3"}
+              className={"rounded-xl  col-span-6 lg:col-span-3 cursor-pointer"}
               key={store.id}
               store={store}
             />

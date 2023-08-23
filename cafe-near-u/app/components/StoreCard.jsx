@@ -24,7 +24,7 @@ export default function StoreCard({ className, store }) {
     setLiked(!liked); // 切换 liked 状态
     Cookies.set("storeid", id);
     // 根据 liked 状态决定是否打开对话框
-    if (!liked) {
+    if (!wishlist_item) {
       handleOpen(); // 打开对话框
     } else {
       handleClose(); // 关闭对话框
@@ -46,11 +46,11 @@ export default function StoreCard({ className, store }) {
 
     try {
       const requestData = {
-        wishlist_id: String(id),
+        wishlist_id: String(wishlist_item),
         cafe_id: String(cafe),
       };
       const response = await fetch(
-        `https://13.211.10.154/api/1.0/wishlists/${id}/cafe/${cafe}`,
+        `https://13.211.10.154/api/1.0/wishlists/${wishlist_item}/cafe/${cafe}`,
         {
           method: "DELETE",
           headers: {
@@ -72,17 +72,32 @@ export default function StoreCard({ className, store }) {
       console.error("把店家從心願單刪除發生錯誤:", error);
     }
   };
+  const handletostoreinfo = (data) => {
+    Cookies.set("storeid", data);
+    window.location.href = `/detail/${data}`;
+  };
 
   return (
-    <div className={`relative flex flex-col justify-center  ${className}`}>
+    <div
+      className={`relative flex flex-col justify-center cursor-pointer  ${className}`}
+    >
       <Carousel transition={{ duration: 2 }}>
         <img
           src={primary_image}
           className="h-72 w-full md:w-72 object-cover rounded-xl"
+          onClick={() => handletostoreinfo(store.id)}
         />
       </Carousel>
-      <div className="text-2xl my-2 mt-4 text-gray-800">{name}</div>
-      <div className="text-base text-gray-600 mb-4">{`${operating_status}  |  最低消費 $${min_order} | ${
+      <div
+        className="text-2xl my-2 mt-4 text-gray-800"
+        onClick={() => handletostoreinfo(store.id)}
+      >
+        {name}
+      </div>
+      <div
+        className="text-base text-gray-600 mb-4"
+        onClick={() => handletostoreinfo(store.id)}
+      >{`${operating_status}  |  最低消費 $${min_order} | ${
         seat ? "尚有座位" : "座位已滿"
       }`}</div>
       {cookieValue && (
@@ -124,7 +139,7 @@ export default function StoreCard({ className, store }) {
         handler={handleOpen}
         className="bg-transparent shadow-none"
       >
-        <Addwish />
+        <Addwish handleOpen={handleOpen} />
       </Dialog>
     </div>
   );

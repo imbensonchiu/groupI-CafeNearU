@@ -15,6 +15,7 @@ export default function h() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
   const token = Cookies.get("token");
+  console.log(token);
 
   // 獲取網址中的keyword 儲存到cookie
   const path = window.location.pathname;
@@ -32,7 +33,7 @@ export default function h() {
       // 向後端API發送請求，將輸入的搜索查詢作為參數傳遞
       const response = await fetch(
         `https://13.211.10.154/api/1.0/shops/search?${keyword}`,
-        { next: { revalidate: 0 } },
+
         {
           method: "GET",
           headers: {
