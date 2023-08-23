@@ -10,6 +10,36 @@ import Filter from "../../components/filter.jsx";
 import storesHome from "../../components/homepage/stores.js";
 import StoreCard from "../../components/StoreCard.jsx";
 import Cookies from "js-cookie";
+import { useLoadScript, GoogleMap, Marker } from "@react-google-maps/api";
+import { getGeocode, getLatLng } from "use-places-autocomplete";
+
+const Map = ({ addresses }) => {
+    const { isLoaded } = useLoadScript({
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+        libraries: ["places"],
+    });
+
+    return (
+        isLoaded && (
+            <GoogleMap
+                zoom={15}
+                center={{ lat: 0, lng: 0 }}
+                mapContainerClassName="m-6 w-full h-full rounded-md"
+            >
+                {addresses.map((address, index) => (
+                    <Marker
+                        key={index}
+                        position={() =>
+                            getGeocode({ address: address }).then((results) => {
+                                console.log(getLatLng(results[0]));
+                            })
+                        }
+                    />
+                ))}
+            </GoogleMap>
+        )
+    );
+};
 
 export default function h() {
     const [open, setOpen] = useState(false);
@@ -278,7 +308,11 @@ export default function h() {
             ))} */}
                     </div>
                 </div>
-                <div className="hidden md:block w-[30%] h-[920px] bg-gray-200 "></div>
+                <div className="hidden md:block w-[30%] h-[920px] ">
+                    <Map
+                        addresses={searchResult.map((store) => store.address)}
+                    />
+                </div>
             </div>
             <Footer className="fixed bottom-0" />
         </>
