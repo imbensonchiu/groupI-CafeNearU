@@ -3,22 +3,14 @@
 
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import Header from "../components/header";
-import Footer from "../components/footer";
+
+import Header from "../components/Header";
+
+import Footer from "../components/Footer";
 import ChangePassword from "../components/ChangePassword";
 import useFetchProfile from "../ApiHook/useFetchProfile";
 import useProfileUpdate from "../ApiHook/useProfileUpdate";
-import {
-    Button,
-    Dialog,
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    Typography,
-    Input,
-    Checkbox,
-} from "@material-tailwind/react";
+import { Button, Dialog } from "@material-tailwind/react";
 
 export default function h() {
     const token = Cookies.get("token");

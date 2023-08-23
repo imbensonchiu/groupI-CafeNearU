@@ -27,7 +27,7 @@ export default function GuestSignupForm() {
             .required("Password is required")
             .matches(
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-                "Password must contain uppercase letter, lowercase letter, and number"
+                "Password must contain uppercase letter, lowercase letter, and 8 number"
             ),
         repassword5: Yup.string()
             .required("Please confirm your password")

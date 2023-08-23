@@ -61,6 +61,7 @@ export default function Home() {
                     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
                 />
 
+<<<<<<< HEAD
                 <div className="flex items-end gap-8 mt-4 flex-nowrap overflow-scroll ">
                     <div className="flex flex-col">
                         <IconButton
@@ -203,4 +204,129 @@ export default function Home() {
             <Footer />
         </>
     );
+=======
+        <div className="flex items-end gap-8 mt-4 flex-nowrap overflow-scroll ">
+          <div className="flex flex-col">
+            <IconButton
+              variant="text"
+              className="rounded-full"
+              onClick={() => {
+                jump("type=工作");
+              }}
+            >
+              <span className="material-symbols-outlined">work</span>
+            </IconButton>
+            <span className="self-center  text-xs lg:text-sm">工作</span>
+          </div>
+          <div className="flex flex-col">
+            <IconButton
+              variant="text"
+              className="rounded-full"
+              onClick={() => {
+                jump("type=休閒");
+              }}
+            >
+              <span className="material-symbols-outlined">local_cafe</span>
+            </IconButton>
+            <span className="self-center  text-xs lg:text-sm">休閒</span>
+          </div>
+          {/* <div className="flex flex-col">
+            <IconButton variant="text" className="rounded-full">
+              <span class="material-symbols-outlined">groups</span>
+            </IconButton>
+            <span className="self-center text-xs lg:text-sm">聚會</span>
+          </div> */}
+          <div className="flex flex-col">
+            <IconButton
+              variant="text"
+              className="rounded-full"
+              onClick={() => {
+                jump("type=寵物");
+              }}
+            >
+              <span className="material-symbols-outlined">pets</span>
+            </IconButton>
+            <span className="self-center  text-xs lg:text-sm">寵物</span>
+          </div>
+          <div className="flex flex-col">
+            <IconButton
+              variant="text"
+              className="rounded-full"
+              onClick={() => {
+                jump("no_time_limit=true");
+              }}
+            >
+              <span className="material-symbols-outlined">schedule</span>
+            </IconButton>
+            <span className="self-center text-xs lg:text-sm">不限時</span>
+          </div>
+          {/* <div className="flex flex-col">
+            <IconButton variant="text" className="rounded-full">
+              <span class="material-symbols-outlined">cookie</span>
+            </IconButton>
+            <span className="self-center  text-xs lg:text-sm">甜點</span>
+          </div> */}
+          <div className="flex flex-col">
+            <IconButton
+              variant="text"
+              className="rounded-full"
+              onClick={() => {
+                jump("plug=true");
+              }}
+            >
+              <span className="material-symbols-outlined">power</span>
+            </IconButton>
+            <span className="self-center  text-xs lg:text-sm">插座</span>
+          </div>
+          <div className="flex flex-col">
+            <IconButton variant="text" className="rounded-full">
+              <span className="material-symbols-outlined">casino</span>
+            </IconButton>
+            <span className="self-center text-xs lg:text-sm">好手氣</span>
+          </div>
+        </div>
+      </div>
+      <div className="container mx-auto grid grid-cols-12 gap-8 mt-8">
+        <div className="col-span-12 text-2xl font-light text-gray-800">
+          精選工作地點
+        </div>
+        <div className="col-span-12 grid grid-cols-12 gap-8">
+          {homepage.workspace?.map((store) => (
+            <StoreCard
+              className={"rounded-xl col-span-6 lg:col-span-3"}
+              key={store.id}
+              store={store}
+            />
+          ))}
+        </div>
+        <div className="col-span-12 text-2xl font-light text-gray-800">
+          精選放鬆地點
+        </div>
+        <div className="col-span-12 grid grid-cols-12 gap-8">
+          {homepage.leisure?.map((store) => (
+            <StoreCard
+              className={"rounded-xl  col-span-6 lg:col-span-3"}
+              key={store.id}
+              store={store}
+            />
+          ))}
+        </div>
+        <div className="col-span-12 text-2xl font-light text-gray-800">
+          擼貓擼狗好去處
+        </div>
+        <div className="col-span-12 grid grid-cols-12 gap-8">
+          {homepage.pet?.map((store) => (
+            <StoreCard
+              className={"rounded-xl  col-span-6 lg:col-span-3 cursor-pointer"}
+              key={store.id}
+              store={store}
+            />
+          ))}
+        </div>
+      </div>
+
+      <Footer />
+    </>
+  );
+>>>>>>> 5880baed28a4c32ea0eed64b25e2ed8fbc70600e
 }

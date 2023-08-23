@@ -10,10 +10,17 @@ import {
     Button,
     ButtonGroup,
 } from "@material-tailwind/react";
+<<<<<<< HEAD
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Wish from "../components/wishitem";
 import Comment from "../components/comment";
+=======
+import Header from "../components/Header.jsx";
+import Footer from "../components/Footer.jsx";
+import Wish from "../components/Wishitem.jsx";
+import Comment from "../components/Commentdialog.jsx";
+>>>>>>> 5880baed28a4c32ea0eed64b25e2ed8fbc70600e
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
 
