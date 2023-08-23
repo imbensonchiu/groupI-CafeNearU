@@ -1,7 +1,13 @@
 /* eslint-disable no-unused-vars */
 "use client";
 
-import { IconButton, Switch, Button, Dialog } from "@material-tailwind/react";
+import {
+    Tooltip,
+    IconButton,
+    Switch,
+    Button,
+    Dialog,
+} from "@material-tailwind/react";
 import { useState, useEffect } from "react";
 
 import Header from "../../components/header.jsx";
@@ -10,15 +16,21 @@ import Filter from "../../components/filter.jsx";
 import storesHome from "../../components/homepage/stores.js";
 import StoreCard from "../../components/StoreCard.jsx";
 import Cookies from "js-cookie";
-import { useLoadScript, GoogleMap, Marker } from "@react-google-maps/api";
+import {
+    useLoadScript,
+    GoogleMap,
+    Marker,
+    MarkerLabel,
+} from "@react-google-maps/api";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 
-const Map = ({ addresses }) => {
+const Map = ({ addresses, names }) => {
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
         libraries: ["places"],
     });
 
+    let center = {};
     let posList = [];
 
     console.log("addresses", addresses[0]);
@@ -30,17 +42,29 @@ const Map = ({ addresses }) => {
             })
         );
     }
-
     return posList.length ? (
         <GoogleMap
-            zoom={15}
-            center={posList[0].then((res) => res)}
+            zoom={10}
+            center={{ lat: 25.033, lng: 121.565 }}
             mapContainerClassName="m-6 w-full h-full rounded-md"
         >
-            {posList.map(async (p) =>
+            {posList.map(async (p, index) =>
                 p.then((res) => {
                     console.log("res", res);
-                    return <Marker position={res} />;
+                    return (
+                        <>
+                            <Marker
+                                position={res}
+                                label={{
+                                    text: names[index],
+                                    color: "white",
+                                    className:
+                                        "p-2 bg-[#7D6E83] -mt-14 font-medium opacity-85 rounded-md",
+                                }}
+                                symbol={{ fillColor: "#7D6E83" }}
+                            />
+                        </>
+                    );
                 })
             )}
         </GoogleMap>
@@ -322,6 +346,7 @@ export default function h() {
                             addresses={searchResult.map(
                                 (store) => store.address
                             )}
+                            names={searchResult.map((store) => store.name)}
                         />
                     )}
                 </div>
