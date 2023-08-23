@@ -12,9 +12,9 @@ const useFetchHomepage = () => {
         `https://13.211.10.154/api/1.0/home`,
         {
           method: "GET",
-          // headers: {
-          //   Authorization: `Bearer ${token}`,
-          // },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       const responseData = await responseprofile.json();

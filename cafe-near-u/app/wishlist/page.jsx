@@ -13,7 +13,7 @@ import {
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import Wish from "../components/Wishitem.jsx";
-import Comment from "../components/Comment.jsx";
+import Comment from "../components/Commentdialog.jsx";
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
 
