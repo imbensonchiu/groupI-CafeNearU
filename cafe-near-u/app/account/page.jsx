@@ -4,9 +4,9 @@
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
-import Header from "../components/Header";
+import Header from "../components/header";
 
-import Footer from "../components/Footer";
+import Footer from "../components/footer";
 import ChangePassword from "../components/ChangePassword";
 import useFetchProfile from "../ApiHook/useFetchProfile";
 import useProfileUpdate from "../ApiHook/useProfileUpdate";
