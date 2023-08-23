@@ -37,7 +37,7 @@ export default function ChangePassword() {
             .required("Password is required")
             .matches(
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-                "Password must contain uppercase letter, lowercase letter, and number"
+                "Password must contain uppercase letter, lowercase letter, and 8 number"
             ),
         repassword3: Yup.string()
             .required("Please confirm your password")
