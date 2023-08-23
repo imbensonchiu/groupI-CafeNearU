@@ -13,9 +13,9 @@ export default function Home() {
     const [open, setOpen] = useState(false);
     const [type, setType] = useState(0);
 
-    console.log(Cookies.get("userId"));
+    console.log(Cookies.get("ownerId"));
 
-    const { isError } = useStoreBasicInfo(Cookies.get("userId"));
+    const { isError } = useStoreBasicInfo(Cookies.get("ownerId"));
     if (isError?.status === 404) {
         window.location.replace("/store/init/basic_info");
     }
