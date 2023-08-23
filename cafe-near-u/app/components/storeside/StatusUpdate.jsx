@@ -13,6 +13,7 @@ import {
     Tab,
     Tabs,
 } from "@material-tailwind/react";
+import { useState } from "react";
 
 const data = [
     { label: "座位ㄧ", value: 1 },
@@ -21,6 +22,7 @@ const data = [
     { label: "座位四", value: 4 },
 ];
 export default function StatusUpdate({ open, handleOpen }) {
+    const [value, setValue] = useState(1);
     return (
         <Dialog
             size="md"
@@ -57,13 +59,30 @@ export default function StatusUpdate({ open, handleOpen }) {
                         營業資訊
                     </div>
                     <ButtonGroup variant="outlined" className="col-span-8">
-                        <Button className="text-base font-normal">
+                        <Button
+                            className={`text-base font-normal ${
+                                value === 1 && "bg-gray-800 text-white"
+                            }`}
+                            onClick={() => setValue(1)}
+                        >
                             正常營業
                         </Button>
-                        <Button className="text-base font-normal">
+                        <Button
+                            className={`text-base font-normal ${
+                                value === 2 && "bg-gray-800 text-white"
+                            }`}
+                            onClick={() => setValue(2)}
+                        >
                             時間異動
                         </Button>
-                        <Button className="text-base font-normal">店休</Button>
+                        <Button
+                            className={`text-base font-normal ${
+                                value === 3 && "bg-gray-800 text-white"
+                            }`}
+                            onClick={() => setValue(3)}
+                        >
+                            店休
+                        </Button>
                     </ButtonGroup>
                 </div>
                 <div className="flex flex-row gap-6 mt-4">

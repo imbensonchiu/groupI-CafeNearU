@@ -9,6 +9,7 @@ import useFetchHomepage from "./ApiHook/useFetchHomepage.jsx";
 import Cookies from "js-cookie";
 
 export default function Home() {
+    // 如果店家有登入，直接導向店家頁面
     if (Cookies.get("ownerId")) {
         window.location.replace("/store");
     }

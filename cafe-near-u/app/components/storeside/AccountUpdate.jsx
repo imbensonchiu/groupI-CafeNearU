@@ -8,11 +8,36 @@ import {
 } from "@material-tailwind/react";
 import useOwnerProfile from "../../lib/store_manage/useOwnerProfile";
 import Cookies from "js-cookie";
+import { useState } from "react";
+import ownerProfileUpdate from "../../lib/store_manage/ownerProfileUpdate";
+import ownerPasswordUpdate from "../../lib/store_manage/ownerPasswordUpdate";
 
 export default function AccountUpdate({ open, handleOpen }) {
     const { owner, isLoading, isError, mutate } = useOwnerProfile(
-        Cookies.get("token")
+        Cookies.get("ownerToken")
     );
+
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const [usernameEdit, setUsernameEdit] = useState(false);
+    const [emailEdit, setEmailEdit] = useState(false);
+    const [passwordEdit, setPasswordEdit] = useState(false);
+
+    async function handleUpdate(token) {
+        const data = {
+            username,
+            email,
+        };
+        const res = await ownerProfileUpdate(token, data);
+        const passwordData = {
+            password,
+        };
+        const res2 = await ownerPasswordUpdate(token, passwordData);
+        console.log(res);
+        console.log(res2);
+    }
 
     return (
         <Dialog
@@ -56,13 +81,17 @@ export default function AccountUpdate({ open, handleOpen }) {
                                     containerProps={{
                                         className: "my-2 col-span-12",
                                     }}
+                                    disabled={!usernameEdit}
                                 />
                                 <Button
                                     size="sm"
                                     className="!absolute right-6 top-[30px] rounded"
                                     variant="text"
+                                    onClick={() =>
+                                        setUsernameEdit(!usernameEdit)
+                                    }
                                 >
-                                    編輯
+                                    {!usernameEdit ? "編輯" : "取消"}
                                 </Button>
                             </div>
 
@@ -75,13 +104,15 @@ export default function AccountUpdate({ open, handleOpen }) {
                                     containerProps={{
                                         className: "my-2 col-span-12",
                                     }}
+                                    disabled={!emailEdit}
                                 />
                                 <Button
                                     size="sm"
                                     className="!absolute right-6 top-[90px] rounded"
                                     variant="text"
+                                    onClick={() => setEmailEdit(!emailEdit)}
                                 >
-                                    編輯
+                                    {!emailEdit ? "編輯" : "取消"}
                                 </Button>
                             </div>
 
@@ -94,13 +125,17 @@ export default function AccountUpdate({ open, handleOpen }) {
                                     containerProps={{
                                         className: "my-2 col-span-12",
                                     }}
+                                    disabled={!passwordEdit}
                                 />
                                 <Button
                                     size="sm"
                                     className="!absolute right-6 top-[150px] rounded"
                                     variant="text"
+                                    onClick={() =>
+                                        setPasswordEdit(!passwordEdit)
+                                    }
                                 >
-                                    編輯
+                                    {!passwordEdit ? "編輯" : "取消"}
                                 </Button>
                             </div>
                         </div>
@@ -110,13 +145,24 @@ export default function AccountUpdate({ open, handleOpen }) {
             <DialogFooter className="space-x-4 lg:container lg:mx-auto">
                 <Button
                     variant="outlined"
-                    onClick={handleOpen}
+                    onClick={() => {
+                        setUsernameEdit(false);
+                        setEmailEdit(false);
+                        setPasswordEdit(false);
+                        handleOpen();
+                    }}
                     className="text-base px-6 border border-[#7D6E83] text-[#7D6E83] "
                 >
                     關閉
                 </Button>
                 <Button
-                    onClick={handleOpen}
+                    onClick={() => {
+                        setUsernameEdit(false);
+                        setEmailEdit(false);
+                        setPasswordEdit(false);
+                        handleUpdate();
+                        handleOpen();
+                    }}
                     className="text-base px-6 bg-[#7D6E83] text-white"
                 >
                     更新

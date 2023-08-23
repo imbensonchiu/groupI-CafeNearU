@@ -122,7 +122,7 @@ export default function Home() {
                                 發布設定
                             </div>
                             <div className="text-base text-gray-700 mr-2">
-                                預覽畫面，並將店家資訊公開至
+                                將店家資訊公開至
                                 <span className="font-logo">CaféNearU</span>
                             </div>
                         </div>

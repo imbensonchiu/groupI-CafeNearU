@@ -4,12 +4,30 @@ import {
     DialogBody,
     DialogFooter,
     Button,
+    Switch,
+    Typography,
 } from "@material-tailwind/react";
+import { useState } from "react";
+import shopPublish from "../../lib/store_manage/shopPublish";
+import shopUnpublish from "../../lib/store_manage/shopUnpublish";
+import Cookies from "js-cookie";
 
 export default function PublishUpdate({ open, handleOpen }) {
+    const token = Cookies.get("ownerToken");
+    const [publish, setPublish] = useState(false);
+    async function handleUpdate(token) {
+        if (publish) {
+            const res = await shopPublish(token);
+            console.log(res);
+        } else {
+            const res = await shopUnpublish(token);
+            console.log(res);
+        }
+    }
+
     return (
         <Dialog
-            size="xxl"
+            size="md"
             open={open}
             handler={handleOpen}
             className="rounded-md"
@@ -20,7 +38,7 @@ export default function PublishUpdate({ open, handleOpen }) {
                         發布設定
                     </div>
                     <div className="text-base text-gray-700 mr-2 text-left font-normal">
-                        預覽畫面，並將店家資訊公開至
+                        將店家資訊公開至
                         <span className="font-logo">CaféNearU</span>
                     </div>
                 </DialogHeader>
@@ -38,7 +56,34 @@ export default function PublishUpdate({ open, handleOpen }) {
                     />
                 </svg>
             </div>
-            <DialogBody divider className="flex flex-col"></DialogBody>
+            <DialogBody divider className="flex flex-col">
+                <Switch
+                    label={
+                        <div>
+                            <Typography
+                                color="blue-gray"
+                                className="font-medium"
+                            >
+                                設定公開狀態
+                            </Typography>
+                            <Typography
+                                variant="small"
+                                color="gray"
+                                className="font-normal"
+                            >
+                                當左側開關為開啟狀態時，您的店家資訊將會被公開
+                            </Typography>
+                        </div>
+                    }
+                    checked={publish}
+                    onChange={() => {
+                        setPublish(!publish);
+                    }}
+                    containerProps={{
+                        className: "ml-4 -mt-5",
+                    }}
+                />
+            </DialogBody>
             <DialogFooter className="space-x-4 ">
                 <Button
                     variant="outlined"
@@ -48,7 +93,10 @@ export default function PublishUpdate({ open, handleOpen }) {
                     關閉
                 </Button>
                 <Button
-                    onClick={handleOpen}
+                    onClick={() => {
+                        handleUpdate(token);
+                        handleOpen();
+                    }}
                     className="text-base px-6 bg-[#7D6E83] text-white"
                 >
                     更新
