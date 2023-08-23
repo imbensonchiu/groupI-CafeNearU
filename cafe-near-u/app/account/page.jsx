@@ -3,10 +3,8 @@
 
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import Login from "../components/Login";
-import Header from "../components/Header";
-import Signup from "../components/Signup";
-import Footer from "../components/Footer";
+import Header from "../components/header";
+import Footer from "../components/footer";
 import ChangePassword from "../components/ChangePassword";
 import useFetchProfile from "../ApiHook/useFetchProfile";
 import useProfileUpdate from "../ApiHook/useProfileUpdate";
