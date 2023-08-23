@@ -35,11 +35,16 @@ async function handleChange(e) {
 }
 
 async function handleSubmit(tableRows) {
-    const token = Cookies.get("token");
+    const token = Cookies.get("tokenOwner");
     const menu = { menu: tableRows };
     console.log(menu);
     const res = await menuUpdate({ token, menu });
     console.log(res);
+    if (res === 200) {
+        window.location.replace("/store/init/seat_info");
+    } else {
+        window.location.replace(`https://http.cat/${res}`);
+    }
 }
 
 export default function Home() {

@@ -3,7 +3,7 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 
 const useFetchHomepage = () => {
-    const [homepage, sethomepage] = useState([]);
+    const [homepage, sethomepage] = useState();
 
     const fetchHomepage = async () => {
         try {
@@ -22,7 +22,7 @@ const useFetchHomepage = () => {
 
             if (responseprofile.ok) {
                 console.log("獲取首頁成功");
-                const homepages = responseData.data.shops;
+                const homepages = await responseData.data.shops;
                 sethomepage(homepages);
                 console.log(responseData);
                 console.log("homepage");

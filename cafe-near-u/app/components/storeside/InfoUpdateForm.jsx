@@ -25,6 +25,8 @@ import "react-time-picker/dist/TimePicker.css";
 import { useFormik } from "formik";
 import { useState } from "react";
 import { useLoadScript, GoogleMap, Marker } from "@react-google-maps/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import usePlacesAutocomplete, {
     getGeocode,
@@ -190,7 +192,7 @@ const AutoComplete = ({ setPos, formik }) => {
     );
 };
 
-export default function InfoUpdateForm() {
+export default function InfoUpdateForm({ edit = false, handleOpen }) {
     const [timeFrom, setTimeFrom] = useState([
         "00:00",
         "00:00",
@@ -374,11 +376,42 @@ export default function InfoUpdateForm() {
             }
 
             const res = await shopBasicInfoUpdate(
-                Cookies.get("token"),
+                Cookies.get("tokenOwner"),
                 formData
             );
 
             console.log(res);
+
+            if (res === 200 && edit) {
+                handleOpen();
+                toast.success("更新成功", {
+                    position: "top-right",
+                    autoClose: 4999,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            } else if (res !== 200 && edit) {
+                handleOpen();
+                toast.error(`更新失敗 (Error: ${data})`, {
+                    position: "top-right",
+                    autoClose: 4999,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            }
+            console.log(edit);
+            if (res === 200 && !edit) {
+                console.log("success");
+                window.location.replace("/store/init/menu_info");
+            }
         },
     });
 
@@ -1051,14 +1084,45 @@ export default function InfoUpdateForm() {
                     ))}
             </div>
             <div className="col-span-12 h-[0.5px]  bg-gray-500 my-2"></div>
-            <div className="col-span-12 space-x-4 lg:container lg:mx-auto flex flex-row justify-end">
-                <Button
-                    type="submit"
-                    className="w-full lg:w-40 text-base px-6 mb-4 bg-[#7D6E83] text-white"
-                >
-                    儲存並繼續
-                </Button>
-            </div>
+            {!edit ? (
+                <div className="col-span-12 space-x-4 lg:container lg:mx-auto flex flex-row justify-end">
+                    <Button
+                        type="submit"
+                        className="w-full lg:w-40 text-base px-6 mb-4 bg-[#7D6E83] text-white"
+                    >
+                        儲存並繼續
+                    </Button>
+                </div>
+            ) : (
+                <div className="col-span-12 gap-4 flex flex-row lg:container lg:mx-auto justify-end">
+                    {" "}
+                    <Button
+                        variant="outlined"
+                        onClick={handleOpen}
+                        className="text-base px-6 border border-[#7D6E83] text-[#7D6E83] "
+                    >
+                        關閉
+                    </Button>
+                    <Button
+                        type="submit"
+                        className="text-base px-6 bg-[#7D6E83] text-white"
+                    >
+                        更新
+                    </Button>
+                </div>
+            )}
+            <ToastContainer
+                position="top-right"
+                autoClose={4999}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         </form>
     );
 }

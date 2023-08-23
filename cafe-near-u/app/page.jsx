@@ -1,15 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import storesHome from "./components/homepage/stores";
 import Header from "./components/header";
 import { IconButton } from "@material-tailwind/react";
 import StoreCard from "./components/StoreCard";
 import Footer from "./components/footer";
 import useFetchHomepage from "./ApiHook/useFetchHomepage.jsx";
+import Cookies from "js-cookie";
 
 export default function Home() {
-    console.log(storesHome);
+    if (Cookies.get("ownerId")) {
+        window.location.replace("/store");
+    }
 
     //點icon搜尋
     const [searchTerm, setSearchTerm] = useState("");
@@ -19,6 +21,8 @@ export default function Home() {
         window.location.href = `/searchresult/${info}`;
     };
     const { homepage, fetchHomepage } = useFetchHomepage();
+    console.log("->", homepage);
+
     useEffect(() => {
         fetchHomepage();
     }, []);
@@ -150,44 +154,52 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <div className="container mx-auto grid grid-cols-12 gap-8 mt-8">
-                <div className="col-span-12 text-2xl font-light text-gray-800">
-                    精選工作地點
+            {homepage && (
+                <div className="container mx-auto grid grid-cols-12 gap-8 mt-8">
+                    <div className="col-span-12 text-2xl font-light text-gray-800">
+                        精選工作地點
+                    </div>
+                    <div className="col-span-12 grid grid-cols-12 gap-8">
+                        {homepage.workspace?.map((store) => (
+                            <StoreCard
+                                className={
+                                    "rounded-xl col-span-6 lg:col-span-3"
+                                }
+                                key={store.id}
+                                store={store}
+                            />
+                        ))}
+                    </div>
+                    <div className="col-span-12 text-2xl font-light text-gray-800">
+                        精選放鬆地點
+                    </div>
+                    <div className="col-span-12 grid grid-cols-12 gap-8">
+                        {homepage.leisure?.map((store) => (
+                            <StoreCard
+                                className={
+                                    "rounded-xl  col-span-6 lg:col-span-3"
+                                }
+                                key={store.id}
+                                store={store}
+                            />
+                        ))}
+                    </div>
+                    <div className="col-span-12 text-2xl font-light text-gray-800">
+                        擼貓擼狗好去處
+                    </div>
+                    <div className="col-span-12 grid grid-cols-12 gap-8">
+                        {homepage.pet?.map((store) => (
+                            <StoreCard
+                                className={
+                                    "rounded-xl  col-span-6 lg:col-span-3"
+                                }
+                                key={store.id}
+                                store={store}
+                            />
+                        ))}
+                    </div>
                 </div>
-                <div className="col-span-12 grid grid-cols-12 gap-8">
-                    {homepage.workspace?.map((store) => (
-                        <StoreCard
-                            className={"rounded-xl col-span-6 lg:col-span-3"}
-                            key={store.id}
-                            store={store}
-                        />
-                    ))}
-                </div>
-                <div className="col-span-12 text-2xl font-light text-gray-800">
-                    精選放鬆地點
-                </div>
-                <div className="col-span-12 grid grid-cols-12 gap-8">
-                    {homepage.leisure?.map((store) => (
-                        <StoreCard
-                            className={"rounded-xl  col-span-6 lg:col-span-3"}
-                            key={store.id}
-                            store={store}
-                        />
-                    ))}
-                </div>
-                <div className="col-span-12 text-2xl font-light text-gray-800">
-                    擼貓擼狗好去處
-                </div>
-                <div className="col-span-12 grid grid-cols-12 gap-8">
-                    {homepage.pet?.map((store) => (
-                        <StoreCard
-                            className={"rounded-xl  col-span-6 lg:col-span-3"}
-                            key={store.id}
-                            store={store}
-                        />
-                    ))}
-                </div>
-            </div>
+            )}
             <Footer />
         </>
     );
