@@ -1,15 +1,31 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
+import { useState, useEffect } from "react";
 import storesHome from "./components/homepage/stores";
 import Header from "./components/Header";
 import { IconButton } from "@material-tailwind/react";
 import StoreCard from "./components/StoreCard";
 import Footer from "./components/Footer";
 import useFetchHomepage from "./ApiHook/useFetchHomepage.jsx";
+import useFetchHomepage from "./ApiHook/useFetchHomepage.jsx";
 
 export default function Home() {
   console.log(storesHome);
+
+  //點icon搜尋
+  const [searchTerm, setSearchTerm] = useState("");
+  const jump = (info) => {
+    setSearchTerm(info);
+    console.log(info);
+    window.location.href = `/searchresult/${info}`;
+  };
+  const { homepage, fetchHomepage } = useFetchHomepage();
+  useEffect(() => {
+    fetchHomepage();
+  }, []);
+
 
   //點icon搜尋
   const [searchTerm, setSearchTerm] = useState("");
@@ -66,14 +82,27 @@ export default function Home() {
                 jump("type=工作");
               }}
             >
+            <IconButton
+              variant="text"
+              className="rounded-full"
+              onClick={() => {
+                jump("type=工作");
+              }}
+            >
               <span className="material-symbols-outlined">work</span>
             </IconButton>
             <span className="self-center  text-xs lg:text-sm">工作</span>
           </div>
           <div className="flex flex-col">
             <IconButton
+             
               variant="text"
+             
               className="rounded-full"
+              onClick={() => {
+                jump("type=休閒");
+              }}
+            
               onClick={() => {
                 jump("type=休閒");
               }}
@@ -81,8 +110,9 @@ export default function Home() {
               <span className="material-symbols-outlined">local_cafe</span>
             </IconButton>
             <span className="self-center  text-xs lg:text-sm">休閒</span>
+            <span className="self-center  text-xs lg:text-sm">休閒</span>
           </div>
-          {/* <div className="flex flex-col">
+          {/* {/* <div className="flex flex-col">
             <IconButton variant="text" className="rounded-full">
               <span class="material-symbols-outlined">groups</span>
             </IconButton>
@@ -96,7 +126,7 @@ export default function Home() {
                 jump("type=寵物");
               }}
             >
-              <span class="material-symbols-outlined">pets</span>
+              <span className="material-symbols-outlined">pets</span>
             </IconButton>
             <span className="self-center  text-xs lg:text-sm">寵物</span>
           </div>
@@ -108,7 +138,8 @@ export default function Home() {
                 jump("no_time_limit=true");
               }}
             >
-              <span class="material-symbols-outlined">schedule</span>
+
+              <span className="material-symbols-outlined">schedule</span>
             </IconButton>
             <span className="self-center text-xs lg:text-sm">不限時</span>
           </div>
@@ -118,6 +149,7 @@ export default function Home() {
             </IconButton>
             <span className="self-center  text-xs lg:text-sm">甜點</span>
           </div> */}
+          </div> */}
           <div className="flex flex-col">
             <IconButton
               variant="text"
@@ -126,13 +158,13 @@ export default function Home() {
                 jump("plug=true");
               }}
             >
-              <span class="material-symbols-outlined">power</span>
+              <span className="material-symbols-outlined">power</span>
             </IconButton>
             <span className="self-center  text-xs lg:text-sm">插座</span>
           </div>
           <div className="flex flex-col">
             <IconButton variant="text" className="rounded-full">
-              <span class="material-symbols-outlined">casino</span>
+              <span className="material-symbols-outlined">casino</span>
             </IconButton>
             <span className="self-center text-xs lg:text-sm">好手氣</span>
           </div>
