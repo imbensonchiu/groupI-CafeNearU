@@ -17,18 +17,9 @@ export default function Home() {
     const [type, setType] = useState(0);
 
     if (Cookies.get("ownerId") === undefined) {
-        Swal.fire({
-            title: "您沒有權限訪問此頁面",
-            text: "請先登入店家端帳號後再進行操作",
-            icon: "warning",
-            confirmButtonText: "回到首頁",
-        }).then(({ isConfirmed }) => {
-            if (isConfirmed) {
-                if (typeof window !== "undefined") {
-                    window.location.href = "/";
-                }
-            }
-        });
+        if (typeof window !== "undefined") {
+            window.location.href = "/";
+        }
     }
 
     console.log(Cookies.get());
@@ -37,18 +28,9 @@ export default function Home() {
     console.log(newOwner);
 
     if (newOwner?.new_owner) {
-        Swal.fire({
-            title: "您是初次使用的新用戶",
-            text: "請先設定您的基本資料",
-            icon: "warning",
-            confirmButtonText: "繼續",
-        }).then(({ isConfirmed }) => {
-            if (isConfirmed) {
-                if (typeof window !== "undefined") {
-                    window.location.replace("/store/init/basic_info");
-                }
-            }
-        });
+        if (typeof window !== "undefined") {
+            window.location.replace("/store/init/basic_info");
+        }
     }
 
     const { owner } = useOwnerProfile(Cookies.get("token"));

@@ -15,18 +15,9 @@ export default function Home() {
     const router = useRouter();
     // 如果店家有登入，直接導向店家頁面
     if (Cookies.get("ownerId") !== undefined) {
-        Swal.fire({
-            title: "您沒有權限訪問此頁面",
-            text: "店家帳號已登入，請先登出後再進行操作",
-            icon: "warning",
-            confirmButtonText: "回到店家頁面",
-        }).then(({ isConfirmed }) => {
-            if (isConfirmed) {
-                if (typeof window !== "undefined") {
-                    window.location.href = "/store"; // 登出後重定向至登入頁面
-                }
-            }
-        });
+        if (typeof window !== "undefined") {
+            window.location.href = "/store"; // 登出後重定向至登入頁面
+        }
     }
 
     const { homepage, fetchHomepage } = useFetchHomepage();
