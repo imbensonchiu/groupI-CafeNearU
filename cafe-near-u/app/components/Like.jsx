@@ -70,7 +70,7 @@ export default function Addwish({ handleOpe }) {
               <img
                 src="../cat.gif"
                 alt="cafe"
-                className=" hidden md:block w-full md:w-[40%] h-28 text-gray-600 md:mt-0"
+                className=" hidden md:block w-full md:w-[40%] h-auto text-gray-600 md:mt-0"
               />
             )}
             {userWishlist.map((data) => (
