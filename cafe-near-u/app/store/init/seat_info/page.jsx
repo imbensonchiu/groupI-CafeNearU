@@ -6,6 +6,8 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import shopSeatTypeUpdate from "../../../lib/store_manage/shopSeatTypeUpdate";
 import shopStatusUpdate from "../../../lib/store_manage/shopStatusUpdate";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
     Button,
@@ -35,22 +37,54 @@ function TrashIcon() {
 }
 
 async function handleSubmit(seatType) {
-    const token = Cookies.get("tokenOwner");
+    const token = Cookies.get("token");
     const data = await shopSeatTypeUpdate(token, { seats: seatType });
-    const res = await shopStatusUpdate(token, {
-        operating_status: "正常營業",
-        type: seatType[0].type,
-        available_seats: seatType[0].total_seats,
-    });
     console.log(data);
-    if (data === 200 && res === 200) {
-        window.location.replace("/store");
+    if (data !== 200) {
+        toast.error(`更新失敗 (Error: ${data})`, {
+            position: "top-right",
+            autoClose: 4999,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
     } else {
-        window.location.replace(`https://http.cat/${res}`);
+        const res = await shopStatusUpdate(token, {
+            operating_status: "正常營業",
+            type: seatType[0].type,
+            available_seats: seatType[0].total_seats,
+        });
+        if (data === 200 && res === 200) {
+            window.location.replace("/store");
+        }
+
+        if (res !== 200) {
+            toast.error(`更新失敗 (Error: ${res})`, {
+                position: "top-right",
+                autoClose: 4999,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
     }
 }
 
+const handleLogout = () => {
+    Cookies.remove("token");
+    Cookies.remove("ownerId");
+    // Cookies.remove("postid");
+    window.location.href = "/"; // 登出後重定向至登入頁面
+};
+
 export default function Home() {
+    <HeaderStore handleLogout={handleLogout} />;
     const [category, setCategory] = useState("");
     const [number, setNumber] = useState("");
 
@@ -154,6 +188,18 @@ export default function Home() {
                 >
                     更新並進入店家後台
                 </Button>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={4999}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
             </div>
         </>
     );

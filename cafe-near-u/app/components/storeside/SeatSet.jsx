@@ -36,6 +36,7 @@ function TrashIcon() {
 
 async function handleSubmit(seatType, handleOpen, setSeatType) {
     const token = Cookies.get("token");
+    console.log(seatType);
     const data = await shopSeatTypeUpdate(token, { seats: seatType });
     console.log(data);
     if (data === 200) {
@@ -71,6 +72,7 @@ export default function SeatSet({ open, handleOpen }) {
     const [number, setNumber] = useState("");
 
     const [seatType, setSeatType] = useState([]);
+
     return (
         <>
             <Dialog

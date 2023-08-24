@@ -3,6 +3,8 @@
 import "react-time-picker/dist/TimePicker.css";
 import HeaderStore from "../../../components/storeside/HeaderStore";
 import InfoUpdateForm from "../../../components/storeside/InfoUpdateForm";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
 import {
     Button,
@@ -58,7 +60,7 @@ async function handleChange(e) {
 }
 
 async function handleSubmit(tableRows) {
-    const token = Cookies.get("tokenOwner");
+    const token = Cookies.get("token");
     const menu = { menu: tableRows };
     console.log(menu);
     const res = await menuUpdate({ token, menu });
@@ -66,9 +68,25 @@ async function handleSubmit(tableRows) {
     if (res === 200) {
         window.location.replace("/store/init/seat_info");
     } else {
-        window.location.replace(`https://http.cat/${res}`);
+        toast.error(`更新失敗 (Error: ${res})`, {
+            position: "top-right",
+            autoClose: 4999,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
     }
 }
+
+const handleLogout = () => {
+    Cookies.remove("token");
+    Cookies.remove("ownerId");
+    // Cookies.remove("postid");
+    window.location.href = "/"; // 登出後重定向至登入頁面
+};
 
 export default function Home() {
     const [tableRows, setTableRows] = useState([]);
@@ -77,7 +95,7 @@ export default function Home() {
     const [newCategory, setNewCategory] = useState("");
     return (
         <>
-            <HeaderStore />
+            <HeaderStore handleLogout={handleLogout} />
             <div className="flex flex-col items-center justify-between top-0 bg-white z-50">
                 <div className="mt-2 flex flex-col items-start border-l-[#7D6E83] border-l-8 lg:container lg:mx-auto ">
                     <div className="pl-2 text-xl text-[#7D6E83] mb-1 w-fit py-1 transition-all text-left font-medium">
@@ -262,6 +280,18 @@ export default function Home() {
                         更新並繼續
                     </Button>
                 </div>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={4999}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
             </div>
         </>
     );

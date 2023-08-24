@@ -22,7 +22,7 @@ export default function useOwnerStatus(token) {
             return res.json();
         });
     const { data, error, isLoading, mutate } = useSWR(
-        `${process.env.NEXT_PUBLIC_API_HOST}/shop-owners/status`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/shop-owners/account-status`,
         fetcher
     );
     return { newOwner: data, isLoading, isError: error, mutate };

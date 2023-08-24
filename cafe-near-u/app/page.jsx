@@ -7,13 +7,22 @@ import StoreCard from "./components/StoreCard";
 import Footer from "./components/footer";
 import useFetchHomepage from "./ApiHook/useFetchHomepage.jsx";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function Home() {
+    const router = useRouter();
     // 如果店家有登入，直接導向店家頁面
-    if (Cookies.get("ownerId")) {
-        window.location.replace("/store");
+    if (Cookies.get("ownerId") !== undefined) {
+        Swal.fire({
+            title: "您沒有權限訪問此頁面",
+            text: "店家帳號已登入，請先登出後再進行操作",
+            icon: "warning",
+            confirmButtonText: "回到店家頁面",
+        }).then(() => {
+            router.push("/store");
+        });
     }
-
     //點icon搜尋
     const [searchTerm, setSearchTerm] = useState("");
     const jump = (info) => {

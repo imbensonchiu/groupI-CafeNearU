@@ -13,14 +13,12 @@ import ownerProfileUpdate from "../../lib/store_manage/ownerProfileUpdate";
 import ownerPasswordUpdate from "../../lib/store_manage/ownerPasswordUpdate";
 
 export default function AccountUpdate({ open, handleOpen }) {
-    const { owner, isLoading, isError, mutate } = useOwnerProfile(
-        Cookies.get("ownerToken")
-    );
+    const { owner } = useOwnerProfile(Cookies.get("token"));
+    console.log(owner);
 
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState(owner?.data?.user?.name);
+    const [email, setEmail] = useState(owner?.data?.user?.email);
     const [password, setPassword] = useState("");
-
     const [usernameEdit, setUsernameEdit] = useState(false);
     const [emailEdit, setEmailEdit] = useState(false);
     const [passwordEdit, setPasswordEdit] = useState(false);
@@ -30,13 +28,14 @@ export default function AccountUpdate({ open, handleOpen }) {
             username,
             email,
         };
-        const res = await ownerProfileUpdate(token, data);
-        const passwordData = {
-            password,
-        };
-        const res2 = await ownerPasswordUpdate(token, passwordData);
-        console.log(res);
-        console.log(res2);
+        await ownerProfileUpdate(token, data);
+
+        if (passwordEdit) {
+            const passwordData = {
+                new_password: password,
+            };
+            await ownerPasswordUpdate(token, passwordData);
+        }
     }
 
     return (
@@ -78,9 +77,13 @@ export default function AccountUpdate({ open, handleOpen }) {
                                     label="使用者名稱"
                                     className="py-4 "
                                     size="lg"
+                                    value={username}
                                     containerProps={{
                                         className: "my-2 col-span-12",
                                     }}
+                                    onChange={(e) =>
+                                        setUsername(e.target.value)
+                                    }
                                     disabled={!usernameEdit}
                                 />
                                 <Button
@@ -98,9 +101,11 @@ export default function AccountUpdate({ open, handleOpen }) {
                             <div className="col-span-12">
                                 <Input
                                     label="電子郵箱地址"
+                                    value={email}
                                     type="email"
                                     className="py-4 "
                                     size="lg"
+                                    onChange={(e) => setEmail(e.target.value)}
                                     containerProps={{
                                         className: "my-2 col-span-12",
                                     }}
@@ -120,8 +125,12 @@ export default function AccountUpdate({ open, handleOpen }) {
                                 <Input
                                     label="密碼"
                                     type="password"
+                                    value={password}
                                     className="py-4 "
                                     size="lg"
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
                                     containerProps={{
                                         className: "my-2 col-span-12",
                                     }}
@@ -146,9 +155,7 @@ export default function AccountUpdate({ open, handleOpen }) {
                 <Button
                     variant="outlined"
                     onClick={() => {
-                        setUsernameEdit(false);
-                        setEmailEdit(false);
-                        setPasswordEdit(false);
+                        handleUpdate(Cookies.get("token"));
                         handleOpen();
                     }}
                     className="text-base px-6 border border-[#7D6E83] text-[#7D6E83] "
@@ -156,14 +163,12 @@ export default function AccountUpdate({ open, handleOpen }) {
                     關閉
                 </Button>
                 <Button
+                    onClick={handleOpen}
+                    className="text-base px-6 bg-[#7D6E83] text-white"
                     onClick={() => {
-                        setUsernameEdit(false);
-                        setEmailEdit(false);
-                        setPasswordEdit(false);
-                        handleUpdate();
+                        handleUpdate(Cookies.get("token"));
                         handleOpen();
                     }}
-                    className="text-base px-6 bg-[#7D6E83] text-white"
                 >
                     更新
                 </Button>

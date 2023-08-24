@@ -13,14 +13,14 @@ import shopUnpublish from "../../lib/store_manage/shopUnpublish";
 import Cookies from "js-cookie";
 
 export default function PublishUpdate({ open, handleOpen }) {
-    const token = Cookies.get("ownerToken");
+    const token = Cookies.get("token");
     const [publish, setPublish] = useState(false);
-    async function handleUpdate(token) {
+    async function handleUpdate() {
         if (publish) {
-            const res = await shopPublish(token);
+            const res = await shopPublish(token, { is_published: publish });
             console.log(res);
         } else {
-            const res = await shopUnpublish(token);
+            const res = await shopUnpublish(token, { is_published: publish });
             console.log(res);
         }
     }
@@ -94,7 +94,7 @@ export default function PublishUpdate({ open, handleOpen }) {
                 </Button>
                 <Button
                     onClick={() => {
-                        handleUpdate(token);
+                        handleUpdate();
                         handleOpen();
                     }}
                     className="text-base px-6 bg-[#7D6E83] text-white"
