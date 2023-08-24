@@ -62,7 +62,7 @@ export default function Addwish({ handleOpe }) {
       <div className="flex flex-wrap justify-center max-h-[80vh] overflow-y-auto">
         <Card className=" w-full mx-auto">
           <div className="px-4 py-3 text-center font-bold text-xl text-[#030712]">
-            收藏口袋名單
+            收藏口袋清單
           </div>
           <hr className="border-gray-300 mb-4" />
           <div className="flex flex-wrap justify-center ">
@@ -74,10 +74,13 @@ export default function Addwish({ handleOpe }) {
               />
             )}
             {userWishlist.map((data) => (
-              <div key={data.id} className={"md:w-[45%] w-[100%]  p-2"}>
+              <div
+                key={data.id}
+                className={"md:w-[45%] w-[100%]  p-2 cursor:pointer"}
+              >
                 <>
                   <Card
-                    className="w-[100%] h-48 md:h-60 mb-2 transform hover:scale-110 transition-transform  border border-[#00000] cursor:pointer"
+                    className="w-[100%] h-48 md:h-60 mb-2 transform hover:scale-110 transition-transform  border border-[#00000] "
                     onClick={() => handleAddtowishlist(data.id)}
                   >
                     <CardHeader floated={false} className="h-80">
@@ -117,7 +120,7 @@ export default function Addwish({ handleOpe }) {
           handler={handleOpen}
           className="bg-transparent shadow-none"
         >
-          <Addtowishlist />
+          <Addtowishlist handler={handleOpen} />
         </Dialog>
       </div>
     </>

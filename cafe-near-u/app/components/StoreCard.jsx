@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Addwish from "./Like.jsx";
 import Cookies from "js-cookie";
 
-export default function StoreCard({ className, store, nolike }) {
+export default function StoreCard({ className, store }) {
   const cookieValue = Cookies.get("token");
 
   const {
@@ -86,7 +86,10 @@ export default function StoreCard({ className, store, nolike }) {
         <img
           src={primary_image}
           className="h-72 w-full md:w-72 object-cover rounded-xl"
-          onClick={() => handletostoreinfo(store.id)}
+        />
+        <img
+          src={primary_image}
+          className="h-72 w-full md:w-72 object-cover rounded-xl"
         />
       </Carousel>
       <div

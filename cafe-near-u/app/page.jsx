@@ -19,8 +19,12 @@ export default function Home() {
     window.location.href = `/searchresult/${info}`;
   };
   const { homepage, fetchHomepage } = useFetchHomepage();
+  const [isloading, setisloading] = useState(true);
   useEffect(() => {
     fetchHomepage();
+    setTimeout(() => {
+      setisloading(false);
+    }, 1500);
   }, []);
 
   return (
@@ -138,44 +142,62 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="container mx-auto grid grid-cols-12 gap-8 mt-8">
-        <div className="col-span-12 text-2xl font-light text-gray-800">
-          精選工作地點
+      {isloading ? (
+        <div className="flex flex-col col-span-9 items-center w-full  mx-auto justify-center ">
+          <img
+            src="../cat.gif"
+            alt="cafe"
+            className="block mb-4  w-[40%] h-auto text-gray-600 mt-28"
+          />
+          <div className="container mx-auto flex-col md:flex-row flex items-center justify-center">
+            <p className="text-gray-600 text-2xl mb-2 me-4 font-logo">
+              CafeNearU
+            </p>
+            <p className="text-gray-700 text-xl">正在努力...</p>
+          </div>
         </div>
-        <div className="col-span-12 grid grid-cols-12 gap-8">
-          {homepage.workspace?.map((store) => (
-            <StoreCard
-              className={"rounded-xl col-span-6 lg:col-span-3"}
-              key={store.id}
-              store={store}
-            />
-          ))}
+      ) : (
+        <div className="container mx-auto grid grid-cols-12 gap-8 mt-8">
+          <div className="col-span-12 text-2xl font-light text-gray-800">
+            精選工作地點
+          </div>
+          <div className="col-span-12 grid grid-cols-12 gap-8">
+            {homepage.workspace?.map((store) => (
+              <StoreCard
+                className={"rounded-xl col-span-6 lg:col-span-3"}
+                key={store.id}
+                store={store}
+              />
+            ))}
+          </div>
+          <div className="col-span-12 text-2xl font-light text-gray-800">
+            精選放鬆地點
+          </div>
+          <div className="col-span-12 grid grid-cols-12 gap-8">
+            {homepage.leisure?.map((store) => (
+              <StoreCard
+                className={"rounded-xl  col-span-6 lg:col-span-3"}
+                key={store.id}
+                store={store}
+              />
+            ))}
+          </div>
+          <div className="col-span-12 text-2xl font-light text-gray-800">
+            擼貓擼狗好去處
+          </div>
+          <div className="col-span-12 grid grid-cols-12 gap-8">
+            {homepage.pet?.map((store) => (
+              <StoreCard
+                className={
+                  "rounded-xl  col-span-6 lg:col-span-3 cursor-pointer"
+                }
+                key={store.id}
+                store={store}
+              />
+            ))}
+          </div>
         </div>
-        <div className="col-span-12 text-2xl font-light text-gray-800">
-          精選放鬆地點
-        </div>
-        <div className="col-span-12 grid grid-cols-12 gap-8">
-          {homepage.leisure?.map((store) => (
-            <StoreCard
-              className={"rounded-xl  col-span-6 lg:col-span-3"}
-              key={store.id}
-              store={store}
-            />
-          ))}
-        </div>
-        <div className="col-span-12 text-2xl font-light text-gray-800">
-          擼貓擼狗好去處
-        </div>
-        <div className="col-span-12 grid grid-cols-12 gap-8">
-          {homepage.pet?.map((store) => (
-            <StoreCard
-              className={"rounded-xl  col-span-6 lg:col-span-3 cursor-pointer"}
-              key={store.id}
-              store={store}
-            />
-          ))}
-        </div>
-      </div>
+      )}
 
       <Footer />
     </>

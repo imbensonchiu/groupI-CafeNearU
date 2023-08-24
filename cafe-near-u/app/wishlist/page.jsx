@@ -40,7 +40,7 @@ export default function h() {
     <>
       <Header />
       <div className=" text-4xl mt-32 mb-4 ml-[10%] text-5c5c5c text-left font-bold font-normal">
-        口袋名單
+        口袋清單
       </div>
       <hr className="border-gray-300 mb-20 " />
       <div className="ml-[10%] flex flex-wrap">

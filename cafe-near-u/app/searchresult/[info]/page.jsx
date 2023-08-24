@@ -223,7 +223,7 @@ export default function h() {
               <img
                 src="../cat.gif"
                 alt="cafe"
-                className="block mb-4  w-[50%] h-28 text-gray-600 mt-28"
+                className="block mb-4  w-[40%] h-auto text-gray-600 mt-28"
               />
               <div className="container mx-auto flex-col md:flex-row flex items-center justify-center">
                 <p className="text-gray-600 text-2xl mb-2 me-4 font-logo">
@@ -238,7 +238,7 @@ export default function h() {
               <img
                 src="../cat.gif"
                 alt="cafe"
-                className="block mb-4  w-[50%] h-28 text-gray-600 mt-28"
+                className="block mb-4  w-[40%] h-auto text-gray-600 mt-28"
               />
               <div className="container mx-auto flex-col  flex items-center justify-center">
                 {/* <p className="text-gray-600 text-2xl mb-2 me-4 font-logo">
