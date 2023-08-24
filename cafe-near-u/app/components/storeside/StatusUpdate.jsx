@@ -7,22 +7,14 @@ import {
     DialogFooter,
     Button,
     ButtonGroup,
-    TabPanel,
-    TabsBody,
-    TabsHeader,
-    Tab,
-    Tabs,
+    Chip,
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import useStatus from "../../lib/store_manage/useStatus";
 import Cookies from "js-cookie";
+import shopStatusUpdate from "../../lib/store_manage/shopStatusUpdate";
 
-const data = [
-    { label: "座位ㄧ", value: 1 },
-    { label: "座位二", value: 2 },
-    { label: "座位三", value: 3 },
-    { label: "座位四", value: 4 },
-];
+const statusList = ["正常營業", "提早關門", "店休"];
 
 export default function StatusUpdate({ open, handleOpen }) {
     const { status, isError } = useStatus(Cookies.get("ownerId"));
@@ -32,7 +24,10 @@ export default function StatusUpdate({ open, handleOpen }) {
     else if (operating_status === "店休") statusCode = 3;
 
     const [value, setValue] = useState(statusCode);
+
     const seats = status?.data?.shop?.seats;
+    const [seat, setSeat] = useState(new Array(seats?.length));
+
     return (
         <Dialog
             size="md"
@@ -95,73 +90,118 @@ export default function StatusUpdate({ open, handleOpen }) {
                         </Button>
                     </ButtonGroup>
                 </div>
-                <div className="flex flex-row gap-6 mt-4">
+                <div className="flex flex-col gap-6 mt-4">
                     <div className="pl-2 col-span-4 text-gray-800 ">
                         剩餘座位
                     </div>
-                    <Tabs
-                        value="normal"
-                        orientation="horizontal"
-                        className="col-span-8 flex flex-col self-center"
-                    >
-                        <TabsHeader className="w-auto">
-                            {seats?.map(({ type }, index) => (
-                                <Tab key={index} value={index}>
-                                    {type}
-                                </Tab>
-                            ))}
-                        </TabsHeader>
-                        <TabsBody className="w-80 flex flex-row self-center my-4">
-                            {seats?.map(
-                                ({ available_seats, total_seats }, index) => (
-                                    <TabPanel
-                                        key={index}
-                                        value={index}
-                                        className="py-0"
+                    {seats?.map(
+                        ({ type, available_seats, total_seats }, index) => {
+                            const newSeat = seat.map((item, i) => {
+                                if (i === index) return available_seats;
+                                return item;
+                            });
+                            setSeat(newSeat);
+
+                            return (
+                                <div
+                                    className="flex flex-row justify-center"
+                                    key={index}
+                                >
+                                    <Chip
+                                        className="self-center px-3 text-xl mr-4 font-light"
+                                        color="white"
+                                        value={type}
+                                        variant="outlined"
+                                    />
+                                    <Button
+                                        className="bg-[#B79681] text-base text-white rounded-full font-normal p-1"
+                                        onClick={() => {
+                                            const newSeatPlus = seat.map(
+                                                (item, i) => {
+                                                    if (
+                                                        i === index &&
+                                                        item < total_seats
+                                                    )
+                                                        return item + 1;
+                                                    return item;
+                                                }
+                                            );
+                                            setSeat(newSeatPlus);
+                                            const req = {
+                                                operating_status:
+                                                    statusList[value - 1],
+                                                type,
+                                                available_seats:
+                                                    newSeatPlus[index],
+                                            };
+                                            shopStatusUpdate(
+                                                Cookies.get("token"),
+                                                req
+                                            );
+                                        }}
                                     >
-                                        <div className="flex flex-row justify-center">
-                                            <Button className="bg-[#B79681] text-base text-white rounded-full font-normal p-1">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    strokeWidth={1.5}
-                                                    stroke="currentColor"
-                                                    className="w-6 h-6"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        d="M12 4.5v15m7.5-7.5h-15"
-                                                    />
-                                                </svg>
-                                            </Button>
-                                            <div className="self-center px-3 text-2xl">
-                                                <strong>{`剩 ${available_seats} 席`}</strong>{" "}
-                                                {`/ 共 ${total_seats} 席`}
-                                            </div>
-                                            <Button className="bg-[#c3ab9b] text-base text-white rounded-full font-normal p-1">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    strokeWidth={1.5}
-                                                    stroke="currentColor"
-                                                    className="w-6 h-6"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        d="M19.5 12h-15"
-                                                    />
-                                                </svg>
-                                            </Button>
-                                        </div>
-                                    </TabPanel>
-                                )
-                            )}
-                        </TabsBody>
-                    </Tabs>
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth={1.5}
+                                            stroke="currentColor"
+                                            className="w-6 h-6"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M12 4.5v15m7.5-7.5h-15"
+                                            />
+                                        </svg>
+                                    </Button>
+                                    <div className="self-center px-3 text-2xl">
+                                        <strong>{`剩 ${seat[index]} 席`}</strong>{" "}
+                                        {`/ 共 ${total_seats} 席`}
+                                    </div>
+                                    <Button
+                                        className="bg-[#c3ab9b] text-base text-white rounded-full font-normal p-1"
+                                        onClick={() => {
+                                            const newSeatPlus = seat.map(
+                                                (item, i) => {
+                                                    if (i === index && item > 0)
+                                                        return item - 1;
+                                                    return item;
+                                                }
+                                            );
+                                            setSeat(newSeatPlus);
+                                            const req = {
+                                                operating_status:
+                                                    statusList[value - 1],
+                                                type,
+                                                available_seats:
+                                                    newSeatPlus[index],
+                                            };
+                                            shopStatusUpdate(
+                                                Cookies.get("token"),
+                                                req
+                                            );
+                                        }}
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth={1.5}
+                                            stroke="currentColor"
+                                            className="w-6 h-6"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M19.5 12h-15"
+                                            />
+                                        </svg>
+                                    </Button>
+                                </div>
+                            );
+                        }
+                    )}
                 </div>
             </DialogBody>
             <DialogFooter className="space-x-4 ">
@@ -176,7 +216,7 @@ export default function StatusUpdate({ open, handleOpen }) {
                     onClick={handleOpen}
                     className="text-base px-6 bg-[#B79681] text-white"
                 >
-                    更新
+                    完成
                 </Button>
             </DialogFooter>
         </Dialog>

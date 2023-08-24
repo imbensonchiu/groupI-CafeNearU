@@ -59,7 +59,7 @@ async function handleChange(e) {
 }
 
 async function handleSubmit(tableRows, handleOpen) {
-    const token = Cookies.get("tokenOwner");
+    const token = Cookies.get("token");
     const menu = { menu: tableRows };
     console.log(menu);
     const res = await menuUpdate({ token, menu });
