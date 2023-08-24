@@ -18,7 +18,7 @@ import {
   Dialog,
 } from "@material-tailwind/react";
 
-export default function Addtowishlist({ handler }) {
+export default function Addtowishlist({ handleOpen }) {
   const [open2, setOpen] = useState(false);
   const handleOpen2 = () => setOpen((cur) => !cur);
   const token = Cookies.get("token");
@@ -47,7 +47,7 @@ export default function Addtowishlist({ handler }) {
 
       if (response.ok) {
         console.log("新增心願單成功");
-        handler.handleOpen();
+        handleOpen();
         <Dialog
           size="xs"
           open={open2}

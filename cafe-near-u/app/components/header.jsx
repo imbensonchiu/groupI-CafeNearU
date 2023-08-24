@@ -111,7 +111,7 @@ export default function withRouter(Header) {
                       className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-left font-bold text-xl first:hover:rounded-t-2xl last:hover:rounded-b-2xl"
                       onClick={handletowishlist}
                     >
-                      口袋清單
+                      口袋名單
                     </li>
                     <hr className="border-gray-300" />
                     <li
