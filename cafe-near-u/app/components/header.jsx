@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Login from "./Login.jsx";
-import Signup from "./Signup.jsx";
+import Signup from "./signup.jsx";
 import { Dialog } from "@material-tailwind/react";
 import Cookies from "js-cookie";
 

@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import storesHome from "./components/homepage/stores";
-import Header from "./components/Header";
+import Header from "./components/header";
 import { IconButton } from "@material-tailwind/react";
 import StoreCard from "./components/StoreCard";
-import Footer from "./components/Footer";
+import Footer from "./components/footer";
 import useFetchHomepage from "./ApiHook/useFetchHomepage.jsx";
 
 export default function Home() {

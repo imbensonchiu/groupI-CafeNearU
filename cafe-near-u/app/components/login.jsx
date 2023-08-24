@@ -177,7 +177,7 @@ export default function Login() {
                 </Button>
               </div>
 
-              <Typography variant="small" className="mt-6 flex justify-center">
+              {/* <Typography variant="small" className="mt-6 flex justify-center">
                 忘記密碼?
                 <Typography
                   as="a"
@@ -188,17 +188,17 @@ export default function Login() {
                 >
                   點我
                 </Typography>
-              </Typography>
+              </Typography> */}
             </CardFooter>
           </form>
-          <div className="flex items-center justify-center">
+          {/* <div className="flex items-center justify-center">
             <hr className="mt-4 border-gray-300 flex-grow" />
             <div className="flex items-center">
               <p className="text-[#030712] text-sm mt-2 mx-4">或</p>
             </div>
             <hr className="mt-4 border-gray-300 flex-grow" />
-          </div>
-          <div className="flex items-center justify-center mt-4 mb-4">
+          </div> */}
+          {/* <div className="flex items-center justify-center mt-4 mb-4">
             <Button
               size="md"
               variant="outlined"
@@ -208,7 +208,7 @@ export default function Login() {
               <img src="images.png" alt="metamask" className="h-6 w-6" />
               <span className="flex-grow text-center">使用 Google 登入</span>
             </Button>
-          </div>
+          </div> */}
         </Card>
       )}
     </>

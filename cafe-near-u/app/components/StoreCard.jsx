@@ -101,6 +101,7 @@ export default function StoreCard({ className, store, nolike }) {
       >{`${operating_status}  |  最低消費 $${min_order} | ${
         seat ? "尚有座位" : "座位已滿"
       }`}</div>
+
       {cookieValue && (
         <div
           className={"absolute top-2 right-5 cursor-pointer"}

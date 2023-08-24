@@ -18,10 +18,10 @@ import {
   Slider,
 } from "@material-tailwind/react";
 
-export default function Filter() {
+export default function Filter(props) {
   const [username, setUsername] = useState("");
   const [activeButton, setActiveButton] = useState("all");
-  const [picButton, setpicButton] = useState("cafe.gif");
+  const [picButton, setpicButton] = useState("../cafe.gif");
   const [defiButton, setdefiButton] = useState("就知道你什麼都喜歡");
 
   const [activeButton2, setActiveButton2] = useState("alltime");
@@ -41,11 +41,21 @@ export default function Filter() {
   const handleSliderChange = (value) => {
     setSliderValue(value);
   };
-  // 獲取網址中的keyword 儲存到cookie
-  const path = window.location.pathname;
-  const match = path.match(/keyword=([^&]*)/);
-  const keyword = match[0];
-  console.log(keyword); // 输出："台北"
+  // 獲取網址中的keyword
+  const [keyword, setkeyword] = useState("");
+  useEffect(() => {
+    const path = window.location.pathname;
+    const match = path.match(/keyword=([^&]*)/);
+
+    if (match && match[1]) {
+      setkeyword("keyword=" + decodeURIComponent(match[1])); // Decode the URL-encoded keyword
+      console.log(keyword); // 输出："台北"
+    } else {
+      console.log("Keyword not found in the URL");
+    }
+  }, []); // Empty dep
+
+  // console.log(keyword); // 输出："台北"
 
   const [type, settype] = useState("");
   const [plug, setplug] = useState("");
@@ -116,6 +126,7 @@ export default function Filter() {
       keyword + type + plug + wifi + dog + cat + smoke + money + timelimit;
     setall(updatedAll);
     console.log(all);
+    props.onAllChange(updatedAll);
   }, [type, plug, wifi, dog, cat, smoke, money, timelimit]);
 
   const showresult = () => {
@@ -131,7 +142,7 @@ export default function Filter() {
   };
 
   const jump = (all) => {
-    window.location.href = `/searchresult/${all}`;
+    //window.location.href = `/searchresult/${all}`;
   };
 
   // 清除狀態
@@ -140,7 +151,7 @@ export default function Filter() {
   };
   return (
     <>
-      <Card className="w-full">
+      <Card className="w-full max-h-[80vh] overflow-y-auto scrollbar-none">
         <div className="px-4 py-3 text-center font-bold text-xl text-[#030712]">
           篩選條件
         </div>
@@ -223,7 +234,7 @@ export default function Filter() {
 
         <hr className="border-gray-300 w-11/12 mx-auto" />
 
-        <div className="container w-[100%] mx-auto flex-row items-center justify-start ml-8 py-4">
+        <div className="container w-[100%] mx-auto flex-row items-center justify-start px-8 py-4">
           <p className="text-[#030712] text-xl me-2 mb-2 text-left font-bold">
             設備與服務
           </p>
@@ -257,7 +268,7 @@ export default function Filter() {
         </div>
         <hr className="border-gray-300 w-11/12 mx-auto" />
 
-        <div className="container mx-auto flex-row items-center justify-start ml-8 py-4">
+        <div className="container mx-auto flex-row items-center justify-start  px-8 py-4">
           <div className="flex items-center mb-2">
             <p className="text-[#030712] text-xl me-2 text-left font-bold">
               低消範圍
@@ -281,7 +292,7 @@ export default function Filter() {
           </div>
         </div>
         <hr className="border-gray-300 w-11/12 mx-auto" />
-        <div className="container mx-auto flex-col items-center justify-start ml-8 py-4">
+        <div className="container mx-auto flex-col items-center justify-start  px-8 py-4">
           <div className="flex items-center mb-2">
             <p className="text-[#030712] text-xl me-2 mb-2 text-left font-bold">
               消費時間
@@ -328,9 +339,10 @@ export default function Filter() {
             onClick={() => {
               showresult();
               jump(all);
+              props.handle(); // Call the handle function to close the dialog
             }}
           >
-            顯示23間咖啡廳
+            顯示咖啡廳
           </Button>
         </div>
       </Card>

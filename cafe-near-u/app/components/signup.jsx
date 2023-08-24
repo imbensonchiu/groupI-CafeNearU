@@ -25,7 +25,7 @@ export default function Signup() {
   return (
     <>
       {dialogOpen && (
-        <Card className="w-full mx-auto ">
+        <Card className="w-full mx-auto max-h-[80vh] overflow-y-auto ">
           <div className="px-4 py-3 text-center font-bold text-xl text-[#030712] ">
             註冊
           </div>
@@ -63,14 +63,14 @@ export default function Signup() {
           </div>
           {activeButton === "guest" && <GuestSignupForm />}
           {activeButton === "store" && <StoreSingupForm />}
-          <div className="flex items-center justify-center">
+          {/* <div className="flex items-center justify-center">
             <hr className="mt-4 border-gray-300 flex-grow" />
             <div className="flex items-center">
               <p className="text-[#030712] text-sm mt-2 mx-4">或</p>
             </div>
             <hr className="mt-4 border-gray-300 flex-grow" />
-          </div>
-          <div className="flex items-center justify-center mt-4 mb-4">
+          </div> */}
+          {/* <div className="flex items-center justify-center mt-4 mb-4">
             <Button
               size="md"
               variant="outlined"
@@ -80,7 +80,7 @@ export default function Signup() {
               <img src="images.png" alt="metamask" className="h-6 w-6" />
               <span className="flex-grow text-center">使用 Google 註冊</span>
             </Button>
-          </div>
+          </div> */}
         </Card>
       )}
     </>

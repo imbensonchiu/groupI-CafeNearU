@@ -4,9 +4,9 @@
 import { IconButton, Switch, Button, Dialog } from "@material-tailwind/react";
 import { useState, useEffect } from "react";
 
-import Header from "../../components/Header.jsx";
-import Footer from "../../components/Footer.jsx";
-import Filter from "../../components/Filter.jsx";
+import Header from "../../components/header.jsx";
+import Footer from "../../components/footer.jsx";
+import Filter from "../../components/filter.jsx";
 import storesHome from "../../components/homepage/stores.js";
 import StoreCard from "../../components/StoreCard.jsx";
 import Cookies from "js-cookie";
@@ -18,17 +18,30 @@ export default function h() {
   console.log(token);
 
   // 獲取網址中的keyword 儲存到cookie
-  const path = window.location.pathname;
-  const parts = path.split("/"); // 将路径部分拆分成数组
-  const keyword = parts[parts.length - 1];
-  console.log(keyword); // 输出："台北"
-
+  const [keyword, setkeyword] = useState("");
   useEffect(() => {
-    handleSearch();
+    const path = window.location.pathname;
+    console.log(path);
+    const match = path.match(/keyword=([^&]*)/);
+    console.log(match);
+
+    if (match && match[1]) {
+      setkeyword("keyword=" + decodeURIComponent(match[1])); // Decode the URL-encoded keyword
+      console.log(keyword); // 输出："台北"
+    } else {
+      console.log("Keyword not found in the URL");
+    }
   }, []);
 
+  const [all, setAll] = useState(""); // 创建一个状态变量，用于接收子组件传递的all值
+  useEffect(() => {
+    handleSearch(keyword + all);
+  }, [keyword, all]);
+
   const [searchResult, setsearchResult] = useState([]);
-  const handleSearch = async () => {
+  const [isloading, setisloading] = useState(true);
+  const handleSearch = async (keyword) => {
+    console.log("k", keyword);
     try {
       // 向後端API發送請求，將輸入的搜索查詢作為參數傳遞
       const response = await fetch(
@@ -50,6 +63,7 @@ export default function h() {
 
         const searchResults = data.data.shops;
         setsearchResult(searchResults);
+        setisloading(false);
       } else {
         console.error("關鍵字搜尋失敗");
       }
@@ -63,7 +77,15 @@ export default function h() {
   const jump = (info) => {
     setSearchTerm(info);
     console.log(info);
-    window.location.href = `/searchresult/${keyword + info}`;
+    //window.location.href = `/searchresult/${keyword + info}`;
+    handleSearch(keyword + info);
+    setisloading(true);
+  };
+
+  // 回调函数，用于接收子组件传递的all值
+  const handleAllChange = (allValue) => {
+    setAll(allValue);
+    console.log(all);
   };
 
   return (
@@ -77,7 +99,13 @@ export default function h() {
 
         <div className="flex w-full items-end mt-24 gap-8 mb-3 flex-nowrap h-[100px]  ">
           <div className="flex mb-4 w-[60px] flex-col justify-center items-center relative">
-            <IconButton variant="text" className="rounded-full">
+            <IconButton
+              variant="text"
+              className="rounded-full"
+              onClick={() => {
+                jump("");
+              }}
+            >
               <span className="material-symbols-outlined">home</span>
             </IconButton>
             <span className="self-center text-xs lg:text-sm">我的搜尋</span>
@@ -184,16 +212,47 @@ export default function h() {
         handler={handleOpen}
         className="bg-transparent shadow-none "
       >
-        <Filter />
+        <Filter handle={handleOpen} onAllChange={handleAllChange} />
       </Dialog>
 
       <hr className="border-gray-300 w-full" />
       <div className="flex w-full ">
         <div className="container w-[90%] mx-auto md:mx-[0%] md:w-[50%] md:ml-[10%] justify-between grid grid-cols-9 gap-8 mt-8">
+          {isloading && (
+            <div className="flex flex-col col-span-9 items-center w-full  mx-auto justify-center h-36">
+              <img
+                src="../cat.gif"
+                alt="cafe"
+                className="block mb-4  w-[50%] h-28 text-gray-600 mt-28"
+              />
+              <div className="container mx-auto flex-col md:flex-row flex items-center justify-center">
+                <p className="text-gray-600 text-2xl mb-2 me-4 font-logo">
+                  CafeNearU
+                </p>
+                <p className="text-gray-700 text-xl">正在努力...</p>
+              </div>
+            </div>
+          )}
+          {!isloading && !searchResult.length && (
+            <div className="flex flex-col col-span-9 items-center w-full  mx-auto justify-center h-36">
+              <img
+                src="../cat.gif"
+                alt="cafe"
+                className="block mb-4  w-[50%] h-28 text-gray-600 mt-28"
+              />
+              <div className="container mx-auto flex-col  flex items-center justify-center">
+                {/* <p className="text-gray-600 text-2xl mb-2 me-4 font-logo">
+                  CafeNearU
+                </p> */}
+                <p className="text-gray-700 text-xl">雖然查無此咖啡廳</p>
+                <p className="text-gray-700 text-xl">但還是要給你可愛的貓貓</p>
+              </div>
+            </div>
+          )}
           <div className=" h-8 flex justify-between items-center col-span-9 col-start-1  space-x-2">
-            <span className="col-span-6 md:col-span-3 col-start-1 self-center text-xl md:text-2xl me-8">
+            {/* <span className="col-span-6 md:col-span-3 col-start-1 self-center text-xl md:text-2xl me-8">
               顯示23間咖啡廳
-            </span>
+            </span> */}
 
             {/* <div className="w-[75%] col-span-2 col-start-3 relative flex items-center border-black border-2 rounded-full">
             <div className="self-center text-lg ml-4">低消價格</div>
@@ -211,7 +270,7 @@ export default function h() {
             />
           </div> */}
 
-            <button
+            {/* <button
               onClick={handleOpen}
               className="bg-[#D0B8A8] md:hidden w-[30%] col-start-5 h-12  flex items-center justify-center space-x-2 font-bold text-white rounded-sm"
             >
@@ -222,23 +281,25 @@ export default function h() {
                 viewBox="0 0 20 20"
               />
               <span>篩選條件</span>
-            </button>
-            <Button className="hidden md:flex md:col-span-2 md:col-start-7 bg-[#D0B8A8]  h-12 text-sm ">
+            </button> */}
+            {/* <Button className="hidden md:flex md:col-span-2 md:col-start-7 bg-[#D0B8A8]  h-12 text-sm ">
               下一頁
-            </Button>
+            </Button> */}
           </div>
 
           <div className="col-span-9 md:hidden h-[300px] bg-gray-200 "></div>
 
-          <div className="col-span-9 grid grid-cols-9 gap-4 justify-center">
-            {searchResult.map((store) => (
-              <StoreCard
-                className={"rounded-xl col-span-9 md:col-span-3 "}
-                key={store.id}
-                store={store}
-              />
-            ))}
-          </div>
+          {!isloading && (
+            <div className="col-span-9 grid grid-cols-9 gap-4 justify-center">
+              {searchResult.map((store) => (
+                <StoreCard
+                  className={"rounded-xl col-span-9 md:col-span-3 "}
+                  key={store.id}
+                  store={store}
+                />
+              ))}
+            </div>
+          )}
         </div>
         <div className="hidden md:block w-[30%] h-[920px] bg-gray-200 "></div>
       </div>

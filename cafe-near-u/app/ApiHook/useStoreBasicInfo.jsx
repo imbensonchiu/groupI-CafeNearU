@@ -16,6 +16,7 @@ export default function useStoreBasicInfo() {
       }
       return res.json();
     });
+
   const { data, error, isLoading, mutate } = useSWR(
     `https://13.211.10.154/api/1.0/shops/${id}/basic-info`,
     fetcher
