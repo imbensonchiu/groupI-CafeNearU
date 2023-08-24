@@ -32,12 +32,17 @@ export default function Rules({ rules }) {
                 </div>
             </div>
 
-            <div>
-                <div className="font-medium text-xl "> {rules[2].heading}</div>
-                <div className="font-normal text-base my-2">
-                    {rules[2].content}
+            {rules[2] && (
+                <div>
+                    <div className="font-medium text-xl ">
+                        {" "}
+                        {rules[2]?.heading}
+                    </div>
+                    <div className="font-normal text-base my-2">
+                        {rules[2]?.content}
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div>
                 <Button
@@ -88,13 +93,11 @@ export default function Rules({ rules }) {
                                     {rules[0].content}
                                 </div>
                             </div>
-                            {rules.slice(2).map((rule) => (
-                                <div>
+                            {rules.slice(2).map((rule, index) => (
+                                <div key={index}>
                                     <div className="font-bold text-xl ">
                                         {" "}
-                                        {rule.heading
-                                            ? "此為限時咖啡廳"
-                                            : "此為不限時咖啡廳"}
+                                        {rule.heading}
                                     </div>
                                     <div className="font-normal text-base my-2">
                                         {rule.content}
