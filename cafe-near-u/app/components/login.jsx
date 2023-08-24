@@ -44,7 +44,7 @@ export default function Login() {
       .required("Password is required")
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-        "Password must contain uppercase letter, lowercase letter, and 8 number"
+        "Password must contain uppercase letter, lowercase letter, and 8 numbers"
       ),
   });
   const formikLogin = useFormik({
@@ -74,22 +74,37 @@ export default function Login() {
 
         if (loginResponse.ok) {
           console.log("登入成功");
-          document.cookie = `token=${loginData.data.access_token}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+          if (activeButton === "guest") {
+            document.cookie = `tokenOwner=${loginData.data.access_token}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+          } else {
+            document.cookie = `token=${loginData.data.access_token}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+          }
           console.log(loginData.data.access_token);
+          console.log(document.cookie);
           // 取得id
           // document.cookie = `userId=${loginData.data.${type}.id}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
-          document.cookie = `userId=${loginData.data.customer.id}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
-          //console.log(loginData.data.customer.id);
-          window.location.reload();
+          if (activeButton === "guest") {
+            document.cookie = `userId=${loginData.data.customer.id}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+          } else {
+            document.cookie = `ownerId=${loginData.data.user.id}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+            window.location.href = "/store";
+          }
+          console.log(document.cookie);
+
+          // console.log(loginData.data.customer.id);
         } else {
           console.error("註冊失敗:", data.error);
           if (response.status >= 500 && response.status <= 599) {
             alert("出現錯誤。請稍後再試或通知我們的工程團隊。");
-            window.location.href = "/";
+            if (typeof window !== "undefined") {
+              window.location.href = "/";
+            }
           } else {
             const errorMessage = `註冊失敗: ${data.error}`;
             alert(errorMessage);
-            window.location.href = "/";
+            if (typeof window !== "undefined") {
+              window.location.href = "/";
+            }
           }
         }
       } catch (error) {

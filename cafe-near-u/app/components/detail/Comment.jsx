@@ -74,7 +74,9 @@ export default function Comment({ comment }) {
 
       if (response.ok) {
         console.log("刪除評論成功");
-        window.location.reload();
+        if (typeof window !== "undefined") {
+          window.location.reload();
+        }
       } else {
         console.error("刪除評論失敗");
       }

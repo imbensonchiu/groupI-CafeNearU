@@ -8,11 +8,35 @@ import {
 } from "@material-tailwind/react";
 import useOwnerProfile from "../../lib/store_manage/useOwnerProfile";
 import Cookies from "js-cookie";
+import { useState } from "react";
+import ownerProfileUpdate from "../../lib/store_manage/ownerProfileUpdate";
+import ownerPasswordUpdate from "../../lib/store_manage/ownerPasswordUpdate";
 
 export default function AccountUpdate({ open, handleOpen }) {
-    const { owner, isLoading, isError, mutate } = useOwnerProfile(
-        Cookies.get("token")
-    );
+    const { owner } = useOwnerProfile(Cookies.get("token"));
+    console.log(owner);
+
+    const [username, setUsername] = useState(owner?.data?.user?.name);
+    const [email, setEmail] = useState(owner?.data?.user?.email);
+    const [password, setPassword] = useState("");
+    const [usernameEdit, setUsernameEdit] = useState(false);
+    const [emailEdit, setEmailEdit] = useState(false);
+    const [passwordEdit, setPasswordEdit] = useState(false);
+
+    async function handleUpdate(token) {
+        const data = {
+            username,
+            email,
+        };
+        await ownerProfileUpdate(token, data);
+
+        if (passwordEdit) {
+            const passwordData = {
+                new_password: password,
+            };
+            await ownerPasswordUpdate(token, passwordData);
+        }
+    }
 
     return (
         <Dialog
@@ -53,35 +77,47 @@ export default function AccountUpdate({ open, handleOpen }) {
                                     label="使用者名稱"
                                     className="py-4 "
                                     size="lg"
+                                    value={username}
                                     containerProps={{
                                         className: "my-2 col-span-12",
                                     }}
+                                    onChange={(e) =>
+                                        setUsername(e.target.value)
+                                    }
+                                    disabled={!usernameEdit}
                                 />
                                 <Button
                                     size="sm"
                                     className="!absolute right-6 top-[30px] rounded"
                                     variant="text"
+                                    onClick={() =>
+                                        setUsernameEdit(!usernameEdit)
+                                    }
                                 >
-                                    編輯
+                                    {!usernameEdit ? "編輯" : "取消"}
                                 </Button>
                             </div>
 
                             <div className="col-span-12">
                                 <Input
                                     label="電子郵箱地址"
+                                    value={email}
                                     type="email"
                                     className="py-4 "
                                     size="lg"
+                                    onChange={(e) => setEmail(e.target.value)}
                                     containerProps={{
                                         className: "my-2 col-span-12",
                                     }}
+                                    disabled={!emailEdit}
                                 />
                                 <Button
                                     size="sm"
                                     className="!absolute right-6 top-[90px] rounded"
                                     variant="text"
+                                    onClick={() => setEmailEdit(!emailEdit)}
                                 >
-                                    編輯
+                                    {!emailEdit ? "編輯" : "取消"}
                                 </Button>
                             </div>
 
@@ -89,18 +125,26 @@ export default function AccountUpdate({ open, handleOpen }) {
                                 <Input
                                     label="密碼"
                                     type="password"
+                                    value={password}
                                     className="py-4 "
                                     size="lg"
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
                                     containerProps={{
                                         className: "my-2 col-span-12",
                                     }}
+                                    disabled={!passwordEdit}
                                 />
                                 <Button
                                     size="sm"
                                     className="!absolute right-6 top-[150px] rounded"
                                     variant="text"
+                                    onClick={() =>
+                                        setPasswordEdit(!passwordEdit)
+                                    }
                                 >
-                                    編輯
+                                    {!passwordEdit ? "編輯" : "取消"}
                                 </Button>
                             </div>
                         </div>
@@ -110,7 +154,10 @@ export default function AccountUpdate({ open, handleOpen }) {
             <DialogFooter className="space-x-4 lg:container lg:mx-auto">
                 <Button
                     variant="outlined"
-                    onClick={handleOpen}
+                    onClick={() => {
+                        handleUpdate(Cookies.get("token"));
+                        handleOpen();
+                    }}
                     className="text-base px-6 border border-[#7D6E83] text-[#7D6E83] "
                 >
                     關閉
@@ -118,6 +165,10 @@ export default function AccountUpdate({ open, handleOpen }) {
                 <Button
                     onClick={handleOpen}
                     className="text-base px-6 bg-[#7D6E83] text-white"
+                    onClick={() => {
+                        handleUpdate(Cookies.get("token"));
+                        handleOpen();
+                    }}
                 >
                     更新
                 </Button>

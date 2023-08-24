@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Login from "../Login.jsx";
+import Login from "../login";
 import {
   Card,
   CardHeader,
@@ -74,7 +74,10 @@ export default function GuestSignupForm() {
         if (response.ok) {
           console.log("店家註冊成功");
           console.log(data);
-          window.location.reload();
+          if (typeof window !== "undefined") {
+            window.location.reload();
+          }
+
           <Dialog
             size="xs"
             open={open}
@@ -87,11 +90,15 @@ export default function GuestSignupForm() {
           console.error("店家註冊失敗:", data.error);
           if (response.status >= 500 && response.status <= 599) {
             alert("出現錯誤。請稍後再試或通知我們的工程團隊。");
-            window.location.href = "/";
+            if (typeof window !== "undefined") {
+              window.location.href = "/";
+            }
           } else {
             const errorMessage = `店家註冊失敗: ${data.error}`;
             alert(errorMessage);
-            window.location.href = "/";
+            if (typeof window !== "undefined") {
+              window.location.href = "/";
+            }
           }
         }
       } catch (error) {

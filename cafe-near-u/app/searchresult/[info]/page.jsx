@@ -1,7 +1,13 @@
 /* eslint-disable no-unused-vars */
 "use client";
 
-import { IconButton, Switch, Button, Dialog } from "@material-tailwind/react";
+import {
+  Tooltip,
+  IconButton,
+  Switch,
+  Button,
+  Dialog,
+} from "@material-tailwind/react";
 import { useState, useEffect } from "react";
 
 import Header from "../../components/header.jsx";
@@ -10,17 +16,74 @@ import Filter from "../../components/filter.jsx";
 import storesHome from "../../components/homepage/stores.js";
 import StoreCard from "../../components/StoreCard.jsx";
 import Cookies from "js-cookie";
+import {
+  useLoadScript,
+  GoogleMap,
+  Marker,
+  MarkerLabel,
+} from "@react-google-maps/api";
+import { getGeocode, getLatLng } from "use-places-autocomplete";
+
+const Map = ({ addresses, names }) => {
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    libraries: ["places"],
+  });
+
+  let center = {};
+  let posList = [];
+
+  console.log("addresses", addresses[0]);
+  if (isLoaded) {
+    posList = addresses.map((address) =>
+      getGeocode({ address }).then((res) => {
+        const { lat, lng } = getLatLng(res[0]);
+        return { lat, lng };
+      })
+    );
+  }
+  return posList.length ? (
+    <GoogleMap
+      zoom={10}
+      center={{ lat: 25.033, lng: 121.565 }}
+      mapContainerClassName="m-6 w-full h-full rounded-md"
+    >
+      {posList.map((p, index) =>
+        p.then((res) => {
+          console.log("res", res);
+          return (
+            <>
+              <Marker
+                position={res}
+                label={{
+                  text: names[index],
+                  color: "white",
+                  className:
+                    "p-2 bg-[#7D6E83] -mt-14 font-medium opacity-85 rounded-md",
+                }}
+                symbol={{ fillColor: "#7D6E83" }}
+              />
+            </>
+          );
+        })
+      )}
+    </GoogleMap>
+  ) : (
+    <></>
+  );
+};
 
 export default function h() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
   const token = Cookies.get("token");
-  console.log(token);
 
   // 獲取網址中的keyword 儲存到cookie
   const [keyword, setkeyword] = useState("");
+
   useEffect(() => {
-    const path = window.location.pathname;
+    const path = typeof window !== "undefined" ? window.location.pathname : "";
+
     console.log(path);
     const match = path.match(/keyword=([^&]*)/);
     console.log(match);
@@ -34,13 +97,14 @@ export default function h() {
   }, []);
 
   const [all, setAll] = useState(""); // 创建一个状态变量，用于接收子组件传递的all值
-  useEffect(() => {
-    handleSearch(keyword + all);
+  useEffect(async () => {
+    await handleSearch(keyword + all);
   }, [keyword, all]);
 
   const [searchResult, setsearchResult] = useState([]);
   const [isloading, setisloading] = useState(true);
   const handleSearch = async (keyword) => {
+    console.log("handleSearch");
     console.log("k", keyword);
     try {
       // 向後端API發送請求，將輸入的搜索查詢作為參數傳遞
@@ -56,7 +120,7 @@ export default function h() {
         }
       );
       const data = await response.json();
-      console.log(data.data.shops);
+      console.log("done", data.data.shops);
 
       if (response.ok) {
         console.log("關鍵字搜尋成功");
@@ -75,8 +139,7 @@ export default function h() {
   //點icon搜尋
   const [searchTerm, setSearchTerm] = useState("");
   const jump = (info) => {
-    setSearchTerm(info);
-    console.log(info);
+    console.log("info->", info);
     //window.location.href = `/searchresult/${keyword + info}`;
     handleSearch(keyword + info);
     setisloading(true);
@@ -288,7 +351,6 @@ export default function h() {
           </div>
 
           <div className="col-span-9 md:hidden h-[300px] bg-gray-200 "></div>
-
           {!isloading && (
             <div className="col-span-9 grid grid-cols-9 gap-4 justify-center">
               {searchResult.map((store) => (
@@ -298,10 +360,24 @@ export default function h() {
                   store={store}
                 />
               ))}
+              {/* {storesHome.data.shops.leisure.map((store) => (
+              <StoreCard
+                className={"rounded-xl  col-span-6 lg:col-span-3"}
+                  key={store.id}
+                  store={store}
+                />
+              ))} */}
             </div>
           )}
         </div>
-        <div className="hidden md:block w-[30%] h-[920px] bg-gray-200 "></div>
+        <div className="hidden md:block w-[30%] h-[920px] ">
+          {searchResult.length > 0 && (
+            <Map
+              addresses={searchResult.map((store) => store.address)}
+              names={searchResult.map((store) => store.name)}
+            />
+          )}
+        </div>
       </div>
       <Footer className="fixed bottom-0" />
     </>

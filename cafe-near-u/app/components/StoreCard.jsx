@@ -2,12 +2,11 @@
 
 import { Carousel, Dialog } from "@material-tailwind/react";
 import { useState, useEffect } from "react";
-import Addwish from "./Like.jsx";
+import Addwish from "./Like";
 import Cookies from "js-cookie";
 
-export default function StoreCard({ className, store, nolike }) {
+export default function StoreCard({ className, store }) {
   const cookieValue = Cookies.get("token");
-
   const {
     id,
     name,
@@ -17,15 +16,15 @@ export default function StoreCard({ className, store, nolike }) {
     min_order,
     seats,
   } = store;
+  const seat = seats.some((elem) => elem.available_seats);
 
-  let seat = seats.some((elem) => elem.available_seats);
   const [liked, setLiked] = useState(false);
   const [open, setOpen] = useState(false);
   const toggleLike = () => {
     setLiked(!liked); // 切换 liked 状态
     Cookies.set("storeid", id);
     // 根据 liked 状态决定是否打开对话框
-    if (!wishlist_item) {
+    if (!liked) {
       handleOpen(); // 打开对话框
     } else {
       handleClose(); // 关闭对话框
@@ -47,11 +46,11 @@ export default function StoreCard({ className, store, nolike }) {
 
     try {
       const requestData = {
-        wishlist_id: String(wishlist_item),
+        wishlist_id: String(id),
         cafe_id: String(cafe),
       };
       const response = await fetch(
-        `https://13.211.10.154/api/1.0/wishlists/${wishlist_item}/cafe/${cafe}`,
+        `https://13.211.10.154/api/1.0/wishlists/${id}/cafe/${cafe}`,
         {
           method: "DELETE",
           headers: {
@@ -75,7 +74,9 @@ export default function StoreCard({ className, store, nolike }) {
   };
   const handletostoreinfo = (data) => {
     Cookies.set("storeid", data);
-    window.location.href = `/detail/${data}`;
+    if (typeof window !== "undefined") {
+      window.location.href = `/detail/${data}`;
+    }
   };
 
   return (

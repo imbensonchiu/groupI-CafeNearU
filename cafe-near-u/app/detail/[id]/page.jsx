@@ -87,7 +87,7 @@ export default function StoreDetail() {
                 <Equipments {...storeDetail} />
                 <div className="h-[0.5px] bg-gray-600 my-6 mr-6"></div>
                 {shouldRenderRatingAndComments && (
-                  <RatingAndComments {...storeComments} />
+                  <RatingAndComments {...storeComments.data} />
                 )}
               </div>
               <div className="col-span-12 lg:col-span-4 flex flex-col mt-4 lg:mt-0">

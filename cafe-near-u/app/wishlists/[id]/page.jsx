@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
-import Header from "../../components/header.jsx";
-import Footer from "../../components/footer.jsx";
-import storesHome from "../../components/homepage/stores.js";
-import StoreCard from "../../components/StoreCard.jsx";
-import useWishlistitem from "../../ApiHook/userWishlistitem.jsx";
+import Header from "../../components/header";
+import Footer from "../../components/footer";
+import storesHome from "../../components/homepage/stores";
+import StoreCard from "../../components/StoreCard";
+import useWishlistitem from "../../ApiHook/userWishlistitem";
 
 export default function h() {
   const [activeButton, setActiveButton] = useState(null);

@@ -4,9 +4,9 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Login from "./Login.jsx";
-import GuestSignupForm from "./signupform/GuestSignupForm.jsx";
-import StoreSingupForm from "./signupform/StoreSingupForm.jsx";
+import Login from "./login";
+import GuestSignupForm from "./signupform/GuestSignupForm";
+import StoreSingupForm from "./signupform/StoreSingupForm";
 import { Card, Button, ButtonGroup } from "@material-tailwind/react";
 
 export default function Signup() {

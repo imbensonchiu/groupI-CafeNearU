@@ -17,7 +17,7 @@ import Comment from "../components/Commentdialog.jsx";
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
 
-import useFetchWishlist from "../ApiHook/useFetchWishlist.jsx";
+import useFetchWishlist from "../ApiHook/useFetchWishlist";
 
 export default function h() {
   const [activeButton, setActiveButton] = useState(null);
@@ -33,7 +33,9 @@ export default function h() {
   const handletowishlist = (data) => {
     Cookies.set("wishlistid", data.id);
     Cookies.set("wishlistname", data.name);
-    window.location.href = `/wishlists/${data.id}`;
+    if (typeof window !== "undefined") {
+      window.location.href = `/wishlists/${data.id}`;
+    }
   };
 
   return (
