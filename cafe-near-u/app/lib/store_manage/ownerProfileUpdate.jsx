@@ -1,4 +1,4 @@
-export default async function ownerProfileUpdate({ token, profile }) {
+export default async function ownerProfileUpdate(token, profile) {
     const header = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

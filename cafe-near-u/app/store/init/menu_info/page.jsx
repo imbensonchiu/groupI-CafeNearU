@@ -3,13 +3,38 @@
 import "react-time-picker/dist/TimePicker.css";
 import HeaderStore from "../../../components/storeside/HeaderStore";
 import InfoUpdateForm from "../../../components/storeside/InfoUpdateForm";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
-import { Button, Card, Typography, Input } from "@material-tailwind/react";
+import {
+    Button,
+    Card,
+    Typography,
+    Input,
+    IconButton,
+} from "@material-tailwind/react";
 import * as XLSX from "xlsx/xlsx.mjs";
 import menuUpdate from "../../../lib/store_manage/menuUpdate";
 import Cookies from "js-cookie";
 
-const TABLE_HEAD = ["品項", "價格", "分類", ""];
+function TrashIcon() {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="h-5 w-5"
+        >
+            <path
+                fillRule="evenodd"
+                d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                clipRule="evenodd"
+            />
+        </svg>
+    );
+}
+
+const TABLE_HEAD = ["品項", "價格", "分類", "刪除項目"];
 
 const TABLE_ROWS = [
     {
@@ -35,7 +60,7 @@ async function handleChange(e) {
 }
 
 async function handleSubmit(tableRows) {
-    const token = Cookies.get("tokenOwner");
+    const token = Cookies.get("token");
     const menu = { menu: tableRows };
     console.log(menu);
     const res = await menuUpdate({ token, menu });
@@ -43,18 +68,34 @@ async function handleSubmit(tableRows) {
     if (res === 200) {
         window.location.replace("/store/init/seat_info");
     } else {
-        window.location.replace(`https://http.cat/${res}`);
+        toast.error(`更新失敗 (Error: ${res})`, {
+            position: "top-right",
+            autoClose: 4999,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
     }
 }
 
+const handleLogout = () => {
+    Cookies.remove("token");
+    Cookies.remove("ownerId");
+    // Cookies.remove("postid");
+    window.location.href = "/"; // 登出後重定向至登入頁面
+};
+
 export default function Home() {
-    const [tableRows, setTableRows] = useState();
+    const [tableRows, setTableRows] = useState([]);
     const [newItem, setNewItem] = useState("");
     const [newPrice, setNewPrice] = useState("");
     const [newCategory, setNewCategory] = useState("");
     return (
         <>
-            <HeaderStore />
+            <HeaderStore handleLogout={handleLogout} />
             <div className="flex flex-col items-center justify-between top-0 bg-white z-50">
                 <div className="mt-2 flex flex-col items-start border-l-[#7D6E83] border-l-8 lg:container lg:mx-auto ">
                     <div className="pl-2 text-xl text-[#7D6E83] mb-1 w-fit py-1 transition-all text-left font-medium">
@@ -98,6 +139,7 @@ export default function Home() {
                             onChange={(e) => {
                                 setNewItem(e.target.value);
                             }}
+                            value={newItem}
                         />
                         <Input
                             label="價格"
@@ -108,6 +150,7 @@ export default function Home() {
                             onChange={(e) => {
                                 setNewPrice(e.target.value);
                             }}
+                            value={newPrice}
                         />
                         <Input
                             label="分類"
@@ -118,10 +161,11 @@ export default function Home() {
                             onChange={(e) => {
                                 setNewCategory(e.target.value);
                             }}
+                            value={newCategory}
                         />
                         <Button
                             className="text-base px-6 xl:py-0  bg-[#7D6E83] text-white  col-span-12 py-2  xl:col-span-2"
-                            onClick={() =>
+                            onClick={() => {
                                 setTableRows([
                                     ...tableRows,
                                     {
@@ -129,8 +173,11 @@ export default function Home() {
                                         price: newPrice,
                                         category: newCategory,
                                     },
-                                ])
-                            }
+                                ]);
+                                setNewItem("");
+                                setNewPrice("");
+                                setNewCategory("");
+                            }}
                         >
                             新增項目至菜單
                         </Button>
@@ -196,6 +243,26 @@ export default function Home() {
                                                             {category}
                                                         </Typography>
                                                     </td>
+                                                    <td className={classes}>
+                                                        <IconButton
+                                                            variant="text"
+                                                            color="blue-gray"
+                                                            onClick={() => {
+                                                                setTableRows(
+                                                                    tableRows.filter(
+                                                                        (
+                                                                            item,
+                                                                            i
+                                                                        ) =>
+                                                                            i !==
+                                                                            index
+                                                                    )
+                                                                );
+                                                            }}
+                                                        >
+                                                            <TrashIcon />
+                                                        </IconButton>
+                                                    </td>
                                                 </tr>
                                             );
                                         }
@@ -213,6 +280,18 @@ export default function Home() {
                         更新並繼續
                     </Button>
                 </div>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={4999}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
             </div>
         </>
     );

@@ -16,11 +16,8 @@ export default function StoreCard({ className, store }) {
         min_order,
         seats,
     } = store;
-    console.log("store->", store);
-    console.log("seats->", seats);
-    let seat = seats.some((elem) => elem.available_seats);
+    const seat = seats.some((elem) => elem.available_seats);
 
-    console.log("seat-->", seat);
     const [liked, setLiked] = useState(false);
     const [open, setOpen] = useState(false);
     const toggleLike = () => {

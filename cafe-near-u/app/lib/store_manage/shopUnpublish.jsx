@@ -1,4 +1,4 @@
-export default async function shopUnpublish({ token, isPublish }) {
+export default async function shopUnpublish(token, isPublish) {
     const header = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

@@ -1,4 +1,4 @@
-export default function shopPublish({ token, isPublish }) {
+export default function shopPublish(token, isPublish) {
     const header = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

@@ -1,7 +1,13 @@
 /* eslint-disable no-unused-vars */
 "use client";
 
-import { IconButton, Switch, Button, Dialog } from "@material-tailwind/react";
+import {
+    Tooltip,
+    IconButton,
+    Switch,
+    Button,
+    Dialog,
+} from "@material-tailwind/react";
 import { useState, useEffect } from "react";
 
 import Header from "../../components/header.jsx";
@@ -10,6 +16,62 @@ import Filter from "../../components/filter.jsx";
 import storesHome from "../../components/homepage/stores.js";
 import StoreCard from "../../components/StoreCard.jsx";
 import Cookies from "js-cookie";
+import {
+    useLoadScript,
+    GoogleMap,
+    Marker,
+    MarkerLabel,
+} from "@react-google-maps/api";
+import { getGeocode, getLatLng } from "use-places-autocomplete";
+
+const Map = ({ addresses, names }) => {
+    const { isLoaded } = useLoadScript({
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+        libraries: ["places"],
+    });
+
+    let center = {};
+    let posList = [];
+
+    console.log("addresses", addresses[0]);
+    if (isLoaded) {
+        posList = addresses.map((address) =>
+            getGeocode({ address }).then((res) => {
+                const { lat, lng } = getLatLng(res[0]);
+                return { lat, lng };
+            })
+        );
+    }
+    return posList.length ? (
+        <GoogleMap
+            zoom={10}
+            center={{ lat: 25.033, lng: 121.565 }}
+            mapContainerClassName="m-6 w-full h-full rounded-md"
+        >
+            {posList.map(async (p, index) =>
+                p.then((res) => {
+                    console.log("res", res);
+                    return (
+                        <>
+                            <Marker
+                                position={res}
+                                label={{
+                                    text: names[index],
+                                    color: "white",
+                                    className:
+                                        "p-2 bg-[#7D6E83] -mt-14 font-medium opacity-85 rounded-md",
+                                }}
+                                symbol={{ fillColor: "#7D6E83" }}
+                            />
+                        </>
+                    );
+                })
+            )}
+        </GoogleMap>
+    ) : (
+        <></>
+    );
+};
 
 export default function h() {
     const [open, setOpen] = useState(false);
@@ -78,7 +140,7 @@ export default function h() {
                 />
 
                 <div className="flex w-full items-end mt-24 gap-8 mb-3 flex-nowrap  ">
-                    <div className="flex mb-4 w-[60px] flex-col justify-center items-center relative">
+                    <div className="flex w-[60px] flex-col justify-center items-center relative">
                         <IconButton variant="text" className="rounded-full">
                             <span className="material-symbols-outlined">
                                 home
@@ -243,7 +305,7 @@ export default function h() {
 
                         <button
                             onClick={handleOpen}
-                            className="bg-[#D0B8A8] md:hidden w-[30%] col-start-5 h-12  flex items-center justify-center space-x-2 font-bold text-white rounded-sm"
+                            className="border md:hidden w-[30%] col-start-5 h-12  flex items-center justify-center space-x-2 font-bold text-gray-800 rounded-lg"
                         >
                             <img
                                 src="sliders.png"
@@ -253,7 +315,7 @@ export default function h() {
                             />
                             <span>篩選條件</span>
                         </button>
-                        <Button className="hidden md:flex md:col-span-2 md:col-start-7 bg-[#D0B8A8]  h-12 text-sm ">
+                        <Button className="hidden rounded-lg md:flex md:col-span-2 md:col-start-7 bg-[#D0B8A8]  py-3 text-sm ">
                             下一頁
                         </Button>
                     </div>
@@ -278,7 +340,16 @@ export default function h() {
             ))} */}
                     </div>
                 </div>
-                <div className="hidden md:block w-[30%] h-[920px] bg-gray-200 "></div>
+                <div className="hidden md:block w-[30%] h-[920px] ">
+                    {searchResult.length > 0 && (
+                        <Map
+                            addresses={searchResult.map(
+                                (store) => store.address
+                            )}
+                            names={searchResult.map((store) => store.name)}
+                        />
+                    )}
+                </div>
             </div>
             <Footer className="fixed bottom-0" />
         </>

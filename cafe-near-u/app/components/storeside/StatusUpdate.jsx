@@ -13,6 +13,9 @@ import {
     Tab,
     Tabs,
 } from "@material-tailwind/react";
+import { useEffect, useState } from "react";
+import useStatus from "../../lib/store_manage/useStatus";
+import Cookies from "js-cookie";
 
 const data = [
     { label: "座位ㄧ", value: 1 },
@@ -20,7 +23,16 @@ const data = [
     { label: "座位三", value: 3 },
     { label: "座位四", value: 4 },
 ];
+
 export default function StatusUpdate({ open, handleOpen }) {
+    const { status, isError } = useStatus(Cookies.get("ownerId"));
+    const operating_status = status?.data?.operating_status;
+    let statusCode = 1;
+    if (operating_status === "提早關門") statusCode = 2;
+    else if (operating_status === "店休") statusCode = 3;
+
+    const [value, setValue] = useState(statusCode);
+    const seats = status?.data?.shop?.seats;
     return (
         <Dialog
             size="md"
@@ -57,13 +69,30 @@ export default function StatusUpdate({ open, handleOpen }) {
                         營業資訊
                     </div>
                     <ButtonGroup variant="outlined" className="col-span-8">
-                        <Button className="text-base font-normal">
+                        <Button
+                            className={`text-base font-normal ${
+                                value === 1 && "bg-gray-800 text-white"
+                            }`}
+                            onClick={() => setValue(1)}
+                        >
                             正常營業
                         </Button>
-                        <Button className="text-base font-normal">
+                        <Button
+                            className={`text-base font-normal ${
+                                value === 2 && "bg-gray-800 text-white"
+                            }`}
+                            onClick={() => setValue(2)}
+                        >
                             時間異動
                         </Button>
-                        <Button className="text-base font-normal">店休</Button>
+                        <Button
+                            className={`text-base font-normal ${
+                                value === 3 && "bg-gray-800 text-white"
+                            }`}
+                            onClick={() => setValue(3)}
+                        >
+                            店休
+                        </Button>
                     </ButtonGroup>
                 </div>
                 <div className="flex flex-row gap-6 mt-4">
@@ -76,58 +105,61 @@ export default function StatusUpdate({ open, handleOpen }) {
                         className="col-span-8 flex flex-col self-center"
                     >
                         <TabsHeader className="w-auto">
-                            {data.map(({ label, value }) => (
-                                <Tab key={value} value={value}>
-                                    {label}
+                            {seats?.map(({ type }, index) => (
+                                <Tab key={index} value={index}>
+                                    {type}
                                 </Tab>
                             ))}
                         </TabsHeader>
                         <TabsBody className="w-80 flex flex-row self-center my-4">
-                            {data.map(({ value }) => (
-                                <TabPanel
-                                    key={value}
-                                    value={value}
-                                    className="py-0"
-                                >
-                                    <div className="flex flex-row justify-center">
-                                        <Button className="bg-[#B79681] text-base text-white rounded-full font-normal p-1">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth={1.5}
-                                                stroke="currentColor"
-                                                className="w-6 h-6"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M12 4.5v15m7.5-7.5h-15"
-                                                />
-                                            </svg>
-                                        </Button>
-                                        <div className="self-center px-3 text-2xl">
-                                            <strong>剩 25 席</strong> / 共 30 席
+                            {seats?.map(
+                                ({ available_seats, total_seats }, index) => (
+                                    <TabPanel
+                                        key={index}
+                                        value={index}
+                                        className="py-0"
+                                    >
+                                        <div className="flex flex-row justify-center">
+                                            <Button className="bg-[#B79681] text-base text-white rounded-full font-normal p-1">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    strokeWidth={1.5}
+                                                    stroke="currentColor"
+                                                    className="w-6 h-6"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        d="M12 4.5v15m7.5-7.5h-15"
+                                                    />
+                                                </svg>
+                                            </Button>
+                                            <div className="self-center px-3 text-2xl">
+                                                <strong>{`剩 ${available_seats} 席`}</strong>{" "}
+                                                {`/ 共 ${total_seats} 席`}
+                                            </div>
+                                            <Button className="bg-[#c3ab9b] text-base text-white rounded-full font-normal p-1">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    strokeWidth={1.5}
+                                                    stroke="currentColor"
+                                                    className="w-6 h-6"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        d="M19.5 12h-15"
+                                                    />
+                                                </svg>
+                                            </Button>
                                         </div>
-                                        <Button className="bg-[#c3ab9b] text-base text-white rounded-full font-normal p-1">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth={1.5}
-                                                stroke="currentColor"
-                                                className="w-6 h-6"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M19.5 12h-15"
-                                                />
-                                            </svg>
-                                        </Button>
-                                    </div>
-                                </TabPanel>
-                            ))}
+                                    </TabPanel>
+                                )
+                            )}
                         </TabsBody>
                     </Tabs>
                 </div>
