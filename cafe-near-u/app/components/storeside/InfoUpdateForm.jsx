@@ -405,7 +405,10 @@ export default function InfoUpdateForm({ edit = false, handleOpen }) {
                     theme: "light",
                 });
             } else if (res === 200 && !edit) {
-                window.location.replace("/store/init/menu_info");
+                if (typeof window !== "undefined") {
+                    window.location.replace("/store/init/menu_info");
+                  }
+               
             } else if (res !== 200 && !edit) {
                 toast.error(`更新失敗 (Error: ${res})`, {
                     position: "top-right",

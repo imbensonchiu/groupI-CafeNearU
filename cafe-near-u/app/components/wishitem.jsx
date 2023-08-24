@@ -11,7 +11,9 @@ import {
 
 export default function Wish() {
   const handletowishlist = () => {
-    window.location.href = "/wishlists";
+    if (typeof window !== "undefined") {
+      window.location.href = "/wishlists";
+    }
   };
 
   return (
