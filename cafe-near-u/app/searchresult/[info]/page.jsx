@@ -32,8 +32,6 @@ const Map = ({ addresses, names }) => {
 
     let center = {};
     let posList = [];
-
-    console.log("addresses", addresses[0]);
     if (isLoaded) {
         posList = addresses.map((address) =>
             getGeocode({ address }).then((res) => {
