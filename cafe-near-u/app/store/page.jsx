@@ -9,6 +9,7 @@ import useStoreBasicInfo from "../lib/store_manage/useStoreBasicInfo";
 import useStatus from "../lib/store_manage/useStatus";
 import useOwnerStatus from "../lib/store_manage/useOwnerStatus";
 import useOwnerProfile from "../lib/store_manage/useOwnerProfile";
+import { useRouter } from "next/navigation";
 
 import Cookies from "js-cookie";
 
@@ -21,15 +22,17 @@ export default function Home() {
             window.location.href = "/";
         }
     }
+    const router = useRouter();
 
     console.log(Cookies.get());
 
     const { newOwner } = useOwnerStatus(Cookies.get("token"));
     console.log(newOwner);
 
-    if (newOwner?.new_owner) {
+    if (newOwner && newOwner?.data.new_owner) {
+        console.log("new owner");
         if (typeof window !== "undefined") {
-            window.location.replace("/store/init/basic_info");
+            router.push("/store/init/basic_info");
         }
     }
 
